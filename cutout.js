@@ -5,7 +5,21 @@ class AICutout {
         this.originalImage = null;
         this.cutoutImage = null;
         this.token = '';
-        this.initializeEventListeners();
+        this.selectedFile = null;
+        this.fileId = null;
+        
+        console.log('AICutout constructor called');
+        
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('DOM ready - initializing event listeners');
+                this.initializeEventListeners();
+            });
+        } else {
+            console.log('DOM already ready - initializing event listeners immediately');
+            this.initializeEventListeners();
+        }
     }
 
     initializeEventListeners() {
@@ -15,6 +29,14 @@ class AICutout {
         const downloadBtn = document.getElementById('downloadBtn');
         const tokenInput = document.getElementById('tokenInput');
         const saveTokenBtn = document.getElementById('saveTokenBtn');
+        const doUploadBtn = document.getElementById('doUploadBtn');
+        const doCutoutBtn = document.getElementById('doCutoutBtn');
+
+        // Debug: Check if buttons exist
+        console.log('Upload button found:', doUploadBtn);
+        console.log('Cutout button found:', doCutoutBtn);
+        console.log('Cutout button initial classes:', doCutoutBtn ? doCutoutBtn.className : 'null');
+        console.log('Cutout button initial style:', doCutoutBtn ? doCutoutBtn.style.display : 'null');
 
         // File input change
         imageInput.addEventListener('change', (e) => this.handleFileSelect(e));
@@ -25,11 +47,83 @@ class AICutout {
         uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
 
         // Button events
-        resetBtn.addEventListener('click', () => this.reset());
-        downloadBtn.addEventListener('click', () => this.downloadResult());
+        if (resetBtn) resetBtn.addEventListener('click', () => this.reset());
         if (saveTokenBtn) {
             saveTokenBtn.addEventListener('click', () => {
                 this.token = tokenInput && tokenInput.value ? tokenInput.value.trim() : '';
+                console.log('Token saved:', this.token ? 'present' : 'missing');
+            });
+        }
+        if (doUploadBtn) {
+            doUploadBtn.addEventListener('click', async () => {
+                if (!this.selectedFile) {
+                    alert('Please select a file first');
+                    return;
+                }
+                try {
+                    const fileId = await this.uploadToServer(this.selectedFile);
+                    console.log('File uploaded, ID:', fileId);
+                    
+                    // Store fileId for cutout process
+                    this.fileId = fileId;
+                    this.showUploadResult(fileId);
+                    
+                    // Show cutout button and hide upload button
+                    console.log('Showing cutout button, hiding upload button');
+                    console.log('Upload button element:', doUploadBtn);
+                    console.log('Cutout button element:', doCutoutBtn);
+                    
+                    // Force button visibility check
+                    console.log('Before visibility change:');
+                    if (doUploadBtn) {
+                        console.log('Upload button display:', window.getComputedStyle(doUploadBtn).display);
+                        console.log('Upload button classes:', doUploadBtn.className);
+                    }
+                    if (doCutoutBtn) {
+                        console.log('Cutout button display:', window.getComputedStyle(doCutoutBtn).display);
+                        console.log('Cutout button classes:', doCutoutBtn.className);
+                    }
+                    
+                    if (doUploadBtn) {
+                        doUploadBtn.classList.add('hidden');
+                        doUploadBtn.classList.remove('visible');
+                        console.log('Upload button hidden - new classes:', doUploadBtn.className);
+                    }
+                    if (doCutoutBtn) {
+                        doCutoutBtn.classList.remove('hidden');
+                        doCutoutBtn.classList.add('visible');
+                        console.log('Cutout button shown - new classes:', doCutoutBtn.className);
+                        console.log('Cutout button new display:', window.getComputedStyle(doCutoutBtn).display);
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Upload failed. Please retry.');
+                }
+            });
+        }
+        if (doCutoutBtn) {
+            doCutoutBtn.addEventListener('click', async () => {
+                if (!this.fileId) {
+                    alert('Please upload a file first');
+                    return;
+                }
+                try {
+                    // Show loading state
+                    this.showCutoutLoading(true);
+                    
+                    // Run workflow
+                    const workflowResult = await this.runWorkflow(this.fileId);
+                    
+                    // Process and display results
+                    await this.processCutoutResult(workflowResult);
+                    
+                    // Hide loading state
+                    this.showCutoutLoading(false);
+                } catch (err) {
+                    console.error(err);
+                    this.showCutoutLoading(false);
+                    alert('Cutout failed. Please retry.');
+                }
             });
         }
 
@@ -61,9 +155,10 @@ class AICutout {
 
     handleFileSelect(e) {
         const file = e.target.files[0];
-        if (file) {
-            this.processImage(file);
-        }
+        if (!file) return;
+        if (!this.validateImageFile(file)) return;
+        this.selectedFile = file;
+        this.displayFileInfo(file);
     }
 
     validateImageFile(file) {
@@ -84,22 +179,23 @@ class AICutout {
     }
 
     async processImage(file) {
-        if (!this.validateImageFile(file)) {
-            return;
+        if (!this.validateImageFile(file)) return;
+        this.selectedFile = file;
+        this.displayFileInfo(file);
+    }
+
+    displayFileInfo(file) {
+        const pathEl = document.getElementById('selectedFilePath');
+        if (pathEl) pathEl.textContent = file.name;
+        
+        // Store file for processing
+        this.selectedFile = file;
+        
+        // Create object URL for preview
+        if (this.originalImage) {
+            URL.revokeObjectURL(this.originalImage);
         }
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            this.originalImage = e.target.result;
-            this.displayOriginalImage();
-            try {
-              const fileId = await this.uploadToServer(file)
-              await this.performWorkflow(fileId)
-            } catch (err) {
-              console.error(err)
-              this.showError('Upload or workflow failed. Please retry.')
-            }
-        };
-        reader.readAsDataURL(file);
+        this.originalImage = URL.createObjectURL(file);
     }
 
     displayOriginalImage() {
@@ -111,54 +207,184 @@ class AICutout {
         document.getElementById('uploadArea').style.display = 'none';
     }
 
-    async performWorkflow(fileId) {
-        const processingIndicator = document.getElementById('processingIndicator');
-        const cutoutImageEl = document.getElementById('cutoutImage');
-        const placeholderResult = document.getElementById('placeholderResult');
-        processingIndicator.style.display = 'flex';
-        placeholderResult.style.display = 'block';
-        cutoutImageEl.style.display = 'none';
-        const runHeaders = { 'Content-Type': 'application/json' }
-        if (this.token) runHeaders['x-coze-token'] = this.token
-        const runRes = await fetch('/api/coze/cutout/run', { method: 'POST', headers: runHeaders, body: JSON.stringify({ file_id: fileId }) })
-        if (!runRes.ok) throw new Error('workflow run failed')
-        const { run_id } = await runRes.json()
-        const result = await this.pollStatus(run_id)
-        const imageUrl = result?.image_url || result?.url || result?.dataUrl
-        if (!imageUrl) throw new Error('no result image')
-        this.cutoutImage = imageUrl
-        cutoutImageEl.src = this.cutoutImage
-        processingIndicator.style.display = 'none';
-        placeholderResult.style.display = 'none';
-        cutoutImageEl.style.display = 'block';
-    }
+    // simplified flow: no workflow run
 
-    async pollStatus(runId) {
-        const start = Date.now()
-        const timeoutMs = 120000
-        const intervalMs = 1500
-        while (Date.now() - start < timeoutMs) {
-            const statusHeaders = {}
-            if (this.token) statusHeaders['x-coze-token'] = this.token
-            const res = await fetch(`/api/coze/cutout/status?run_id=${encodeURIComponent(runId)}`, { headers: statusHeaders })
-            if (!res.ok) throw new Error('status fetch failed')
-            const { status, result } = await res.json()
-            if (status === 'succeeded' || status === 'completed') return result
-            if (status === 'failed' || status === 'error') throw new Error('workflow failed')
-            await new Promise(r => setTimeout(r, intervalMs))
+    // simplified flow: no workflow polling
+
+    async runWorkflow(fileId) {
+        // 不指定workflowId，让后端使用环境变量
+        
+        console.log('Running workflow with file_id:', fileId);
+        
+        const payload = {
+            file_id: fileId
+            // 不传递workflow_id，让后端使用环境变量
+        };
+        
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        
+        if (this.token) {
+            headers['Authorization'] = `Bearer ${this.token}`;
         }
-        throw new Error('workflow timeout')
+        
+        try {
+            const res = await fetch('/api/coze/workflow/run', { 
+                method: 'POST', 
+                body: JSON.stringify(payload), 
+                headers 
+            });
+            
+            if (!res.ok) {
+                const errorText = await res.text();
+                console.error('Workflow failed:', res.status, errorText);
+                throw new Error(`Workflow failed: ${res.status} - ${errorText}`);
+            }
+            
+            const result = await res.json();
+            console.log('Workflow success:', result);
+            return result;
+        } catch (error) {
+            console.error('Workflow error:', error);
+            throw error;
+        }
     }
 
     async uploadToServer(file) {
+        console.log('Uploading with token:', this.token ? 'present' : 'missing')
+        
         const fd = new FormData()
         fd.append('file', file)
+        
         const headers = {}
-        if (this.token) headers['x-coze-token'] = this.token
-        const res = await fetch('/api/coze/upload', { method: 'POST', body: fd, headers })
-        if (!res.ok) throw new Error('upload failed')
-        const { file_id } = await res.json()
-        return file_id
+        if (this.token) {
+            headers['Authorization'] = `Bearer ${this.token}`
+            console.log('Token being sent:', this.token.substring(0, 10) + '...')
+        }
+        
+        try {
+            const res = await fetch('/api/coze/upload', { method: 'POST', body: fd, headers })
+            
+            if (!res.ok) {
+                const errorText = await res.text()
+                console.error('Upload failed:', res.status, errorText)
+                throw new Error(`Upload failed: ${res.status} - ${errorText}`)
+            }
+            
+            const result = await res.json()
+            console.log('Upload success:', result)
+            return result.file_id
+        } catch (error) {
+            console.error('Upload error:', error)
+            throw error
+        }
+    }
+
+    showUploadResult(fileId) {
+        console.log('Showing upload result for fileId:', fileId);
+        const section = document.getElementById('uploadResultSection')
+        const idEl = document.getElementById('resultFileId')
+        const copyBtn = document.getElementById('copyFileIdBtn')
+        
+        if (section) {
+            section.style.display = 'block';
+            console.log('Results section displayed');
+        }
+        const uploadArea = document.getElementById('uploadArea')
+        if (uploadArea) uploadArea.style.display = 'none'
+        
+        // 显示文件ID
+        if (idEl) {
+            idEl.innerHTML = `
+                <div style="margin-bottom: 16px;">
+                    <strong>File ID:</strong> ${fileId}
+                </div>
+                <div style="margin-bottom: 16px; color: var(--gray-600); font-size: 14px;">
+                    Click "Start AI Cutout" to process your image
+                </div>
+            `
+        }
+        
+        if (copyBtn) {
+          copyBtn.onclick = () => {
+            const textToCopy = `File ID: ${fileId}`
+            navigator.clipboard?.writeText(textToCopy)
+          }
+        }
+    }
+
+    async processCutoutResult(workflowResult) {
+        console.log('Processing cutout result:', workflowResult);
+        
+        // Show the cutout results grid
+        const cutoutResults = document.getElementById('cutoutResults');
+        if (cutoutResults) {
+            cutoutResults.style.display = 'grid';
+        }
+        
+        // Display original image
+        const originalPreview = document.getElementById('originalImagePreview');
+        if (originalPreview && this.originalImage) {
+            originalPreview.src = this.originalImage;
+        }
+        
+        // Use the image_url from the workflow response (enhanced by backend)
+        let cutoutImageUrl = workflowResult?.image_url;
+        
+        // Fallback: try to extract from data if image_url is not available
+        if (!cutoutImageUrl && workflowResult && workflowResult.data) {
+            try {
+                const resultData = typeof workflowResult.data === 'string' ? JSON.parse(workflowResult.data) : workflowResult.data;
+                
+                if (resultData.output && resultData.output.image_url) {
+                    cutoutImageUrl = resultData.output.image_url;
+                } else if (resultData.image_url) {
+                    cutoutImageUrl = resultData.image_url;
+                } else if (resultData.url) {
+                    cutoutImageUrl = resultData.url;
+                } else if (typeof resultData.output === 'string' && resultData.output.startsWith('http')) {
+                    cutoutImageUrl = resultData.output;
+                }
+            } catch (e) {
+                console.log('Could not parse workflow result data:', e);
+            }
+        }
+        
+        // Display cutout result
+        const cutoutPreview = document.getElementById('cutoutImagePreview');
+        if (cutoutPreview) {
+            if (cutoutImageUrl) {
+                cutoutPreview.src = cutoutImageUrl;
+                this.cutoutImage = cutoutImageUrl; // Store for download
+                console.log('Displaying cutout image:', cutoutImageUrl);
+            } else {
+                // Show placeholder if no image URL found
+                cutoutPreview.style.display = 'none';
+                const container = cutoutPreview.parentElement;
+                const placeholder = document.createElement('div');
+                placeholder.className = 'placeholder-result';
+                placeholder.innerHTML = `
+                    <div class="placeholder-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                            <rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M8 13l3-3 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="8" cy="9" r="1.5" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <p>AI cutout result will appear here</p>
+                `;
+                container.appendChild(placeholder);
+                console.log('No image URL found in workflow result');
+            }
+        }
+    }
+
+    showCutoutLoading(show) {
+        const loadingOverlay = document.getElementById('cutoutLoading');
+        if (loadingOverlay) {
+            loadingOverlay.style.display = show ? 'flex' : 'none';
+        }
     }
 
     showError(message) {
@@ -176,29 +402,58 @@ class AICutout {
 
     reset() {
         // Reset to initial state
-        document.getElementById('resultsSection').style.display = 'none';
+        const section = document.getElementById('uploadResultSection')
+        if (section) section.style.display = 'none'
         document.getElementById('uploadArea').style.display = 'block';
         document.getElementById('imageInput').value = '';
         
+        // Reset buttons
+        const uploadBtn = document.getElementById('doUploadBtn');
+        const cutoutBtn = document.getElementById('doCutoutBtn');
+        if (uploadBtn) {
+            uploadBtn.classList.remove('hidden');
+            uploadBtn.classList.add('visible');
+        }
+        if (cutoutBtn) {
+            cutoutBtn.classList.add('hidden');
+            cutoutBtn.classList.remove('visible');
+        }
+        
         // Reset images
+        if (this.originalImage) {
+            URL.revokeObjectURL(this.originalImage);
+        }
         this.originalImage = null;
         this.cutoutImage = null;
-        document.getElementById('originalImage').src = '';
-        document.getElementById('cutoutImage').src = '';
+        this.selectedFile = null;
+        this.fileId = null;
         
-        // Reset placeholder
-        const placeholderResult = document.getElementById('placeholderResult');
-        placeholderResult.innerHTML = `
-            <div class="placeholder-icon">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                    <path d="M4 4h10a3 3 0 0 1 3 3v10" stroke="currentColor" stroke-width="1.5"/>
-                    <circle cx="7" cy="17" r="2" stroke="currentColor" stroke-width="1.5"/>
-                    <circle cx="17" cy="7" r="2" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M7 17l10-10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-            </div>
-            <p>AI is processing your image...</p>
-        `;
+        const idEl = document.getElementById('resultFileId')
+        if (idEl) idEl.textContent = ''
+        const pathEl = document.getElementById('selectedFilePath')
+        if (pathEl) pathEl.textContent = ''
+        
+        // Hide cutout results
+        const cutoutResults = document.getElementById('cutoutResults')
+        if (cutoutResults) cutoutResults.style.display = 'none'
+        
+        // Reset image previews
+        const originalPreview = document.getElementById('originalImagePreview')
+        if (originalPreview) originalPreview.src = ''
+        const cutoutPreview = document.getElementById('cutoutImagePreview')
+        if (cutoutPreview) {
+            cutoutPreview.src = ''
+            cutoutPreview.style.display = 'block'
+        }
+        
+        // Remove any placeholders
+        const containers = document.querySelectorAll('.image-preview-container');
+        containers.forEach(container => {
+            const placeholder = container.querySelector('.placeholder-result');
+            if (placeholder) {
+                placeholder.remove();
+            }
+        });
     }
 
     downloadResult() {
@@ -215,6 +470,5 @@ class AICutout {
 }
 
 // Initialize the AI Cutout tool
-document.addEventListener('DOMContentLoaded', () => {
-    new AICutout();
-});
+console.log('Loading AICutout tool...');
+new AICutout();

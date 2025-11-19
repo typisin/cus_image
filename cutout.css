@@ -23,6 +23,23 @@
     margin: 0 auto;
 }
 
+.token-bar {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.token-input {
+    width: 420px;
+    max-width: 80%;
+    height: 40px;
+    padding: 0 0.75rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    color: var(--gray-800);
+}
+
 .cutout-workspace {
     max-width: 1200px;
     margin: 0 auto;

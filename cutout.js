@@ -4,6 +4,7 @@ class AICutout {
     constructor() {
         this.originalImage = null;
         this.cutoutImage = null;
+        this.token = '';
         this.initializeEventListeners();
     }
 
@@ -12,6 +13,8 @@ class AICutout {
         const imageInput = document.getElementById('imageInput');
         const resetBtn = document.getElementById('resetBtn');
         const downloadBtn = document.getElementById('downloadBtn');
+        const tokenInput = document.getElementById('tokenInput');
+        const saveTokenBtn = document.getElementById('saveTokenBtn');
 
         // File input change
         imageInput.addEventListener('change', (e) => this.handleFileSelect(e));
@@ -24,6 +27,11 @@ class AICutout {
         // Button events
         resetBtn.addEventListener('click', () => this.reset());
         downloadBtn.addEventListener('click', () => this.downloadResult());
+        if (saveTokenBtn) {
+            saveTokenBtn.addEventListener('click', () => {
+                this.token = tokenInput && tokenInput.value ? tokenInput.value.trim() : '';
+            });
+        }
 
         // Prevent default drag behaviors
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -75,16 +83,21 @@ class AICutout {
         return true;
     }
 
-    processImage(file) {
+    async processImage(file) {
         if (!this.validateImageFile(file)) {
             return;
         }
-
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
             this.originalImage = e.target.result;
             this.displayOriginalImage();
-            this.performAICutout();
+            try {
+              const fileId = await this.uploadToServer(file)
+              await this.performWorkflow(fileId)
+            } catch (err) {
+              console.error(err)
+              this.showError('Upload or workflow failed. Please retry.')
+            }
         };
         reader.readAsDataURL(file);
     }
@@ -98,81 +111,54 @@ class AICutout {
         document.getElementById('uploadArea').style.display = 'none';
     }
 
-    async performAICutout() {
+    async performWorkflow(fileId) {
         const processingIndicator = document.getElementById('processingIndicator');
         const cutoutImageEl = document.getElementById('cutoutImage');
         const placeholderResult = document.getElementById('placeholderResult');
-
-        // Show processing indicator
         processingIndicator.style.display = 'flex';
         placeholderResult.style.display = 'block';
         cutoutImageEl.style.display = 'none';
+        const runHeaders = { 'Content-Type': 'application/json' }
+        if (this.token) runHeaders['x-coze-token'] = this.token
+        const runRes = await fetch('/api/coze/cutout/run', { method: 'POST', headers: runHeaders, body: JSON.stringify({ file_id: fileId }) })
+        if (!runRes.ok) throw new Error('workflow run failed')
+        const { run_id } = await runRes.json()
+        const result = await this.pollStatus(run_id)
+        const imageUrl = result?.image_url || result?.url || result?.dataUrl
+        if (!imageUrl) throw new Error('no result image')
+        this.cutoutImage = imageUrl
+        cutoutImageEl.src = this.cutoutImage
+        processingIndicator.style.display = 'none';
+        placeholderResult.style.display = 'none';
+        cutoutImageEl.style.display = 'block';
+    }
 
-        try {
-            // Simulate AI processing time
-            await this.simulateAICutout();
-            
-            // For demo purposes, create a simple cutout effect
-            // In a real implementation, this would call an AI API
-            const cutoutResult = await this.createSimpleCutout(this.originalImage);
-            
-            this.cutoutImage = cutoutResult;
-            cutoutImageEl.src = this.cutoutImage;
-            
-            // Hide processing indicator and show result
-            processingIndicator.style.display = 'none';
-            placeholderResult.style.display = 'none';
-            cutoutImageEl.style.display = 'block';
-            
-        } catch (error) {
-            console.error('AI Cutout failed:', error);
-            this.showError('AI processing failed. Please try again.');
-            processingIndicator.style.display = 'none';
+    async pollStatus(runId) {
+        const start = Date.now()
+        const timeoutMs = 120000
+        const intervalMs = 1500
+        while (Date.now() - start < timeoutMs) {
+            const statusHeaders = {}
+            if (this.token) statusHeaders['x-coze-token'] = this.token
+            const res = await fetch(`/api/coze/cutout/status?run_id=${encodeURIComponent(runId)}`, { headers: statusHeaders })
+            if (!res.ok) throw new Error('status fetch failed')
+            const { status, result } = await res.json()
+            if (status === 'succeeded' || status === 'completed') return result
+            if (status === 'failed' || status === 'error') throw new Error('workflow failed')
+            await new Promise(r => setTimeout(r, intervalMs))
         }
+        throw new Error('workflow timeout')
     }
 
-    async simulateAICutout() {
-        // Simulate processing time between 2-4 seconds
-        const processingTime = 2000 + Math.random() * 2000;
-        return new Promise(resolve => setTimeout(resolve, processingTime));
-    }
-
-    async createSimpleCutout(imageSrc) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                canvas.width = img.width;
-                canvas.height = img.height;
-                
-                // Create a simple mask effect (simulate cutout)
-                // This is a basic implementation - real AI would be much more sophisticated
-                ctx.drawImage(img, 0, 0);
-                
-                // Create a radial gradient mask
-                const gradient = ctx.createRadialGradient(
-                    canvas.width / 2, canvas.height / 2, 0,
-                    canvas.width / 2, canvas.height / 2, Math.min(canvas.width, canvas.height) / 2
-                );
-                gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-                gradient.addColorStop(0.8, 'rgba(255, 255, 255, 0.8)');
-                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-                
-                ctx.globalCompositeOperation = 'destination-in';
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                // Add a white background
-                ctx.globalCompositeOperation = 'destination-over';
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                resolve(canvas.toDataURL('image/png'));
-            };
-            img.src = imageSrc;
-        });
+    async uploadToServer(file) {
+        const fd = new FormData()
+        fd.append('file', file)
+        const headers = {}
+        if (this.token) headers['x-coze-token'] = this.token
+        const res = await fetch('/api/coze/upload', { method: 'POST', body: fd, headers })
+        if (!res.ok) throw new Error('upload failed')
+        const { file_id } = await res.json()
+        return file_id
     }
 
     showError(message) {

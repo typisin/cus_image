@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CusImage - 智能图片编辑工具</title>
+    <meta name="description" content="CusImage - Advanced AI image describer tool for automatic image captioning, intelligent image editing solutions with smart cutout and unicode conversion features">
+    <meta name="keywords" content="image describer, AI image captioning, automatic image description, smart image editing, AI cutout, image to unicode">
+    <title>CusImage - AI Image Describer & Smart Image Editing Tools</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,9 +15,25 @@
     <header class="header">
         <div class="container">
             <div class="brand">
-                <div class="logo">🖼️</div>
+                <div class="logo">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M8 13l3-3 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="8" cy="9" r="1.5" fill="currentColor"/>
+                    </svg>
+                </div>
                 <h1 class="title">CusImage</h1>
-                <p class="subtitle">智能图片编辑解决方案</p>
+                <p class="subtitle">Advanced AI Image Describer & Intelligent Editing Solutions</p>
+            </div>
+            <div class="nav-dropdown">
+                <button class="nav-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="main-nav">Menu</button>
+                <nav class="nav" id="main-nav" aria-label="Main navigation">
+                    <ul class="nav-menu">
+                        <li><a href="/describer.html" class="nav-link">Image Describer</a></li>
+                        <li><a href="/cutout.html" class="nav-link">AI Cutout</a></li>
+                        <li><a href="/unicode.html" class="nav-link">Image to Unicode</a></li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </header>
@@ -23,12 +41,12 @@
     <main class="main">
         <div class="container">
             <section class="hero">
-                <h2 class="hero-title">探索智能图片编辑</h2>
-                <p class="hero-description">三款强大的AI工具，让您的图片处理更高效</p>
+                <h2 class="hero-title">AI-Powered Image Describer & Editing Tools</h2>
+                <p class="hero-description">Transform your images with our advanced AI image describer, smart cutout, and unicode conversion tools for efficient image editing</p>
             </section>
 
             <div class="features-grid">
-                <a href="#describer" class="feature-card">
+                <a href="describer.html" class="feature-card">
                     <div class="card-icon">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
                             <rect x="3" y="3" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
@@ -36,12 +54,12 @@
                             <path d="M6 20l4-4 3 3 5-5 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                         </svg>
                     </div>
-                    <h3 class="card-title">Image Describer</h3>
-                    <p class="card-description">为图片生成精准自然的文字描述，支持多语言输出</p>
-                    <span class="card-cta">开始使用 →</span>
+                    <h3 class="card-title">AI Image Describer</h3>
+                    <p class="card-description">Advanced image describer tool that generates accurate, natural captions for any image with multilingual AI-powered description capabilities</p>
+                    <span class="card-cta">Get Started →</span>
                 </a>
 
-                <a href="#cutout" class="feature-card">
+                <a href="cutout.html" class="feature-card">
                     <div class="card-icon">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
                             <path d="M4 4h10a3 3 0 0 1 3 3v10" stroke="currentColor" stroke-width="1.5"/>
@@ -51,11 +69,11 @@
                         </svg>
                     </div>
                     <h3 class="card-title">AI Cutout</h3>
-                    <p class="card-description">智能抠图与背景移除，保留精细边缘与毛发细节</p>
-                    <span class="card-cta">开始使用 →</span>
+                    <p class="card-description">Smart cutout and background removal with fine edge and hair detail</p>
+                    <span class="card-cta">Get Started →</span>
                 </a>
 
-                <a href="#unicode" class="feature-card">
+                <a href="unicode.html" class="feature-card">
                     <div class="card-icon">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
                             <rect x="3" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
@@ -65,8 +83,8 @@
                         </svg>
                     </div>
                     <h3 class="card-title">Image to Unicode</h3>
-                    <p class="card-description">将图像转为Unicode字符艺术，兼容终端与网页显示</p>
-                    <span class="card-cta">开始使用 →</span>
+                    <p class="card-description">Convert images into Unicode art compatible with terminals and web</p>
+                    <span class="card-cta">Get Started →</span>
                 </a>
             </div>
         </div>
@@ -74,8 +92,26 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 CusImage. 让图片编辑更智能。</p>
+            <p>&copy; 2025 CusImage. Advanced AI image describer and intelligent image editing solutions.</p>
         </div>
     </footer>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var toggle = document.querySelector('.nav-toggle');
+      var dropdown = toggle && toggle.parentElement;
+      var nav = dropdown && dropdown.querySelector('.nav');
+      if (!toggle || !dropdown || !nav) return;
+      toggle.addEventListener('click', function() {
+        var open = dropdown.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target)) {
+          dropdown.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+    </script>
 </body>
 </html>

@@ -31,10 +31,12 @@ class AICutout {
         const saveTokenBtn = document.getElementById('saveTokenBtn');
         const doUploadBtn = document.getElementById('doUploadBtn');
         const doCutoutBtn = document.getElementById('doCutoutBtn');
+        const cutoutBtnInResults = document.getElementById('cutoutBtnInResults');
 
         // Debug: Check if buttons exist
         console.log('Upload button found:', doUploadBtn);
         console.log('Cutout button found:', doCutoutBtn);
+        console.log('Cutout button in results found:', cutoutBtnInResults);
         console.log('Cutout button initial classes:', doCutoutBtn ? doCutoutBtn.className : 'null');
         console.log('Cutout button initial style:', doCutoutBtn ? doCutoutBtn.style.display : 'null');
 
@@ -103,27 +105,12 @@ class AICutout {
         }
         if (doCutoutBtn) {
             doCutoutBtn.addEventListener('click', async () => {
-                if (!this.fileId) {
-                    alert('Please upload a file first');
-                    return;
-                }
-                try {
-                    // Show loading state
-                    this.showCutoutLoading(true);
-                    
-                    // Run workflow
-                    const workflowResult = await this.runWorkflow(this.fileId);
-                    
-                    // Process and display results
-                    await this.processCutoutResult(workflowResult);
-                    
-                    // Hide loading state
-                    this.showCutoutLoading(false);
-                } catch (err) {
-                    console.error(err);
-                    this.showCutoutLoading(false);
-                    alert('Cutout failed. Please retry.');
-                }
+                await this.handleCutoutClick();
+            });
+        }
+        if (cutoutBtnInResults) {
+            cutoutBtnInResults.addEventListener('click', async () => {
+                await this.handleCutoutClick();
             });
         }
 
@@ -131,6 +118,30 @@ class AICutout {
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             uploadArea.addEventListener(eventName, (e) => e.preventDefault());
         });
+    }
+
+    async handleCutoutClick() {
+        if (!this.fileId) {
+            alert('Please upload a file first');
+            return;
+        }
+        try {
+            // Show loading state
+            this.showCutoutLoading(true);
+            
+            // Run workflow
+            const workflowResult = await this.runWorkflow(this.fileId);
+            
+            // Process and display results
+            await this.processCutoutResult(workflowResult);
+            
+            // Hide loading state
+            this.showCutoutLoading(false);
+        } catch (err) {
+            console.error(err);
+            this.showCutoutLoading(false);
+            alert('Cutout failed. Please retry.');
+        }
     }
 
     handleDragOver(e) {
@@ -286,6 +297,7 @@ class AICutout {
         const section = document.getElementById('uploadResultSection')
         const idEl = document.getElementById('resultFileId')
         const copyBtn = document.getElementById('copyFileIdBtn')
+        const cutoutBtnInResults = document.getElementById('cutoutBtnInResults')
         
         if (section) {
             section.style.display = 'block';
@@ -311,6 +323,15 @@ class AICutout {
             const textToCopy = `File ID: ${fileId}`
             navigator.clipboard?.writeText(textToCopy)
           }
+        }
+        
+        // Show the cutout button in results and add click handler
+        if (cutoutBtnInResults) {
+            cutoutBtnInResults.style.display = 'inline-block';
+            cutoutBtnInResults.onclick = async () => {
+                await this.handleCutoutClick();
+            };
+            console.log('Cutout button in results is now visible and clickable');
         }
     }
 

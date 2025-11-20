@@ -46,21 +46,8 @@
             </section>
 
             <div class="describer-card" role="region" aria-label="Image describer">
-                <div class="describer-header">
-                    <label for="file" class="describer-label">Upload image</label>
-                    <div class="file-input-container">
-                        <input id="file" type="file" accept="image/*" class="describer-input" />
-                        <div class="file-input-button" id="fileButton">
-                            <div class="file-input-text">
-                                <span class="svg-icon medium">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M12 2L12 22M2 12L22 12"/>
-                                    </svg>
-                                </span>
-                                <span id="fileText">Choose File</span>
-                            </div>
-                        </div>
-                    </div>
+                <div class="describer-header" style="display:none;">
+                    <input id="file" type="file" accept="image/*" class="describer-input" />
                 </div>
 
                 <div class="describer-grid">
@@ -90,11 +77,11 @@
                                     <path d="M12 2L12 22M2 12L22 12"/>
                                 </svg>
                             </span>
-                            <div style="color: var(--gray-500); font-style: italic;">Upload an image to generate description</div>
+                            <div style="color: var(--gray-500); font-style: italic;">Waiting to generate description</div>
                         </div>
                         <div class="describer-actions">
                             <button id="copy" class="describer-btn describer-btn-primary">Copy</button>
-                            <button id="reset" class="describer-btn describer-btn-secondary">Reset</button>
+                            <button id="generate" class="describer-btn describer-btn-secondary">Generate</button>
                         </div>
                     </div>
                 </div>
@@ -128,25 +115,18 @@
         }
 
         var file = document.getElementById('file');
-        var fileButton = document.getElementById('fileButton');
-        var fileText = document.getElementById('fileText');
         var img = document.getElementById('preview');
         var placeholder = document.getElementById('placeholder');
         var desc = document.getElementById('desc');
         var canvas = document.getElementById('canvas');
         var copyBtn = document.getElementById('copy');
-        var resetBtn = document.getElementById('reset');
+        var generateBtn = document.getElementById('generate');
+        var previewBox = document.querySelector('.describer-preview');
+        var pendingGenerate = false;
 
-        // 文件输入按钮交互
-        if (file && fileButton && fileText) {
-            fileButton.addEventListener('click', function() {
+        if (previewBox && file) {
+            previewBox.addEventListener('click', function() {
                 file.click();
-            });
-
-            file.addEventListener('change', function(e) {
-                var fileName = e.target.files[0]?.name || 'Choose File';
-                fileText.textContent = fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName;
-                fileButton.classList.toggle('has-file', e.target.files.length > 0);
             });
         }
 
@@ -256,12 +236,8 @@
             return parts.join(' ');
         }
 
-        function reset() {
-            img.style.display = 'none';
-            img.removeAttribute('src');
-            placeholder.style.display = 'block';
-            desc.textContent = '';
-            file.value = '';
+        function setWaiting() {
+            desc.textContent = 'Waiting to generate description';
         }
 
         function toResizedDataUrl(file, maxSide, cb) {
@@ -312,16 +288,10 @@
                 img.onload = function(){
                     placeholder.style.display = 'none';
                     img.style.display = 'block';
-                    desc.textContent = 'Generating description…';
-                    toResizedDataUrl(f, 1024, async function(dataUrl) {
-                        var serverDesc = await describeViaAPI(dataUrl);
-                        if (serverDesc) {
-                            desc.textContent = serverDesc;
-                        } else {
-                            var local = analyze(img);
-                            desc.textContent = local;
-                        }
-                    });
+                    setWaiting();
+                    if (pendingGenerate) {
+                        startGenerate(f);
+                    }
                 };
             };
             reader.readAsDataURL(f);
@@ -333,9 +303,29 @@
             navigator.clipboard && navigator.clipboard.writeText(text).then(function(){}, function(){})
         });
 
-        resetBtn.addEventListener('click', function(){
-            reset();
+        generateBtn.addEventListener('click', function(){
+            var f = file.files && file.files[0];
+            if (!f) {
+                pendingGenerate = true;
+                file.click();
+                return;
+            }
+            startGenerate(f);
         });
+
+        function startGenerate(f) {
+            pendingGenerate = false;
+            desc.textContent = 'Generating description…';
+            toResizedDataUrl(f, 1024, async function(dataUrl) {
+                var serverDesc = await describeViaAPI(dataUrl);
+                if (serverDesc) {
+                    desc.textContent = serverDesc;
+                } else {
+                    var local = analyze(img);
+                    desc.textContent = local;
+                }
+            });
+        }
     });
     </script>
 </body>

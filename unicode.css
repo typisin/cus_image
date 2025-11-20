@@ -24,13 +24,34 @@
 }
 
 .tool-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
+}
+
+.tool-columns {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: var(--space-8);
+  align-items: flex-start;
+  margin-bottom: var(--space-8);
 }
 
 /* Upload Section */
 .upload-section {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Controls Section */
+.controls-section {
+  flex: 2;
+  min-width: 0;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
   margin-bottom: var(--space-8);
+  box-shadow: var(--shadow-sm);
 }
 
 .upload-area {
@@ -99,15 +120,7 @@
   box-shadow: var(--shadow-md);
 }
 
-/* Controls Section */
-.controls-section {
-  background: var(--white);
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius-xl);
-  padding: var(--space-8);
-  margin-bottom: var(--space-8);
-  box-shadow: var(--shadow-sm);
-}
+/* Controls Section - Controls are styled in the main layout section above */
 
 .control-group {
   display: flex;
@@ -322,6 +335,15 @@
   
   .tool-container {
     padding: 0 var(--space-4);
+  }
+  
+  .tool-columns {
+    flex-direction: column-reverse;
+  }
+  
+  .upload-section,
+  .controls-section {
+    width: 100%;
   }
   
   .upload-area {

@@ -7,6 +7,11 @@ class AICutout {
         this.token = '';
         this.selectedFile = null;
         this.fileId = null;
+        this.cutoutBlobUrl = null;
+        this.cutoutBlob = null;
+        this.uploadSection = null;
+        this.uploadSectionParent = null;
+        this.uploadSectionNextSibling = null;
         
         console.log('AICutout constructor called');
         
@@ -28,17 +33,10 @@ class AICutout {
         const resetBtn = document.getElementById('resetBtn');
         const downloadBtn = document.getElementById('downloadBtn');
         const tokenInput = document.getElementById('tokenInput');
-        const saveTokenBtn = document.getElementById('saveTokenBtn');
-        const doUploadBtn = document.getElementById('doUploadBtn');
-        const doCutoutBtn = document.getElementById('doCutoutBtn');
-        const cutoutBtnInResults = document.getElementById('cutoutBtnInResults');
+        const removeBackgroundBtn = document.getElementById('removeBackgroundBtn');
 
         // Debug: Check if buttons exist
-        console.log('Upload button found:', doUploadBtn);
-        console.log('Cutout button found:', doCutoutBtn);
-        console.log('Cutout button in results found:', cutoutBtnInResults);
-        console.log('Cutout button initial classes:', doCutoutBtn ? doCutoutBtn.className : 'null');
-        console.log('Cutout button initial style:', doCutoutBtn ? doCutoutBtn.style.display : 'null');
+        console.log('Remove Background button found:', removeBackgroundBtn);
 
         // File input change
         imageInput.addEventListener('change', (e) => this.handleFileSelect(e));
@@ -50,67 +48,52 @@ class AICutout {
 
         // Button events
         if (resetBtn) resetBtn.addEventListener('click', () => this.reset());
-        if (saveTokenBtn) {
-            saveTokenBtn.addEventListener('click', () => {
-                this.token = tokenInput && tokenInput.value ? tokenInput.value.trim() : '';
-                console.log('Token saved:', this.token ? 'present' : 'missing');
-            });
-        }
-        if (doUploadBtn) {
-            doUploadBtn.addEventListener('click', async () => {
+        if (downloadBtn) downloadBtn.addEventListener('click', () => this.downloadResult());
+        if (removeBackgroundBtn) {
+            removeBackgroundBtn.addEventListener('click', async () => {
                 if (!this.selectedFile) {
                     alert('Please select a file first');
                     return;
                 }
+                
                 try {
+                    // Disable button and show loading state
+                    removeBackgroundBtn.disabled = true;
+                    removeBackgroundBtn.textContent = 'Processing...';
+                    
+                    // Detach upload section and show loading
+                    this.detachUploadSection();
+                    this.showResults(true);
+                    this.showCutoutLoading(true);
+                    
+                    // Hide the placeholder and show the actual image container
+                    this.showCutoutLoadingPlaceholder(false);
+                    
+                    // Upload file
+                    console.log('Uploading file...');
                     const fileId = await this.uploadToServer(this.selectedFile);
                     console.log('File uploaded, ID:', fileId);
-                    
-                    // Store fileId for cutout process
                     this.fileId = fileId;
-                    this.showUploadResult(fileId);
                     
-                    // Show cutout button and hide upload button
-                    console.log('Showing cutout button, hiding upload button');
-                    console.log('Upload button element:', doUploadBtn);
-                    console.log('Cutout button element:', doCutoutBtn);
+                    // Immediately start cutout process
+                    console.log('Starting background removal...');
+                    const workflowResult = await this.runWorkflow(this.fileId);
                     
-                    // Force button visibility check
-                    console.log('Before visibility change:');
-                    if (doUploadBtn) {
-                        console.log('Upload button display:', window.getComputedStyle(doUploadBtn).display);
-                        console.log('Upload button classes:', doUploadBtn.className);
-                    }
-                    if (doCutoutBtn) {
-                        console.log('Cutout button display:', window.getComputedStyle(doCutoutBtn).display);
-                        console.log('Cutout button classes:', doCutoutBtn.className);
-                    }
+                    // Process and display results
+                    await this.processCutoutResult(workflowResult);
                     
-                    if (doUploadBtn) {
-                        doUploadBtn.classList.add('hidden');
-                        doUploadBtn.classList.remove('visible');
-                        console.log('Upload button hidden - new classes:', doUploadBtn.className);
-                    }
-                    if (doCutoutBtn) {
-                        doCutoutBtn.classList.remove('hidden');
-                        doCutoutBtn.classList.add('visible');
-                        console.log('Cutout button shown - new classes:', doCutoutBtn.className);
-                        console.log('Cutout button new display:', window.getComputedStyle(doCutoutBtn).display);
-                    }
+                    // Hide loading state and reset button
+                    this.showCutoutLoading(false);
+                    removeBackgroundBtn.disabled = false;
+                    removeBackgroundBtn.textContent = 'Remove Background';
+                    
                 } catch (err) {
-                    console.error(err);
-                    alert('Upload failed. Please retry.');
+                    console.error('Background removal failed:', err);
+                    this.showCutoutLoading(false);
+                    removeBackgroundBtn.disabled = false;
+                    removeBackgroundBtn.textContent = 'Remove Background';
+                    alert('Background removal failed. Please try again.');
                 }
-            });
-        }
-        if (doCutoutBtn) {
-            doCutoutBtn.addEventListener('click', async () => {
-                await this.handleCutoutClick();
-            });
-        }
-        if (cutoutBtnInResults) {
-            cutoutBtnInResults.addEventListener('click', async () => {
-                await this.handleCutoutClick();
             });
         }
 
@@ -141,6 +124,32 @@ class AICutout {
             console.error(err);
             this.showCutoutLoading(false);
             alert('Cutout failed. Please retry.');
+        }
+    }
+
+    showUploadArea(show) {
+        const uploadArea = document.getElementById('uploadArea');
+        const uploadSection = document.querySelector('.upload-section');
+        const removeBackgroundBtn = document.getElementById('removeBackgroundBtn');
+        
+        if (uploadArea) uploadArea.style.display = show ? 'block' : 'none';
+        if (uploadSection) uploadSection.style.display = show ? 'block' : 'none';
+        
+        // When hiding upload area, also hide the Remove Background button
+        if (!show && removeBackgroundBtn) {
+            removeBackgroundBtn.style.display = 'none';
+        }
+    }
+
+    showResults(show) {
+        const resultsSection = document.getElementById('resultsSection');
+        const removeBackgroundBtn = document.getElementById('removeBackgroundBtn');
+        
+        if (resultsSection) resultsSection.style.display = show ? 'block' : 'none';
+        
+        // Show/hide the Remove Background button when results are shown/hidden
+        if (removeBackgroundBtn) {
+            removeBackgroundBtn.style.display = show ? 'inline-block' : 'none';
         }
     }
 
@@ -207,6 +216,129 @@ class AICutout {
             URL.revokeObjectURL(this.originalImage);
         }
         this.originalImage = URL.createObjectURL(file);
+        
+        // Switch to file-selected state: hide upload content, show centered button
+        this.showFileSelectedState();
+        
+        // Show original image immediately in results section
+        this.showOriginalImageImmediately();
+    }
+    
+    showFileSelectedState() {
+        const uploadContent = document.querySelector('.upload-content');
+        const uploadArea = document.getElementById('uploadArea');
+        
+        if (!uploadContent || !uploadArea) return;
+        
+        // Add file-selected class to upload area for CSS-based styling
+        uploadArea.classList.add('file-selected');
+        
+        // Don't show the Remove Background button here anymore
+        // It will be shown when results are displayed
+    }
+    
+    showFilePreview() {
+        // Create and show image preview in upload area
+        const uploadContent = document.querySelector('.upload-content');
+        if (!uploadContent) return;
+        
+        // Remove existing preview if any
+        const existingPreview = uploadContent.querySelector('.file-preview');
+        if (existingPreview) {
+            existingPreview.remove();
+        }
+        
+        // Create preview element
+        const previewDiv = document.createElement('div');
+        previewDiv.className = 'file-preview';
+        previewDiv.innerHTML = `
+            <div class="preview-image-container">
+                <img src="${this.originalImage}" alt="Selected image preview" class="preview-image">
+            </div>
+            <div class="file-info">
+                <p class="file-name">${this.selectedFile.name}</p>
+                <p class="file-size">${this.formatFileSize(this.selectedFile.size)}</p>
+            </div>
+        `;
+        
+        // Insert preview after upload title
+        const uploadTitle = uploadContent.querySelector('.upload-title');
+        if (uploadTitle) {
+            uploadTitle.parentNode.insertBefore(previewDiv, uploadTitle.nextSibling);
+        }
+    }
+    
+    showRemoveBackgroundButton(show) {
+        const removeBtn = document.getElementById('removeBackgroundBtn');
+        if (removeBtn) {
+            removeBtn.style.display = show ? 'inline-block' : 'none';
+            if (show) {
+                removeBtn.classList.add('visible');
+            }
+        }
+    }
+    
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    showOriginalImageImmediately() {
+        // Detach upload section and show results immediately after upload
+        this.detachUploadSection();
+        this.showResults(true);
+        
+        // Display original image in the results section
+        const originalPreview = document.getElementById('originalImagePreview');
+        if (originalPreview && this.originalImage) {
+            originalPreview.src = this.originalImage;
+        }
+        
+        // Hide the cutout result initially and show loading placeholder
+        const cutoutPreview = document.getElementById('cutoutImagePreview');
+        if (cutoutPreview) {
+            cutoutPreview.style.display = 'none';
+            // Show loading placeholder
+            this.showCutoutLoadingPlaceholder(true);
+        }
+        
+        // Hide download button initially
+        const downloadBtn = document.getElementById('downloadBtn');
+        if (downloadBtn) {
+            downloadBtn.style.display = 'none';
+        }
+    }
+    
+    showCutoutLoadingPlaceholder(show) {
+        const cutoutPreview = document.getElementById('cutoutImagePreview');
+        const container = cutoutPreview?.parentElement;
+        
+        if (!container) return;
+        
+        // Remove existing placeholder
+        const existingPlaceholder = container.querySelector('.loading-placeholder');
+        if (existingPlaceholder) {
+            existingPlaceholder.remove();
+        }
+        
+        if (show) {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'loading-placeholder';
+            placeholder.innerHTML = `
+                <div class="placeholder-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                        <rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M8 13l3-3 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="8" cy="9" r="1.5" fill="currentColor"/>
+                    </svg>
+                </div>
+                <p>Ready for AI cutout processing</p>
+            `;
+            container.appendChild(placeholder);
+        }
     }
 
     displayOriginalImage() {
@@ -215,7 +347,29 @@ class AICutout {
         
         // Show results section
         document.getElementById('resultsSection').style.display = 'block';
-        document.getElementById('uploadArea').style.display = 'none';
+        this.detachUploadSection();
+    }
+
+    detachUploadSection() {
+        if (this.uploadSection) return;
+        const section = document.querySelector('.upload-section');
+        if (!section) return;
+        this.uploadSection = section;
+        this.uploadSectionParent = section.parentNode;
+        this.uploadSectionNextSibling = section.nextSibling;
+        this.uploadSection.remove();
+    }
+
+    restoreUploadSection() {
+        if (!this.uploadSection || !this.uploadSectionParent) return;
+        if (this.uploadSectionNextSibling) {
+            this.uploadSectionParent.insertBefore(this.uploadSection, this.uploadSectionNextSibling);
+        } else {
+            this.uploadSectionParent.appendChild(this.uploadSection);
+        }
+        this.uploadSection = null;
+        this.uploadSectionParent = null;
+        this.uploadSectionNextSibling = null;
     }
 
     // simplified flow: no workflow run
@@ -338,13 +492,7 @@ class AICutout {
     async processCutoutResult(workflowResult) {
         console.log('Processing cutout result:', workflowResult);
         
-        // Show the cutout results grid
-        const cutoutResults = document.getElementById('cutoutResults');
-        if (cutoutResults) {
-            cutoutResults.style.display = 'grid';
-        }
-        
-        // Display original image
+        // Display original image immediately (already shown after upload)
         const originalPreview = document.getElementById('originalImagePreview');
         if (originalPreview && this.originalImage) {
             originalPreview.src = this.originalImage;
@@ -377,10 +525,35 @@ class AICutout {
         if (cutoutPreview) {
             if (cutoutImageUrl) {
                 cutoutPreview.src = cutoutImageUrl;
-                this.cutoutImage = cutoutImageUrl; // Store for download
+                this.cutoutImage = cutoutImageUrl;
                 console.log('Displaying cutout image:', cutoutImageUrl);
+                
+                // **IMPORTANT: Make the image visible!**
+                cutoutPreview.style.display = 'block';
+                
+                // Hide the loading overlay and placeholder
+                this.showCutoutLoading(false);
+                const container = cutoutPreview.parentElement;
+                const existingPlaceholder = container.querySelector('.loading-placeholder');
+                if (existingPlaceholder) {
+                    existingPlaceholder.style.display = 'none';
+                }
+                
+                // Show download button
+                const downloadBtn = document.getElementById('downloadBtn');
+                if (downloadBtn) {
+                    downloadBtn.style.display = 'inline-flex';
+                }
+
+                fetch(cutoutImageUrl, { mode: 'cors' })
+                    .then(res => res.blob())
+                    .then(blob => {
+                        if (this.cutoutBlobUrl) URL.revokeObjectURL(this.cutoutBlobUrl);
+                        this.cutoutBlobUrl = URL.createObjectURL(blob);
+                        this.cutoutBlob = blob;
+                    })
+                    .catch(() => {});
             } else {
-                // Show placeholder if no image URL found
                 cutoutPreview.style.display = 'none';
                 const container = cutoutPreview.parentElement;
                 const placeholder = document.createElement('div');
@@ -425,10 +598,31 @@ class AICutout {
         // Reset to initial state
         const section = document.getElementById('uploadResultSection')
         if (section) section.style.display = 'none'
-        document.getElementById('uploadArea').style.display = 'block';
+        // Restore upload section back to DOM
+        this.restoreUploadSection();
+        const uploadArea = document.getElementById('uploadArea');
+        if (uploadArea) {
+            uploadArea.style.display = 'block';
+            uploadArea.classList.remove('file-selected'); // Remove file-selected class
+        }
         document.getElementById('imageInput').value = '';
         
-        // Reset buttons
+        // Hide Remove Background button (now in new position)
+        const removeBtn = document.getElementById('removeBackgroundBtn');
+        if (removeBtn) {
+            removeBtn.style.display = 'none';
+        }
+        
+        // Remove file preview
+        const uploadContent = document.querySelector('.upload-content');
+        if (uploadContent) {
+            const existingPreview = uploadContent.querySelector('.file-preview');
+            if (existingPreview) {
+                existingPreview.remove();
+            }
+        }
+        
+        // Reset buttons (legacy cleanup)
         const uploadBtn = document.getElementById('doUploadBtn');
         const cutoutBtn = document.getElementById('doCutoutBtn');
         if (uploadBtn) {
@@ -445,6 +639,9 @@ class AICutout {
             URL.revokeObjectURL(this.originalImage);
         }
         this.originalImage = null;
+        if (this.cutoutBlobUrl) URL.revokeObjectURL(this.cutoutBlobUrl);
+        this.cutoutBlobUrl = null;
+        this.cutoutBlob = null;
         this.cutoutImage = null;
         this.selectedFile = null;
         this.fileId = null;
@@ -457,6 +654,10 @@ class AICutout {
         // Hide cutout results
         const cutoutResults = document.getElementById('cutoutResults')
         if (cutoutResults) cutoutResults.style.display = 'none'
+        
+        // Hide download button
+        const downloadBtn = document.getElementById('downloadBtn')
+        if (downloadBtn) downloadBtn.style.display = 'none'
         
         // Reset image previews
         const originalPreview = document.getElementById('originalImagePreview')
@@ -483,10 +684,76 @@ class AICutout {
             return;
         }
 
-        const link = document.createElement('a');
-        link.download = `ai-cutout-${Date.now()}.png`;
-        link.href = this.cutoutImage;
-        link.click();
+        const filename = `ai-cutout-${Date.now()}.png`;
+        if (window.showSaveFilePicker) {
+            (async () => {
+                try {
+                    const blob = this.cutoutBlob || (await (await fetch(this.cutoutImage, { mode: 'cors' })).blob());
+                    const handle = await window.showSaveFilePicker({
+                        suggestedName: filename,
+                        types: [{ description: 'PNG Image', accept: { 'image/png': ['.png'] } }]
+                    });
+                    const writable = await handle.createWritable();
+                    await writable.write(blob);
+                    await writable.close();
+                    this.showToast('Download complete');
+                } catch (e) {
+                    const a = document.createElement('a');
+                    const url = this.cutoutBlobUrl || this.cutoutImage;
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }
+            })();
+            return;
+        }
+        if (this.cutoutBlobUrl) {
+            const a = document.createElement('a');
+            a.href = this.cutoutBlobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            return;
+        }
+        fetch(this.cutoutImage, { mode: 'cors' })
+            .then(res => res.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            })
+            .catch(() => {
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = this.cutoutImage;
+                link.click();
+            });
+    }
+
+    showToast(message) {
+        let toast = document.getElementById('toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = 'toast';
+            toast.setAttribute('role', 'status');
+            toast.setAttribute('aria-live', 'polite');
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(this._toastTimer);
+        this._toastTimer = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2000);
     }
 }
 

@@ -103,6 +103,15 @@ class ImageToUnicodeConverter {
     if (!this.currentImage) return;
     const el = document.getElementById('imagePreview');
     el.src = this.currentImage.src;
+    
+    // 显示图片信息
+    const infoEl = document.getElementById('imageInfo');
+    const ratioEl = document.getElementById('aspectRatioDisplay');
+    if (infoEl && ratioEl) {
+      const ratio = (this.currentImage.width / this.currentImage.height).toFixed(2);
+      ratioEl.textContent = `${this.currentImage.width}×${this.currentImage.height} (Ratio: ${ratio}:1)`;
+      infoEl.style.display = 'block';
+    }
   }
   
   updateDensityDisplay(e) {
@@ -117,8 +126,15 @@ class ImageToUnicodeConverter {
     if (!this.currentImage) return;
     
     const outputWidth = parseInt(document.getElementById('widthSlider').value);
-    const aspectRatio = this.currentImage.height / this.currentImage.width;
-    const outputHeight = Math.floor(outputWidth * aspectRatio);
+    
+    // 关键：考虑字符的宽高比例
+    // 等宽字符的宽度大约是高度的0.6倍，所以需要调整高度计算
+    const charAspectRatio = 0.6; // 字符宽度与高度的比例
+    const imageAspectRatio = this.currentImage.height / this.currentImage.width;
+    
+    // 调整输出高度以保持视觉上的正确比例
+    const adjustedAspectRatio = imageAspectRatio / charAspectRatio;
+    const outputHeight = Math.floor(outputWidth * adjustedAspectRatio);
     
     // 获取字符集
     const charsetSelect = document.getElementById('charsetSelect');
@@ -145,6 +161,14 @@ class ImageToUnicodeConverter {
     const pane = document.getElementById('unicodePane');
     
     out.textContent = asciiArt;
+    
+    // 更新Unicode输出信息
+    const lines = asciiArt.split('\n');
+    const maxLen = Math.max(...lines.map(l => l.length));
+    const outputInfo = document.getElementById('outputInfo');
+    if (outputInfo) {
+      outputInfo.textContent = `Output: ${maxLen}×${lines.length} characters`;
+    }
     
     // 动态调整高度确保内容完全可见
     this.adjustContainerHeight(asciiArt, out, pane);
@@ -195,9 +219,9 @@ class ImageToUnicodeConverter {
     const paneWidth = pane.clientWidth - 32; // 减去padding
     const paneHeight = pane.clientHeight - 80; // 减去header高度
     const lineHeightFactor = 1.1;
-    const charWidthFactor = 0.6;
+    const charWidthFactor = 0.6; // 字符宽高比例因子
     
-    // 计算合适的字体大小
+    // 计算合适的字体大小，考虑字符宽高比例
     const fsV = Math.max(6, Math.floor(paneHeight / (linesCount * lineHeightFactor)));
     const fsH = Math.max(6, Math.floor(paneWidth / (Math.max(1, maxLen) * charWidthFactor)));
     const fontSize = Math.max(6, Math.min(fsV, fsH, 20));
@@ -205,10 +229,11 @@ class ImageToUnicodeConverter {
     out.style.fontSize = fontSize + 'px';
     out.style.lineHeight = lineHeightFactor;
     
-    // 确保内容完全可见
+    // 确保内容完全可见并维持比例
     out.style.whiteSpace = 'pre';
     out.style.overflow = 'visible';
     out.style.wordBreak = 'break-all';
+    out.style.letterSpacing = '0px'; // 确保字符间距一致
   }
   
   imageDataToAscii(imageData, charset) {

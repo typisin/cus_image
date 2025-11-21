@@ -32,14 +32,16 @@
   display: flex;
   flex-direction: row-reverse;
   gap: var(--space-8);
-  align-items: flex-start;
+  align-items: stretch; /* 改为stretch确保等高 */
   margin-bottom: var(--space-8);
+  min-height: 600px; /* 设置最小高度 */
 }
 
 /* Upload Section */
 .upload-section {
   flex: 3;
   min-width: 0;
+  align-self: stretch; /* 确保高度撑满 */
 }
 
 #uploadArea .empty-state { display: block; }
@@ -60,6 +62,7 @@
   gap: var(--space-6);
   margin-top: var(--space-6);
   max-width: 100%;
+  min-height: 500px; /* 确保网格有足够高度 */
 }
 
 .content-pane {
@@ -68,10 +71,12 @@
   border-radius: var(--radius-xl);
   padding: var(--space-5);
   box-shadow: var(--shadow-sm);
-  min-height: 280px;
+  min-height: 500px; /* 增加最小高度 */
   box-sizing: border-box;
   max-width: 100%;
-  overflow: hidden;
+  overflow: visible; /* 改为可见，允许内容扩展 */
+  display: flex;
+  flex-direction: column;
 }
 
 .image-preview {
@@ -87,10 +92,13 @@
   margin-bottom: var(--space-4);
 }
 
-.#unicodePane {}
-#unicodePane {
+.#unicodePane {
   display: flex;
   flex-direction: column;
+  height: 100%; /* 确保容器撑满高度 */
+  min-height: 400px; /* 设置最小高度 */
+  max-height: none; /* 移除最大高度限制 */
+  overflow: visible; /* 允许内容溢出 */
 }
 
 #unicodePane .output-header {
@@ -107,12 +115,18 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 12px;
   line-height: 1.1;
-  overflow-y: auto;
+  overflow-y: visible; /* 改为可见 */
   overflow-x: auto;
-  max-height: 480px;
+  max-height: none; /* 移除高度限制 */
+  min-height: 400px; /* 设置最小高度 */
   color: var(--gray-900);
   max-width: 100%;
   flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+  word-break: break-all; /* 允许字符换行 */
+  word-wrap: break-word; /* 确保长文本换行 */
+  display: block; /* 确保是块级元素 */
 }
 
 /* Controls Section */
@@ -129,6 +143,7 @@
   grid-template-columns: 1fr;
   gap: var(--space-4);
   overflow: hidden;
+  align-self: flex-start; /* 防止控件区域过高 */
 }
 
 .upload-area {

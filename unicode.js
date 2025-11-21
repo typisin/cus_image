@@ -136,11 +136,18 @@ class ImageToUnicodeConverter {
     // 获取图像数据
     const imageData = tempCtx.getImageData(0, 0, outputWidth, outputHeight);
     
-    // 转换为ASCII/Unicode艺术
+    // 转换为ASCII
     const asciiArt = this.imageDataToAscii(imageData, charset);
     this.lastAscii = asciiArt;
+    
+    // 显示结果并优化高度
     const out = document.getElementById('unicodeOutput');
+    const pane = document.getElementById('unicodePane');
+    
     out.textContent = asciiArt;
+    
+    // 动态调整高度确保内容完全可见
+    this.adjustContainerHeight(asciiArt, out, pane);
     this.fitAsciiToPane();
   }
 
@@ -152,23 +159,56 @@ class ImageToUnicodeConverter {
     area.style.setProperty('--pane-h', paneH + 'px');
   }
 
+  adjustContainerHeight(asciiText, outputElement, paneElement) {
+    if (!outputElement || !paneElement) return;
+    
+    const lines = asciiText.split('\n');
+    const lineCount = lines.length;
+    const maxChars = Math.max(...lines.map(line => line.length));
+    
+    // 计算所需的最小高度（基于字符大小和行数）
+    const baseFontSize = 12;
+    const lineHeight = 1.1;
+    const charHeight = baseFontSize * lineHeight;
+    const minHeight = Math.max(400, lineCount * charHeight + 120); // 加上header和padding
+    
+    // 设置最小高度
+    paneElement.style.minHeight = minHeight + 'px';
+    outputElement.style.minHeight = (lineCount * charHeight + 20) + 'px';
+    
+    // 确保父容器也适应
+    const contentPane = paneElement.closest('.content-pane');
+    if (contentPane) {
+      contentPane.style.minHeight = (minHeight + 40) + 'px';
+    }
+  }
+  
   fitAsciiToPane() {
     const out = document.getElementById('unicodeOutput');
     const pane = document.getElementById('unicodePane');
     if (!out || !pane || !this.lastAscii) return;
+    
     const text = this.lastAscii;
     const lines = text.split('\n');
     const linesCount = Math.max(1, lines.length);
     const maxLen = Math.max(...lines.map(l => l.length));
-    const paneWidth = pane.clientWidth;
-    const paneHeight = pane.clientHeight;
+    const paneWidth = pane.clientWidth - 32; // 减去padding
+    const paneHeight = pane.clientHeight - 80; // 减去header高度
     const lineHeightFactor = 1.1;
     const charWidthFactor = 0.6;
-    const fsV = Math.max(8, Math.floor(paneHeight / (linesCount * lineHeightFactor)));
-    const fsH = Math.max(8, Math.floor(paneWidth / (Math.max(1, maxLen) * charWidthFactor)));
-    const fontSize = Math.max(8, Math.min(fsV, fsH, 24));
+    
+    // 计算合适的字体大小
+    const fsV = Math.max(6, Math.floor(paneHeight / (linesCount * lineHeightFactor)));
+    const fsH = Math.max(6, Math.floor(paneWidth / (Math.max(1, maxLen) * charWidthFactor)));
+    const fontSize = Math.max(6, Math.min(fsV, fsH, 20));
+    
     out.style.fontSize = fontSize + 'px';
     out.style.lineHeight = lineHeightFactor;
+    
+    // 确保内容完全可见
+    out.style.whiteSpace = 'pre';
+    out.style.overflow = 'visible';
+    out.style.wordBreak = 'break-all';
   }
   
   imageDataToAscii(imageData, charset) {

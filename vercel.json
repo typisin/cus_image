@@ -1,6 +1,11 @@
 {
-
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" }
-  ]
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/image-describer", "destination": "/image-describer.html" },
+    { "source": "/ai-cutout", "destination": "/ai-cutout.html" },
+    { "source": "/turn-images-into-unicode", "destination": "/turn-images-into-unicode.html" },
+    { "source": "/", "destination": "/index.html" }
+  ],
+  "trailingSlash": false,
+  "cleanUrls": true
 }

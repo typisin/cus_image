@@ -1,5 +1,5 @@
 /**
- * Image to Unicode Converter
+ * Turn Images into Unicode Converter
  * Converts images to ASCII/Unicode art with customizable settings
  */
 

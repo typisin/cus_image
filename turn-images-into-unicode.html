@@ -54,17 +54,33 @@
                 <div class="tool-columns">
                     <div class="upload-section">
                     <div class="upload-area" id="uploadArea">
-                        <div class="upload-icon">
-                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
-                                <path d="M12 2L12 22M2 12L22 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
-                            </svg>
+                        <div class="empty-state">
+                            <div class="upload-icon">
+                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 2L12 22M2 12L22 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+                                </svg>
+                            </div>
+                            <h3 class="upload-title">Upload Image for Unicode Conversion</h3>
+                            <p class="upload-text">Click or drag image here to convert into Unicode art</p>
+                            <p class="upload-hint">Supports JPG, PNG, GIF formats</p>
+                            <input type="file" id="fileInput" accept="image/*" hidden>
+                            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">Select Image</button>
                         </div>
-                        <h3 class="upload-title">Upload Image for Unicode Conversion</h3>
-                        <p class="upload-text">Click or drag image here to convert into Unicode art</p>
-                        <p class="upload-hint">Supports JPG, PNG, GIF formats</p>
-                        <input type="file" id="fileInput" accept="image/*" hidden>
-                        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">Select Image</button>
+                        <div class="result-state">
+                            <div class="content-grid" id="contentGrid">
+                                <div class="content-pane" id="imagePane">
+                                    <img id="imagePreview" class="image-preview" alt="Image preview"/>
+                                </div>
+                                <div class="content-pane" id="unicodePane">
+                                    <div class="output-header">
+                                        <h4 class="output-title">Unicode Output</h4>
+                                        <button id="downloadBtn" class="action-btn small">Download Text</button>
+                                    </div>
+                                    <pre id="unicodeOutput" class="unicode-output"></pre>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -92,20 +108,7 @@
                 </div>
                 </div>
 
-                <div class="result-section" id="resultSection" style="display: none;">
-                    <div class="result-header">
-                        <h3 class="result-title">Conversion Preview</h3>
-                        <div class="result-actions">
-                            <button id="downloadBtn" class="action-btn">Download</button>
-                        </div>
-                    </div>
-                    <div class="preview-section">
-                        <h4 class="preview-title">Preview</h4>
-                        <div class="preview-container">
-                            <canvas id="previewCanvas" class="preview-canvas"></canvas>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </main>

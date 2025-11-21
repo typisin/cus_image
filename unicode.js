@@ -6,6 +6,7 @@
 class ImageToUnicodeConverter {
   constructor() {
     this.currentImage = null;
+    this.lastAscii = '';
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d');
     
@@ -18,6 +19,7 @@ class ImageToUnicodeConverter {
     };
     
     this.initializeEventListeners();
+    this.initializePaneHeights();
   }
   
   initializeEventListeners() {
@@ -42,6 +44,11 @@ class ImageToUnicodeConverter {
     convertBtn.addEventListener('click', () => this.convertImage());
     
     downloadBtn.addEventListener('click', () => this.downloadResult());
+
+    window.addEventListener('resize', () => {
+      this.initializePaneHeights();
+      if (this.lastAscii) this.fitAsciiToPane();
+    });
   }
   
   handleDragOver(e) {
@@ -84,10 +91,8 @@ class ImageToUnicodeConverter {
         this.currentImage = img;
         this.updatePreview();
         document.getElementById('convertBtn').disabled = false;
-        const uploadSection = document.querySelector('.upload-section');
-        if (uploadSection) uploadSection.style.display = 'none';
-        const resultSection = document.getElementById('resultSection');
-        if (resultSection) resultSection.style.display = 'block';
+        const area = document.getElementById('uploadArea');
+        area && area.classList.add('has-image');
       };
       img.src = e.target.result;
     };
@@ -96,17 +101,8 @@ class ImageToUnicodeConverter {
   
   updatePreview() {
     if (!this.currentImage) return;
-    
-    const canvas = document.getElementById('previewCanvas');
-    const ctx = canvas.getContext('2d');
-    
-    // Set canvas size for preview
-    const maxSize = 300;
-    const scale = Math.min(maxSize / this.currentImage.width, maxSize / this.currentImage.height);
-    canvas.width = this.currentImage.width * scale;
-    canvas.height = this.currentImage.height * scale;
-    
-    ctx.drawImage(this.currentImage, 0, 0, canvas.width, canvas.height);
+    const el = document.getElementById('imagePreview');
+    el.src = this.currentImage.src;
   }
   
   updateDensityDisplay(e) {
@@ -119,16 +115,60 @@ class ImageToUnicodeConverter {
   
   convertImage() {
     if (!this.currentImage) return;
+    
     const outputWidth = parseInt(document.getElementById('widthSlider').value);
     const aspectRatio = this.currentImage.height / this.currentImage.width;
-    const canvas = document.getElementById('previewCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = outputWidth;
-    canvas.height = Math.floor(outputWidth * aspectRatio);
-    ctx.drawImage(this.currentImage, 0, 0, canvas.width, canvas.height);
-    const resultSection = document.getElementById('resultSection');
-    if (resultSection) resultSection.style.display = 'block';
-    resultSection.scrollIntoView({ behavior: 'smooth' });
+    const outputHeight = Math.floor(outputWidth * aspectRatio);
+    
+    // 获取字符集
+    const charsetSelect = document.getElementById('charsetSelect');
+    const charset = this.charSets[charsetSelect.value] || this.charSets.standard;
+    
+    // 创建临时canvas进行转换
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = outputWidth;
+    tempCanvas.height = outputHeight;
+    
+    // 绘制图片到临时canvas
+    tempCtx.drawImage(this.currentImage, 0, 0, outputWidth, outputHeight);
+    
+    // 获取图像数据
+    const imageData = tempCtx.getImageData(0, 0, outputWidth, outputHeight);
+    
+    // 转换为ASCII/Unicode艺术
+    const asciiArt = this.imageDataToAscii(imageData, charset);
+    this.lastAscii = asciiArt;
+    const out = document.getElementById('unicodeOutput');
+    out.textContent = asciiArt;
+    this.fitAsciiToPane();
+  }
+
+  initializePaneHeights() {
+    const area = document.getElementById('uploadArea');
+    if (!area) return;
+    const h = area.clientHeight || 600;
+    const paneH = Math.max(200, Math.floor(h / 2));
+    area.style.setProperty('--pane-h', paneH + 'px');
+  }
+
+  fitAsciiToPane() {
+    const out = document.getElementById('unicodeOutput');
+    const pane = document.getElementById('unicodePane');
+    if (!out || !pane || !this.lastAscii) return;
+    const text = this.lastAscii;
+    const lines = text.split('\n');
+    const linesCount = Math.max(1, lines.length);
+    const maxLen = Math.max(...lines.map(l => l.length));
+    const paneWidth = pane.clientWidth;
+    const paneHeight = pane.clientHeight;
+    const lineHeightFactor = 1.1;
+    const charWidthFactor = 0.6;
+    const fsV = Math.max(8, Math.floor(paneHeight / (linesCount * lineHeightFactor)));
+    const fsH = Math.max(8, Math.floor(paneWidth / (Math.max(1, maxLen) * charWidthFactor)));
+    const fontSize = Math.max(8, Math.min(fsV, fsH, 24));
+    out.style.fontSize = fontSize + 'px';
+    out.style.lineHeight = lineHeightFactor;
   }
   
   imageDataToAscii(imageData, charset) {
@@ -161,17 +201,16 @@ class ImageToUnicodeConverter {
   
   
   downloadResult() {
-    const canvas = document.getElementById('previewCanvas');
-    canvas.toBlob((blob) => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'unicode-conversion.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }, 'image/png');
+    const out = document.getElementById('unicodeOutput');
+    const blob = new Blob([out.textContent || ''], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'unicode.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 }
 

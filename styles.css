@@ -752,7 +752,7 @@ body {
 
 @media (max-width: 768px) {
   .describer-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(280px, 1fr) minmax(320px, 1fr);
     gap: var(--space-6);
   }
   

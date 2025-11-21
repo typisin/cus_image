@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image to Unicode Converter - Transform Images into Unicode Art | CusImage</title>
+    <meta name="description" content="Convert images into Unicode/ASCII art in the browser.">
+    <meta name="keywords" content="image to Unicode, ASCII art, text art, pixel art, web converter">
+    <title>Image to Unicode — ASCII Art Generator | CusImage</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+    <link rel="shortcut icon" href="/favicon.svg?v=2" type="image/svg+xml">
     <link rel="stylesheet" href="unicode.css">
+    <script src="favicon.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -89,20 +94,15 @@
 
                 <div class="result-section" id="resultSection" style="display: none;">
                     <div class="result-header">
-                        <h3 class="result-title">Unicode Conversion Result</h3>
+                        <h3 class="result-title">Conversion Preview</h3>
                         <div class="result-actions">
-                            <button id="copyBtn" class="action-btn">Copy</button>
                             <button id="downloadBtn" class="action-btn">Download</button>
                         </div>
-                    </div>
-                    <div class="result-content">
-                        <pre id="unicodeOutput" class="unicode-output"></pre>
                     </div>
                     <div class="preview-section">
                         <h4 class="preview-title">Preview</h4>
                         <div class="preview-container">
                             <canvas id="previewCanvas" class="preview-canvas"></canvas>
-                            <div id="unicodePreview" class="unicode-preview"></div>
                         </div>
                     </div>
                 </div>

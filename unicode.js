@@ -26,7 +26,6 @@ class ImageToUnicodeConverter {
     const densitySlider = document.getElementById('densitySlider');
     const widthSlider = document.getElementById('widthSlider');
     const convertBtn = document.getElementById('convertBtn');
-    const copyBtn = document.getElementById('copyBtn');
     const downloadBtn = document.getElementById('downloadBtn');
     
     // File input
@@ -42,8 +41,6 @@ class ImageToUnicodeConverter {
     widthSlider.addEventListener('input', (e) => this.updateWidthDisplay(e));
     convertBtn.addEventListener('click', () => this.convertImage());
     
-    // Result actions
-    copyBtn.addEventListener('click', () => this.copyResult());
     downloadBtn.addEventListener('click', () => this.downloadResult());
   }
   
@@ -87,6 +84,10 @@ class ImageToUnicodeConverter {
         this.currentImage = img;
         this.updatePreview();
         document.getElementById('convertBtn').disabled = false;
+        const uploadSection = document.querySelector('.upload-section');
+        if (uploadSection) uploadSection.style.display = 'none';
+        const resultSection = document.getElementById('resultSection');
+        if (resultSection) resultSection.style.display = 'block';
       };
       img.src = e.target.result;
     };
@@ -118,34 +119,16 @@ class ImageToUnicodeConverter {
   
   convertImage() {
     if (!this.currentImage) return;
-    
-    const density = parseFloat(document.getElementById('densitySlider').value);
     const outputWidth = parseInt(document.getElementById('widthSlider').value);
-    const charsetType = document.getElementById('charsetSelect').value;
-    const charset = this.charSets[charsetType];
-    
-    // Calculate dimensions
     const aspectRatio = this.currentImage.height / this.currentImage.width;
-    const outputHeight = Math.floor(outputWidth * aspectRatio * 0.5 * density); // 0.5 to account for character height
-    
-    // Set canvas size for processing
-    this.canvas.width = outputWidth;
-    this.canvas.height = outputHeight;
-    
-    // Draw and process image
-    this.ctx.drawImage(this.currentImage, 0, 0, outputWidth, outputHeight);
-    const imageData = this.ctx.getImageData(0, 0, outputWidth, outputHeight);
-    
-    // Convert to ASCII
-    const ascii = this.imageDataToAscii(imageData, charset);
-    
-    // Display result
-    document.getElementById('unicodeOutput').textContent = ascii;
-    document.getElementById('unicodePreview').textContent = ascii;
-    document.getElementById('resultSection').style.display = 'block';
-    
-    // Scroll to result
-    document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+    const canvas = document.getElementById('previewCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = outputWidth;
+    canvas.height = Math.floor(outputWidth * aspectRatio);
+    ctx.drawImage(this.currentImage, 0, 0, canvas.width, canvas.height);
+    const resultSection = document.getElementById('resultSection');
+    if (resultSection) resultSection.style.display = 'block';
+    resultSection.scrollIntoView({ behavior: 'smooth' });
   }
   
   imageDataToAscii(imageData, charset) {
@@ -175,54 +158,20 @@ class ImageToUnicodeConverter {
     return result;
   }
   
-  copyResult() {
-    const output = document.getElementById('unicodeOutput');
-    const text = output.textContent;
-    
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.getElementById('copyBtn');
-      const originalText = btn.textContent;
-      btn.textContent = '已复制!';
-      btn.style.background = 'var(--success)';
-      btn.style.color = 'white';
-      
-      setTimeout(() => {
-        btn.textContent = originalText;
-        btn.style.background = '';
-        btn.style.color = '';
-      }, 2000);
-    }).catch(() => {
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      
-      const btn = document.getElementById('copyBtn');
-      btn.textContent = '已复制!';
-      setTimeout(() => {
-        btn.textContent = '复制';
-      }, 2000);
-    });
-  }
+  
   
   downloadResult() {
-    const output = document.getElementById('unicodeOutput');
-    const text = output.textContent;
-    
-    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'unicode-art.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    
-    URL.revokeObjectURL(url);
+    const canvas = document.getElementById('previewCanvas');
+    canvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'unicode-conversion.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 'image/png');
   }
 }
 

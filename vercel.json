@@ -6,6 +6,10 @@
     { "source": "/turn-images-into-unicode", "destination": "/turn-images-into-unicode.html" },
     { "source": "/", "destination": "/index.html" }
   ],
+  "redirects": [
+    { "source": "/describer", "destination": "/image-describer", "permanent": true },
+    { "source": "/describer/", "destination": "/image-describer", "permanent": true }
+  ],
   "trailingSlash": false,
   "cleanUrls": true
 }

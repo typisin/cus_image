@@ -57,3 +57,7 @@
 
   try { if (!fromInlineSVG()) setIconFallback(); } catch(e) { setIconFallback(); }
 })();
+;(function(){
+  var h = location.hostname; var isLocal = /^(localhost|127\.0\.0\.1)$/.test(h);
+  if(!isLocal){ var s = document.createElement('script'); s.defer = true; s.src = '/_vercel/analytics/script.js'; document.head.appendChild(s); }
+})();

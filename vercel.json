@@ -3,12 +3,15 @@
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/image-describer", "destination": "/image-describer.html" },
     { "source": "/ai-cutout", "destination": "/ai-cutout.html" },
+    { "source": "/images-for-fb-cover", "destination": "/images-for-fb-cover.html" },
     { "source": "/turn-images-into-unicode", "destination": "/turn-images-into-unicode.html" },
     { "source": "/", "destination": "/index.html" }
   ],
   "redirects": [
     { "source": "/describer", "destination": "/image-describer", "permanent": true },
     { "source": "/describer/", "destination": "/image-describer", "permanent": true }
+    ,{ "source": "/unicode", "destination": "/turn-images-into-unicode", "permanent": true }
+    ,{ "source": "/unicode/", "destination": "/turn-images-into-unicode", "permanent": true }
   ],
   "trailingSlash": false,
   "cleanUrls": true

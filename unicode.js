@@ -103,15 +103,6 @@ class ImageToUnicodeConverter {
     if (!this.currentImage) return;
     const el = document.getElementById('imagePreview');
     el.src = this.currentImage.src;
-    
-    // 显示图片信息
-    const infoEl = document.getElementById('imageInfo');
-    const ratioEl = document.getElementById('aspectRatioDisplay');
-    if (infoEl && ratioEl) {
-      const ratio = (this.currentImage.width / this.currentImage.height).toFixed(2);
-      ratioEl.textContent = `${this.currentImage.width}×${this.currentImage.height} (Ratio: ${ratio}:1)`;
-      infoEl.style.display = 'block';
-    }
   }
   
   updateDensityDisplay(e) {
@@ -156,22 +147,31 @@ class ImageToUnicodeConverter {
     const asciiArt = this.imageDataToAscii(imageData, charset);
     this.lastAscii = asciiArt;
     
-    // 显示结果并优化高度
+    // 显示结果并设置与原图一致的显示尺寸
     const out = document.getElementById('unicodeOutput');
     const pane = document.getElementById('unicodePane');
     
     out.textContent = asciiArt;
     
-    // 更新Unicode输出信息
-    const lines = asciiArt.split('\n');
-    const maxLen = Math.max(...lines.map(l => l.length));
-    const outputInfo = document.getElementById('outputInfo');
-    if (outputInfo) {
-      outputInfo.textContent = `Output: ${maxLen}×${lines.length} characters`;
+    // 获取原图在页面中的实际展示尺寸
+    const imgEl = document.getElementById('imagePreview');
+    const w = imgEl ? imgEl.clientWidth : this.currentImage.width;
+    const h = imgEl ? imgEl.clientHeight : this.currentImage.height;
+
+    // 将unicode预览区域限制为与原图一致的宽高
+    if (pane) {
+      pane.style.width = w + 'px';
+      pane.style.height = h + 'px';
     }
-    
-    // 动态调整高度确保内容完全可见
-    this.adjustContainerHeight(asciiArt, out, pane);
+    if (out) {
+      out.style.width = w + 'px';
+      out.style.height = h + 'px';
+      out.style.maxWidth = w + 'px';
+      out.style.maxHeight = h + 'px';
+      out.style.overflow = 'auto';
+    }
+
+    // 根据限制后的空间自适配字号
     this.fitAsciiToPane();
   }
 
@@ -231,9 +231,9 @@ class ImageToUnicodeConverter {
     
     // 确保内容完全可见并维持比例
     out.style.whiteSpace = 'pre';
-    out.style.overflow = 'visible';
+    out.style.overflow = 'auto';
     out.style.wordBreak = 'break-all';
-    out.style.letterSpacing = '0px'; // 确保字符间距一致
+    out.style.letterSpacing = '0px';
   }
   
   imageDataToAscii(imageData, charset) {

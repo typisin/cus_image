@@ -14,6 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>(function(){var h=location.hostname;var isLocal=/^(localhost|127\.0\.0\.1)$/.test(h);if(!isLocal){var s=document.createElement('script');s.defer=true;s.src='/_vercel/insights/script.js';document.head.appendChild(s);}})();</script>
 </head>
 <body>
     <header class="header">
@@ -71,16 +72,12 @@
                             <div class="content-grid" id="contentGrid">
                                 <div class="content-pane" id="imagePane">
                                     <img id="imagePreview" class="image-preview" alt="Image preview"/>
-                                    <div class="image-info" id="imageInfo" style="display: none;">
-                                        <span id="aspectRatioDisplay"></span>
-                                    </div>
                                 </div>
                                 <div class="content-pane" id="unicodePane">
                                     <div class="output-header">
                                         <h4 class="output-title">Unicode Output</h4>
                                         <button id="downloadBtn" class="action-btn small">Download Text</button>
                                     </div>
-                                    <div class="output-info" id="outputInfo"></div>
                                     <pre id="unicodeOutput" class="unicode-output"></pre>
                                 </div>
                             </div>

@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Free AI Image Describer tool that automatically generates accurate descriptions, alt text, and captions for any image. Perfect for accessibility and SEO.">
-    <meta name="keywords" content="AI image describer, image description generator, automatic alt text, image captioning, computer vision description, image analysis tool, free image describer">
-    <title>AI Image Describer - Automatic Alt Text Generator & Image Description Tool | CusImage</title>
+    <meta name="description" content="Free AI Image Describer that generates accurate image descriptions, SEO-friendly alt text, and captions. Perfect for accessibility, content teams, and SEO optimization.">
+    <meta name="keywords" content="image describer, AI image describer, image description generator, automatic alt text, image captioning, computer vision description, image analysis tool, free image describer">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="http://localhost:3000/image-describer">
+    <title>AI Image Describer – Free Automatic Alt Text & Description Tool | CusImage</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="cutout.css">
     <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
@@ -14,10 +16,61 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="alternate" hreflang="en" href="http://localhost:3000/image-describer">
+    <meta property="og:title" content="AI Image Describer – Free Automatic Alt Text & Description Tool">
+    <meta property="og:description" content="Generate natural, SEO-friendly image descriptions and alt text automatically. Perfect for accessibility and content workflows.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://localhost:3000/image-describer">
+    <meta property="og:image" content="/favicon.svg?v=2">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="AI Image Describer – Free Automatic Alt Text & Description Tool">
+    <meta name="twitter:description" content="Automatically create accurate image descriptions and alt text for accessibility and SEO.">
+    <meta name="twitter:image" content="/favicon.svg?v=2">
     <style>
       .describer-description { font-size: 16px; line-height: 1.6; color: var(--gray-800); }
       .results-actions .btn { margin-left: 8px; }
     </style>
+    <script>(function(){var h=location.hostname;var isLocal=/^(localhost|127\.0\.0\.1)$/.test(h);if(!isLocal){var s=document.createElement('script');s.defer=true;s.src='/_vercel/insights/script.js';document.head.appendChild(s);}})();</script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "AI Image Describer",
+      "url": "http://localhost:3000/image-describer",
+      "description": "Free AI image describer that generates accurate image descriptions, alt text, and captions for accessibility and SEO.",
+      "inLanguage": "en",
+      "mainEntity": {
+        "@type": "SoftwareApplication",
+        "name": "AI Image Describer",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Web Browser",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is an image describer?",
+          "acceptedAnswer": { "@type": "Answer", "text": "An image describer is a tool that uses AI to generate natural language descriptions, alt text, and captions for images." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is the image describer free to use?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. This image describer is free and runs in your browser with privacy-friendly processing." }
+        },
+        {
+          "@type": "Question",
+          "name": "How does this help SEO?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Accurate alt text and descriptive captions improve accessibility and help search engines understand and rank your images." }
+        }
+      ]
+    }
+    </script>
     </head>
 <body>
     <header class="header">
@@ -68,7 +121,7 @@
                         <div class="result-image-card">
                             <h4 class="result-label">Original Image</h4>
                             <div class="image-preview-container">
-                                <img id="originalImagePreview" class="result-image" alt="Original Image">
+                                <img id="originalImagePreview" class="result-image" alt="Original Image" loading="lazy">
                             </div>
                         </div>
                         <div class="result-image-card">
@@ -88,7 +141,7 @@
                     <div class="upload-area" id="uploadArea">
                         <div class="upload-content">
                             <div class="upload-icon">
-                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" aria-label="Upload icon for image describer">
                                     <path d="M12 2L12 14M12 2L8 6M12 2L16 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                                     <path d="M4 16L4 18C4 19.1046 4.89543 20 6 20L18 20C19.1046 20 20 19.1046 20 18L20 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                                 </svg>
@@ -105,6 +158,45 @@
             </div>
         </div>
     </main>
+
+
+    <section class="faq">
+        <div class="container">
+            <h2>Image Describer FAQ</h2>
+            <div class="faq-intro">
+                <h1 class="tool-h1">AI Image Describer Tool</h1>
+                <div class="copy-wrap">
+                    <div class="copy-col">
+                        <div class="copy-text">
+                            <p>Our advanced <strong>image describer</strong> automatically generates natural, SEO-friendly image descriptions, alt text, and captions. Ideal for improving accessibility compliance and boosting organic search performance.</p>
+                        </div>
+                        <div class="feature-block">
+                            <h2>Why Choose This Image Describer?</h2>
+                            <ul>
+                                <li>Free AI-powered image description</li>
+                                <li>SEO-friendly alt text with one click</li>
+                                <li>Accessibility-focused outputs</li>
+                                <li>Supports JPG, PNG, WebP</li>
+                                <li>Fast, reliable, and privacy-friendly</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <h3>What is an image describer?</h3>
+                <p>An image describer is a tool that uses AI to generate natural language descriptions, alt text, and captions for images.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is the image describer free to use?</h3>
+                <p>Yes. This image describer is free and runs in your browser with privacy-friendly processing.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How does this help SEO?</h3>
+                <p>Accurate alt text and descriptive captions improve accessibility and help search engines understand and rank your images.</p>
+            </div>
+        </div>
+    </section>
 
     <footer class="footer">
         <div class="container">

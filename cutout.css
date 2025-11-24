@@ -35,6 +35,13 @@
     box-shadow: var(--shadow-lg);
 }
 
+.faq .content-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    align-items: start;
+}
+
 .faq h2 {
     font-size: 1.75rem;
     font-weight: 700;

@@ -5,6 +5,7 @@
     { "source": "/ai-cutout", "destination": "/ai-cutout.html" },
     { "source": "/images-for-fb-cover", "destination": "/images-for-fb-cover.html" },
     { "source": "/turn-images-into-unicode", "destination": "/turn-images-into-unicode.html" },
+    { "source": "/400x400-black-image", "destination": "/400x400-black-image.html" },
     { "source": "/", "destination": "/index.html" }
   ],
   "redirects": [

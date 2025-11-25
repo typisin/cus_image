@@ -87,5 +87,9 @@
 })();
 ;(function(){
   var h = location.hostname; var isLocal = /^(localhost|127\.0\.0\.1)$/.test(h);
-  if(!isLocal){ var s = document.createElement('script'); s.defer = true; s.src = '/_vercel/analytics/script.js'; document.head.appendChild(s); }
+  if(!isLocal){
+    var s = document.createElement('script'); s.defer = true; s.src = '/_vercel/insights/script.js';
+    s.onerror = function(){ var a = document.createElement('script'); a.defer = true; a.src = '/_vercel/analytics/script.js'; a.onerror = function(){}; document.head.appendChild(a); };
+    document.head.appendChild(s);
+  }
 })();

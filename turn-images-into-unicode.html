@@ -12,7 +12,15 @@
     <link rel="shortcut icon" href="/favicon.svg?v=2" type="image/svg+xml">
     <link rel="canonical" href="https://www.cusimage.com/turn-images-into-unicode">
     <link rel="stylesheet" href="unicode.css">
-    <script src="favicon.js" defer></script>
+    <script>
+      (function(){
+        var h = location.hostname; var isLocal = /^(localhost|127\.0\.0\.1)$/.test(h);
+        if (!isLocal) {
+          var s = document.createElement('script'); s.defer = true; s.src = '/favicon.js';
+          s.onerror = function(){}; document.head.appendChild(s);
+        }
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -193,11 +201,7 @@
         </div>
     </section>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 CusImage. 让图片编辑更智能。</p>
-        </div>
-    </footer>
+    <cus-footer></cus-footer>
 
     <script src="unicode.js"></script>
     <script>
@@ -218,5 +222,6 @@
       });
     });
     </script>
+    <script src="/footer.js" defer></script>
 </body>
 </html>

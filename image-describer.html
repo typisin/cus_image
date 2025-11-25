@@ -9,10 +9,19 @@
     <link rel="canonical" href="https://www.cusimage.com/image-describer">
     <title>AI Image Describer – Free Automatic Alt Text & Description Tool | CusImage</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="cutout.css">
+    <link rel="stylesheet" href="/cutout.css">
     <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
     <link rel="shortcut icon" href="/favicon.svg?v=2" type="image/svg+xml">
-    <script src="favicon.js" defer></script>
+    <script>
+      (function(){
+        var h = location.hostname; var isLocal = /^(localhost|127\.0\.0\.1)$/.test(h);
+        if (!isLocal) {
+          var s = document.createElement('script'); s.defer = true; s.src = '/favicon.js';
+          s.onerror = function(){ /* skip in case of preview abort */ };
+          document.head.appendChild(s);
+        }
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -154,6 +163,7 @@
                             </div>
                         </div>
                     </div>
+                    <div id="copyToast" class="toast">Copied successfully</div>
                 </div>
 
                 <div class="upload-section">
@@ -217,11 +227,7 @@
         </div>
     </section>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 CusImage. Smart image editing.</p>
-        </div>
-    </footer>
+    <cus-footer></cus-footer>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -296,6 +302,8 @@
             if (!text) return;
             if (navigator.clipboard) navigator.clipboard.writeText(text);
             if (promptOutput) promptOutput.value = text;
+            var toast = document.getElementById('copyToast');
+            if (toast) { toast.textContent = 'Copied successfully'; toast.classList.add('show'); setTimeout(function(){ toast.classList.remove('show'); }, 2000); }
         });
 
         generateBtn.addEventListener('click', function(){
@@ -404,28 +412,27 @@
             } catch (e) { return null; }
         }
         async function describeViaWorkflowByFileId(fileId, style){
-            try {
-                console.log('[Describer] workflow start', { file_id: fileId, style });
-                var res = await fetch('/api/coze/describer/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: JSON.stringify({ file_id: fileId }), prompt_style: style }) });
-                if (!res.ok) { try { var t = await res.text(); console.log('[Describer] workflow failed body len', t.length); } catch(e){} return null; }
-                var json = await res.json();
-                if (json && json.text) return json.text;
-                var data = json && json.data;
-                if (typeof data === 'string') {
-                    try {
-                        var obj = JSON.parse(data);
-                        if (obj && obj.output && typeof obj.output === 'string') return obj.output;
-                        if (obj && obj.output && obj.output.text) return obj.output.text;
-                        if (obj && obj.text) return obj.text;
-                    } catch(e){}
-                } else if (data && data.output) {
-                    if (typeof data.output === 'string') return data.output;
-                    if (data.output.text) return data.output.text;
-                }
-                return null;
-            } catch (e) { return null; }
+            async function once() {
+                var controller = new AbortController();
+                var id = setTimeout(function(){ controller.abort(); }, 15000);
+                try {
+                    var res = await fetch('/api/coze/describer/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: JSON.stringify({ file_id: fileId }), prompt_style: style }), signal: controller.signal });
+                    var json;
+                    try { json = await res.json(); } catch(e){ console.log('[Describer] workflow non-json'); return null; }
+                    if (!res.ok) { console.log('[Describer] workflow failed', json); return null; }
+                    if (json && json.text) return json.text;
+                    var data = json && json.data;
+                    if (typeof data === 'string') { try { var obj = JSON.parse(data); if (obj && obj.output && typeof obj.output === 'string') return obj.output; if (obj && obj.output && obj.output.text) return obj.output.text; if (obj && obj.text) return obj.text; } catch(e){} }
+                    else if (data && data.output) { if (typeof data.output === 'string') return data.output; if (data.output.text) return data.output.text; }
+                    return null;
+                } catch(e) { console.log('[Describer] workflow exception', e && e.message); return null; }
+                finally { clearTimeout(id); }
+            }
+            for (var i=0;i<3;i++){ var delay=i===0?0:Math.min(3000, 500*Math.pow(3,i-1)); if(delay) await new Promise(r=>setTimeout(r,delay)); var out=await once(); if (out) return out; }
+            return null;
         }
     });
     </script>
+    <script src="/footer.js" defer></script>
     </body>
     </html>

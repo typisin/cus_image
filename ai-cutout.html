@@ -9,8 +9,16 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
     <link rel="shortcut icon" href="/favicon.svg?v=2" type="image/svg+xml">
-    <link rel="stylesheet" href="cutout.css">
-    <script src="favicon.js" defer></script>
+    <link rel="stylesheet" href="/cutout.css">
+    <script>
+    (function(){
+      var h = location.hostname; var isLocal = /^(localhost|127\.0\.0\.1)$/.test(h);
+      if (!isLocal) {
+        var s = document.createElement('script'); s.defer = true; s.src = '/favicon.js';
+        s.onerror = function(){}; document.head.appendChild(s);
+      }
+    })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -183,11 +191,7 @@
         </div>
     </section>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 CusImage. Making image editing smarter.</p>
-        </div>
-    </footer>
+    <cus-footer></cus-footer>
 
     <script src="cutout.js"></script>
     <script>
@@ -208,5 +212,6 @@
       });
     });
     </script>
+    <script src="/footer.js" defer></script>
 </body>
 </html>

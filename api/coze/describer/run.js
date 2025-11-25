@@ -25,11 +25,38 @@ export default async function handler(req) {
   if (!workflowId) { console.log('Missing workflow id env'); return new Response(JSON.stringify({ error: 'workflow_id required' }), { status: 400, headers: { 'Content-Type': 'application/json' } }) }
   const payload = { workflow_id: workflowId, parameters: { image: image, prompt_style: promptStyle || 'Brief' } }
   console.log('Prepared payload', { workflow_id: payload.workflow_id, hasImage: !!payload.parameters.image, promptStyle: payload.parameters.prompt_style })
+  async function postWithTimeout(url, options, timeoutMs) {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const res = await fetch(url, { ...options, signal: controller.signal });
+      return res;
+    } finally {
+      clearTimeout(id);
+    }
+  }
+  async function postWithRetry(url, options, attempts, timeoutMs) {
+    let lastError = null;
+    for (let i = 0; i < attempts; i++) {
+      const delay = i === 0 ? 0 : Math.min(3000, 500 * Math.pow(3, i - 1));
+      if (delay) await new Promise(r => setTimeout(r, delay));
+      try {
+        console.time(`coze_workflow_request_${i+1}`)
+        const res = await postWithTimeout(url, options, timeoutMs);
+        console.timeEnd(`coze_workflow_request_${i+1}`)
+        if (res.status >= 500) { lastError = new Error(`upstream_${res.status}`); console.log('Retry on 5xx', res.status); continue; }
+        return res;
+      } catch (e) {
+        lastError = e;
+        console.log('Retry on exception', e?.message);
+      }
+    }
+    throw lastError || new Error('upstream_failed');
+  }
   try {
     const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
-    console.time('coze_workflow_request')
-    const res = await fetch(workflowUrl, { method: 'POST', headers, body: JSON.stringify(payload) })
-    console.timeEnd('coze_workflow_request')
+    const options = { method: 'POST', headers, body: JSON.stringify(payload) }
+    const res = await postWithRetry(workflowUrl, options, 3, 15000)
     console.log('Workflow response status', res.status)
     let responseData
     try { responseData = await res.json(); console.log('Workflow response json keys', Object.keys(responseData || {})) } catch (e) { const text = await res.text(); console.log('Workflow response non-json length', text.length); return new Response(JSON.stringify({ error: 'Invalid JSON response', raw_text: text }), { status: 500, headers: { 'Content-Type': 'application/json' } }) }
@@ -50,10 +77,11 @@ export default async function handler(req) {
     } else {
       const errorMsg = responseData?.msg || responseData?.error || 'Workflow failed'
       console.log('Workflow failed', { status: res.status, errorMsg, code: responseData?.code })
-      return new Response(JSON.stringify({ error: errorMsg, code: responseData?.code, detail: responseData?.detail }), { status: res.status, headers: { 'Content-Type': 'application/json' } })
+      const payload = { error: errorMsg, code: responseData?.code, detail: responseData?.detail, retryable: res.status >= 500, upstream_status: res.status }
+      return new Response(JSON.stringify(payload), { status: res.status, headers: { 'Content-Type': 'application/json' } })
     }
   } catch (error) {
     console.log('Workflow exception', error?.message)
-    return new Response(JSON.stringify({ error: 'Workflow request failed', detail: error.message }), { status: 500, headers: { 'Content-Type': 'application/json' } })
+    return new Response(JSON.stringify({ error: 'upstream_timeout_or_exception', detail: error.message, retryable: true }), { status: 504, headers: { 'Content-Type': 'application/json' } })
   }
 }

@@ -24,9 +24,10 @@ export default async function handler(req) {
       return new Response(JSON.stringify({ error: 'invalid JSON' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
     }
     
-    const { file_id, workflow_id } = body
+    const { file_id, workflow_id, workflow_name, prompt_style } = body
     const envWorkflowId = process.env.COZE_WORKFLOW_Cutout_ID
-    const finalWorkflowId = workflow_id || envWorkflowId
+    const envDescriberId = process.env.COZE_WORKFLOW_Describer_ID
+    const finalWorkflowId = workflow_id || (workflow_name === 'describer' && envDescriberId ? envDescriberId : envWorkflowId)
     
     console.log('Received file_id:', file_id)
     console.log('Received workflow_id:', workflow_id)
@@ -40,7 +41,7 @@ export default async function handler(req) {
     const payload = {
       workflow_id: finalWorkflowId,
       parameters: {
-        input: JSON.stringify({file_id: file_id})
+        input: JSON.stringify(prompt_style ? { file_id: file_id, prompt_style: prompt_style } : { file_id: file_id })
       }
     };
     

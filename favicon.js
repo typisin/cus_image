@@ -1,9 +1,13 @@
 (function(){
   function setIconUrl(url){
-    var link = document.querySelector('link[rel="icon"]');
-    if (!link) { link = document.createElement('link'); link.setAttribute('rel','icon'); document.head.appendChild(link); }
-    link.setAttribute('type','image/png');
-    link.setAttribute('href', url);
+    var rels = ['icon','shortcut icon'];
+    for (var i=0;i<rels.length;i++){
+      var rel = rels[i];
+      var link = document.querySelector('link[rel="'+rel+'"]');
+      if (!link) { link = document.createElement('link'); link.setAttribute('rel', rel); document.head.appendChild(link); }
+      link.setAttribute('type','image/png');
+      link.setAttribute('href', url);
+    }
     var apple = document.querySelector('link[rel="apple-touch-icon"]');
     if (!apple) { apple = document.createElement('link'); apple.setAttribute('rel','apple-touch-icon'); document.head.appendChild(apple); }
     apple.setAttribute('href', url);
@@ -25,6 +29,30 @@
     ctx.textBaseline = 'middle';
     ctx.fillText('CI', size/2, size/2 + 2);
     setIconUrl(c.toDataURL('image/png'));
+  }
+
+  function fromLogoImage(){
+    var imgEl = document.querySelector('.logo img');
+    if (!imgEl) return false;
+    var size = 64;
+    var c = document.createElement('canvas');
+    c.width = size; c.height = size;
+    var ctx = c.getContext('2d');
+    function drawFrom(el){
+      var scale = Math.min(size / el.naturalWidth, size / el.naturalHeight);
+      var w = el.naturalWidth * scale, h = el.naturalHeight * scale;
+      var x = (size - w) / 2, y = (size - h) / 2;
+      ctx.clearRect(0,0,size,size);
+      ctx.drawImage(el, x, y, w, h);
+      setIconUrl(c.toDataURL('image/png'));
+    }
+    if (imgEl.complete && imgEl.naturalWidth > 0){
+      try { drawFrom(imgEl); } catch(e) { setIconFallback(); }
+    } else {
+      imgEl.addEventListener('load', function(){ try { drawFrom(imgEl); } catch(e) { setIconFallback(); } });
+      imgEl.addEventListener('error', setIconFallback);
+    }
+    return true;
   }
 
   function fromInlineSVG(){
@@ -55,7 +83,7 @@
     return true;
   }
 
-  try { if (!fromInlineSVG()) setIconFallback(); } catch(e) { setIconFallback(); }
+  try { if (!fromLogoImage() && !fromInlineSVG()) setIconFallback(); } catch(e) { setIconFallback(); }
 })();
 ;(function(){
   var h = location.hostname; var isLocal = /^(localhost|127\.0\.0\.1)$/.test(h);

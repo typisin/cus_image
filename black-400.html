@@ -32,8 +32,7 @@
             <li><a href="/ai-cutout" class="nav-link">AI Cutout</a></li>
             <li><a href="/turn-images-into-unicode" class="nav-link">Turn Images into Unicode</a></li>
             <li><a href="/images-for-fb-cover" class="nav-link">Fb Covers</a></li>
-            <li><a href="/400x400-black-image" class="nav-link active">400x400 Black Image</a></li>
-            <li><a href="/blank-image" class="nav-link">Blank Image</a></li>
+            <li><a href="/black-400" class="nav-link active">Black 400x400</a></li>
           </ul>
         </nav>
       </div>
@@ -42,22 +41,20 @@
 
   <main class="main">
     <div class="container">
-      <section class="center-layout">
-        <div class="card-layout text-center">
-          <div class="card-header">
-            <h2 class="tool-title">400×400 Black Image</h2>
-            <p class="tool-description">View a 400×400 black square and download as PNG, JPG, or SVG.</p>
-          </div>
-          <div class="image-preview-container">
+      <section class="tool-header">
+        <h2 class="tool-title">400×400 Black Image</h2>
+        <p class="tool-description">View a 400×400 black square and download it as PNG.</p>
+      </section>
+
+      <section class="content-grid" style="justify-content:center;">
+        <div class="faq-card" style="text-align:center;">
+          <div class="image-preview-container" style="display:inline-block;padding:12px;background:#f5f5f7;border:1px solid #e5e7eb;border-radius:12px;">
             <canvas id="blackCanvas" width="400" height="400" aria-label="400 by 400 black image" style="display:block"></canvas>
           </div>
-          <div class="download-actions">
-            <button id="downloadPngBtn" class="btn btn-primary" aria-label="Download 400×400 black image as PNG">Download PNG</button>
-            <button id="downloadJpgBtn" class="btn btn-secondary" aria-label="Download 400×400 black image as JPG">Download JPG</button>
-            <button id="downloadSvgBtn" class="btn btn-secondary" aria-label="Download 400×400 black image as SVG">Download SVG</button>
+          <div style="margin-top:16px;">
+            <button id="downloadBtn" class="btn btn-primary">Download PNG</button>
           </div>
-          <div id="downloadNotice" class="notice notice-success" role="status" aria-live="polite"></div>
-          <p class="assistive-text">Tip: The PNG is exactly 400×400 pixels filled with #000000.</p>
+          <p style="margin-top:8px;color:#6b7280;">Tip: The PNG is exactly 400×400 pixels filled with #000000.</p>
         </div>
       </section>
     </div>
@@ -94,47 +91,16 @@
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
-      function triggerDownload(dataUrl, filename) {
-        var a = document.createElement('a');
-        a.href = dataUrl;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        showDownloadNotice('Downloaded ' + filename + ' successfully');
-      }
-
-      var pngBtn = document.getElementById('downloadPngBtn');
-      if (pngBtn && canvas) {
-        pngBtn.addEventListener('click', function() {
-          triggerDownload(canvas.toDataURL('image/png'), '400x400-black-image.png');
+      var downloadBtn = document.getElementById('downloadBtn');
+      if (downloadBtn && canvas) {
+        downloadBtn.addEventListener('click', function() {
+          var a = document.createElement('a');
+          a.href = canvas.toDataURL('image/png');
+          a.download = 'black-400x400.png';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
         });
-      }
-
-      var jpgBtn = document.getElementById('downloadJpgBtn');
-      if (jpgBtn && canvas) {
-        jpgBtn.addEventListener('click', function() {
-          triggerDownload(canvas.toDataURL('image/jpeg', 0.92), '400x400-black-image.jpg');
-        });
-      }
-
-      var svgBtn = document.getElementById('downloadSvgBtn');
-      if (svgBtn) {
-        svgBtn.addEventListener('click', function() {
-          var svg = '\n<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">\n  <rect width="400" height="400" fill="#000000"/>\n</svg>\n';
-          var blob = new Blob([svg], { type: 'image/svg+xml' });
-          var url = URL.createObjectURL(blob);
-          triggerDownload(url, '400x400-black-image.svg');
-          setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
-        });
-      }
-
-      function showDownloadNotice(text) {
-        var el = document.getElementById('downloadNotice');
-        if (!el) return;
-        el.textContent = text;
-        el.classList.add('show');
-        setTimeout(function(){ el.classList.remove('show'); }, 2000);
       }
     });
   </script>

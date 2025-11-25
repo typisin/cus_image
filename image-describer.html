@@ -29,6 +29,9 @@
     <style>
       .describer-description { font-size: 16px; line-height: 1.6; color: var(--gray-800); }
       .results-actions .btn { margin-left: 8px; }
+      .cutout-results-grid{align-items:stretch}
+      .result-image-card{display:flex;flex-direction:column;min-height:300px}
+      #descriptionText{display:flex;align-items:center;min-height:300px}
     </style>
     <script>(function(){var h=location.hostname;var isLocal=/^(localhost|127\.0\.0\.1)$/.test(h);if(!isLocal){var s=document.createElement('script');s.defer=true;s.src='/_vercel/insights/script.js';document.head.appendChild(s);}})();</script>
     <script type="application/ld+json">
@@ -76,13 +79,7 @@
     <header class="header">
         <div class="container">
             <div class="brand">
-                <div class="logo">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                        <path d="M8 13l3-3 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="8" cy="9" r="1.5" fill="currentColor"/>
-                    </svg>
-                </div>
+                <div class="logo"><img src="/logo.png" alt="CusImage"></div>
                 <h1 class="title">CusImage</h1>
                 <p class="subtitle">Professional AI Image Describer & Automatic Description Solutions</p>
             </div>
@@ -108,6 +105,15 @@
             <section class="tool-header">
                 <h2 class="tool-title">AI-Powered Image Describer & Alt Text Generator</h2>
                 <p class="tool-description">Upload an image, generate natural language descriptions, and copy the result for accessibility and SEO</p>
+                <div class="settings-actions" style="margin-top: var(--space-3);">
+                    <label for="promptStyleSelect" style="font-size:0.9rem;color:var(--gray-700);">Prompt Style</label>
+                    <select id="promptStyleSelect" style="height:40px;padding:0 var(--space-3);border:1px solid var(--gray-300);border-radius:var(--radius-md);">
+                        <option value="Brief">Brief</option>
+                        <option value="In detail">In detail</option>
+                        <option value="Vivid">Vivid</option>
+                        <option value="Abstractly">Abstractly</option>
+                    </select>
+                </div>
             </section>
 
             <div class="cutout-workspace">
@@ -236,6 +242,7 @@
         var generateBtn = document.getElementById('generateBtn');
         var resetBtn = document.getElementById('resetBtn');
         var canvas = document.getElementById('canvas');
+        var promptStyleSelect = document.getElementById('promptStyleSelect');
 
         var selectedFile = null;
         var originalImageUrl = null;
@@ -254,6 +261,7 @@
             showResults(true);
             descriptionText.textContent = 'Ready for AI description';
             copyBtn.style.display = 'none';
+            descriptionLoading.style.display = 'none';
         });
 
         ['dragenter','dragover','dragleave','drop'].forEach(function(evt){
@@ -284,17 +292,16 @@
             }
             descriptionText.textContent = 'Processing description...';
             descriptionLoading.style.display = 'flex';
-            toResizedDataUrl(selectedFile, 1024, async function(dataUrl){
-                var serverDesc = await describeViaAPI(dataUrl);
-                if (serverDesc) {
-                    descriptionText.textContent = serverDesc;
-                } else {
-                    var el = originalImagePreview;
-                    descriptionText.textContent = analyze(el);
-                }
+            (async function(){
+                var style = promptStyleSelect ? promptStyleSelect.value : 'Brief';
+                var fileId = await uploadToServer(selectedFile);
+                console.log('[Describer] upload done', { file_id: fileId });
+                var serverDesc = await describeViaWorkflowByFileId(fileId, style);
+                if (serverDesc) { descriptionText.textContent = serverDesc; }
+                else { var el = originalImagePreview; descriptionText.textContent = analyze(el); }
                 descriptionLoading.style.display = 'none';
                 copyBtn.style.display = 'inline-flex';
-            });
+            })();
         });
 
         resetBtn.addEventListener('click', function(){
@@ -309,6 +316,7 @@
             descriptionLoading.style.display = 'none';
             copyBtn.style.display = 'none';
             showResults(false);
+            setTimeout(function(){ imageInput.click(); }, 0);
         });
 
         function showResults(show){
@@ -366,8 +374,37 @@
         function toResizedDataUrl(file, maxSide, cb) {
             var fr = new FileReader(); fr.onload = function() { var tmp = new Image(); tmp.onload = function() { var w = tmp.naturalWidth; var h = tmp.naturalHeight; var scale = Math.min(1, maxSide / Math.max(w, h)); var cw = Math.max(1, Math.floor(w * scale)); var ch = Math.max(1, Math.floor(h * scale)); var c = document.createElement('canvas'); c.width = cw; c.height = ch; var ctx = c.getContext('2d'); ctx.drawImage(tmp, 0, 0, cw, ch); var mime = file.type && file.type.indexOf('image/') === 0 ? file.type : 'image/jpeg'; var dataUrl = c.toDataURL(mime, 0.9); cb(dataUrl); }; tmp.src = fr.result; }; fr.readAsDataURL(file);
         }
-        async function describeViaAPI(dataUrl) {
-            try { var res = await fetch('/api/describe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ imageBase64: dataUrl, detail: 'low' }) }); if (!res.ok) return null; var json = await res.json(); if (json && json.description) return json.description; return null; } catch (_) { return null; }
+        async function uploadToServer(file){
+            try {
+                console.log('[Describer] upload start');
+                var fd = new FormData(); fd.append('file', file);
+                var res = await fetch('/api/coze/upload', { method: 'POST', body: fd });
+                if (!res.ok) { try { var t = await res.text(); console.log('[Describer] upload failed body len', t.length); } catch(e){} return null; }
+                var json = await res.json();
+                return json && json.file_id ? json.file_id : null;
+            } catch (e) { return null; }
+        }
+        async function describeViaWorkflowByFileId(fileId, style){
+            try {
+                console.log('[Describer] workflow start', { file_id: fileId, style });
+                var res = await fetch('/api/coze/describer/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: JSON.stringify({ file_id: fileId }), prompt_style: style }) });
+                if (!res.ok) { try { var t = await res.text(); console.log('[Describer] workflow failed body len', t.length); } catch(e){} return null; }
+                var json = await res.json();
+                if (json && json.text) return json.text;
+                var data = json && json.data;
+                if (typeof data === 'string') {
+                    try {
+                        var obj = JSON.parse(data);
+                        if (obj && obj.output && typeof obj.output === 'string') return obj.output;
+                        if (obj && obj.output && obj.output.text) return obj.output.text;
+                        if (obj && obj.text) return obj.text;
+                    } catch(e){}
+                } else if (data && data.output) {
+                    if (typeof data.output === 'string') return data.output;
+                    if (data.output.text) return data.output.text;
+                }
+                return null;
+            } catch (e) { return null; }
         }
     });
     </script>

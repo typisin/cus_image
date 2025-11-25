@@ -40,3 +40,4 @@ coverage/
 # 包管理器
 package-lock.json
 yarn.lock
+.env*.local

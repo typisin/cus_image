@@ -1138,3 +1138,64 @@ body {
 }
 
 .notice.show { display: block; }
+/* ===== Describer Results Layout ===== */
+.results-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+  gap: var(--space-8);
+  align-items: stretch;
+}
+
+.panel-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-5);
+}
+
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.results-actions .btn { margin-left: var(--space-2); }
+
+@media (max-width: 768px) {
+  .results-layout { grid-template-columns: 1fr; }
+}
+
+/* 更早在中等屏宽就切换为上下布局 */
+@media (max-width: 1024px) {
+  .results-layout { grid-template-columns: 1fr; }
+}
+.results-layout .content-pane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.results-layout .content-pane .cutout-results-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: 1fr;
+}
+
+.results-layout .content-pane .result-image-card,
+.results-layout .content-pane .image-preview-container {
+  height: 100%;
+}
+
+.results-layout .content-pane .image-preview-container img.result-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.panel-card { height: 100%; display: flex; flex-direction: column; }
+.panel-card .prompts-box { flex: 1; display: flex; flex-direction: column; }
+.panel-card .prompts-box textarea { flex: 1; }
+.panel-card .panel-actions { margin-top: auto; }

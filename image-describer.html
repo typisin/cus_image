@@ -191,6 +191,32 @@
 
     <section class="faq">
         <div class="container">
+            <h2 class="tool-title">Describer Examples</h2>
+            <div class="examples-list">
+                <article class="feature-card example-card">
+                    <img class="example-thumb" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=800" alt="Sunset city skyline reflected on calm water" loading="lazy">
+                    <div class="example-content">
+                        <h3 class="card-title">Brief</h3>
+                        <p class="card-description">A long, empty road stretches through a desert landscape, with mountains in the distance.</p>
+                    </div>
+                </article>
+                <article class="feature-card example-card example-card--reverse">
+                    <img class="example-thumb" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800" alt="Minimalist desk with laptop, notebook and plant" loading="lazy">
+                    <div class="example-content">
+                        <h3 class="card-title">In detail</h3>
+                        <p class="card-description">The image depicts a modern and well-organized workspace. In the foreground, there's a silver laptop displaying lines of code, indicating a focus on programming or software work. To the right of the laptop, a black monitor shows a webpage with images and text. A white smartphone lies on the left side of the desk, and a white cup is positioned nearby. On the right side of the laptop, there's a small white cylindrical object, possibly a speaker. Behind the devices, a potted plant adds a touch of nature. The desk is white, contributing to a clean and minimalist look. Natural light from the left enhances the bright and modern style of the workspace, creating an atmosphere that is both productive and aesthetically pleasing.</p>
+                    </div>
+                </article>
+                <article class="feature-card example-card">
+                    <img class="example-thumb" src="https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?w=800" alt="Golden retriever running on a grassy field" loading="lazy">
+                    <div class="example-content">
+                        <h3 class="card-title">Abstractly</h3>
+                        <p class="card-description">A puppy with a white belly and brown fur sits on an orange background.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="container">
             <h2>Image Describer FAQ</h2>
             <div class="faq-intro">
                 <h1 class="tool-h1">AI Image Describer Tool</h1>
@@ -262,6 +288,7 @@
         var promptOutput = document.getElementById('promptOutput');
 
         var selectedFile = null;
+        var serverFileId = null;
         var originalImageUrl = null;
         var uploadSection = null;
         var uploadSectionParent = null;
@@ -280,6 +307,9 @@
             var pl = document.getElementById('panelLoading'); if (pl) pl.style.display = 'none';
             if (promptOutput) promptOutput.value = '';
             if (promptOutput) promptOutput.value = '';
+            (async function(){
+                serverFileId = await uploadToServer(selectedFile);
+            })();
         });
 
         ['dragenter','dragover','dragleave','drop'].forEach(function(evt){
@@ -314,13 +344,19 @@
             var pl2 = document.getElementById('panelLoading'); if (pl2) pl2.style.display = 'flex';
             (async function(){
                 var style = promptStyleSelect ? promptStyleSelect.value : 'Brief';
-                var fileId = await uploadToServer(selectedFile);
-                console.log('[Describer] upload done', { file_id: fileId });
-                var serverDesc = await describeViaWorkflowByFileId(fileId, style);
-                var finalText = serverDesc ? serverDesc : analyze(originalImagePreview);
-                if (promptOutput) promptOutput.value = finalText;
+                if (!serverFileId) {
+                    serverFileId = await uploadToServer(selectedFile);
+                    console.log('[Describer] upload done', { file_id: serverFileId });
+                }
+                var serverDesc = await describeViaWorkflowByFileId(serverFileId, style);
+                if (serverDesc) {
+                    if (promptOutput) promptOutput.value = serverDesc;
+                    copyBtn.style.display = 'inline-flex';
+                } else {
+                    var toast = document.getElementById('copyToast');
+                    if (toast) { toast.textContent = 'Generation failed, please try again.'; toast.classList.add('show'); setTimeout(function(){ toast.classList.remove('show'); }, 2000); }
+                }
                 if (pl2) pl2.style.display = 'none';
-                copyBtn.style.display = 'inline-flex';
             })();
         });
 
@@ -329,6 +365,7 @@
             uploadArea.style.display = 'block';
             imageInput.value = '';
             selectedFile = null;
+            serverFileId = null;
             if (originalImageUrl) URL.revokeObjectURL(originalImageUrl);
             originalImageUrl = null;
             if (originalImagePreview) originalImagePreview.src = '';
@@ -413,20 +450,17 @@
         }
         async function describeViaWorkflowByFileId(fileId, style){
             async function once() {
-                var controller = new AbortController();
-                var id = setTimeout(function(){ controller.abort(); }, 15000);
                 try {
-                    var res = await fetch('/api/coze/describer/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: JSON.stringify({ file_id: fileId }), prompt_style: style }), signal: controller.signal });
+                    var res = await fetch('/api/coze/describer/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: JSON.stringify({ file_id: fileId }), prompt_style: style }) });
                     var json;
-                    try { json = await res.json(); } catch(e){ console.log('[Describer] workflow non-json'); return null; }
-                    if (!res.ok) { console.log('[Describer] workflow failed', json); return null; }
+                    try { json = await res.json(); } catch(e){ return null; }
+                    if (!res.ok) { return null; }
                     if (json && json.text) return json.text;
                     var data = json && json.data;
                     if (typeof data === 'string') { try { var obj = JSON.parse(data); if (obj && obj.output && typeof obj.output === 'string') return obj.output; if (obj && obj.output && obj.output.text) return obj.output.text; if (obj && obj.text) return obj.text; } catch(e){} }
                     else if (data && data.output) { if (typeof data.output === 'string') return data.output; if (data.output.text) return data.output.text; }
                     return null;
-                } catch(e) { console.log('[Describer] workflow exception', e && e.message); return null; }
-                finally { clearTimeout(id); }
+                } catch(e) { return null; }
             }
             for (var i=0;i<3;i++){ var delay=i===0?0:Math.min(3000, 500*Math.pow(3,i-1)); if(delay) await new Promise(r=>setTimeout(r,delay)); var out=await once(); if (out) return out; }
             return null;

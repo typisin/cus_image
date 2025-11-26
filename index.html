@@ -182,7 +182,7 @@
       var canvas = document.getElementById('editorCanvas');
       var toolImage = document.getElementById('toolImage');
       var toolText = document.getElementById('toolText');
-      var toolDraw = document.getElementById('toolDraw');
+      
       if (!canvas) return; var ctx = canvas.getContext('2d');
 
       var img = null; var imgW = 0, imgH = 0; var scale = 1; var panX = 0, panY = 0; var baseFitScale = 1;
@@ -238,9 +238,23 @@
       fileInput && fileInput.addEventListener('change', function(e){ var f = e.target.files && e.target.files[0]; if (f) loadFileAndEnter(f); });
       toolImage && toolImage.addEventListener('click', function(){ fileInput && fileInput.click(); });
       toolText && toolText.addEventListener('click', function(){ if (!img) return; var cx = imgW/2, cy = imgH/2; overlays.texts.push({ text: 'Text', x: cx, y: cy, color: '#111827', font: '18px Inter, sans-serif' }); draw(); });
-      toolDraw && toolDraw.addEventListener('click', function(){ drawMode = !drawMode; document.body.style.cursor = drawMode ? 'crosshair' : 'default'; });
+      function deleteImage(){ if (!img) return; img = null; imgW = 0; imgH = 0; overlays.paths = []; overlays.texts = []; drawMode = false; document.body.style.cursor = 'default'; if (emptyState) emptyState.style.display = 'block'; draw(); }
+      window.addEventListener('keydown', function(e){ if ((e.key==='Delete' || e.key==='Backspace') && img){ e.preventDefault(); deleteImage(); } });
+      
 
-      canvas && canvas.addEventListener('wheel', function(e){ e.preventDefault(); var delta = e.deltaY < 0 ? 0.1 : -0.1; var old = scale; scale = Math.max(0.1, Math.min(10, scale + delta)); var mx = e.offsetX - canvas.width/2; var my = e.offsetY - canvas.height/2; panX += mx * (scale - old); panY += my * (scale - old); draw(); }, { passive: false });
+      canvas && canvas.addEventListener('wheel', function(e){
+        if (e.ctrlKey) {
+          e.preventDefault();
+          var delta = e.deltaY < 0 ? 0.1 : -0.1;
+          var old = scale;
+          scale = Math.max(0.1, Math.min(10, scale + delta));
+          var mx = e.offsetX - canvas.width/2;
+          var my = e.offsetY - canvas.height/2;
+          panX += mx * (scale - old);
+          panY += my * (scale - old);
+          draw();
+        }
+      }, { passive: false });
 
       canvas && canvas.addEventListener('mousedown', function(e){
         if (drawMode && img){ drawing = true; var rect = canvas.getBoundingClientRect(); var x = (e.clientX - rect.left - canvas.width/2) / (baseFitScale*scale) + imgW/2; var y = (e.clientY - rect.top  - canvas.height/2) / (baseFitScale*scale) + imgH/2; overlays.paths.push([{x:x,y:y}]); draw(); return; }

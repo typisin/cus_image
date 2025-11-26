@@ -714,6 +714,37 @@ body {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
+.example-thumb {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius-lg);
+  background: var(--gray-100);
+}
+
+@media (max-width: 768px) {
+  .example-thumb { height: 160px; }
+}
+
+/* Examples: 纵向容器 + 横向卡片 */
+.examples-list { display: flex; flex-direction: column; gap: var(--space-6); }
+.feature-card.example-card { display: flex; flex-direction: row; align-items: center; gap: var(--space-6); }
+.feature-card.example-card.example-card--reverse { flex-direction: row-reverse; }
+.example-content { flex: 1; }
+.feature-card.example-card .example-thumb { width: 280px; height: 180px; }
+
+@media (max-width: 768px) {
+  .feature-card.example-card { flex-direction: column; align-items: stretch; }
+  .feature-card.example-card.example-card--reverse { flex-direction: column; }
+  .feature-card.example-card .example-thumb { width: 100%; height: 160px; }
+}
+
+/* FAQ 示例容器与 FAQ 内容容器之间的间距 */
+.faq .container + .container {
+  margin-top: var(--space-12);
+}
+
 .card-icon {
   width: 64px;
   height: 64px;

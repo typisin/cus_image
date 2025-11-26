@@ -172,6 +172,211 @@ body {
   margin: 0 auto;
 }
 
+/* ===== 图片编辑器 ===== */
+/* Editor styles are now managed in editor.html */
+
+.empty-state { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-3); color: var(--gray-600); pointer-events: none; text-align: center; padding: var(--space-6); }
+.empty-state .download-actions { pointer-events: auto; }
+.empty-state .upload-title { font-size: 1.25rem; font-weight: 600; color: var(--gray-900); }
+.empty-state .upload-text { max-width: 600px; }
+
+/* Floating vertical toolbar */
+
+/* Right Processing Panel - Floating next to selection */
+
+/* If the panel needs to float OUTSIDE the canvas but relative to the page, we might need body appending.
+   But current structure has .editor-panel-right inside .container which is relative?
+   Actually .editor-canvas is the container for the canvas element.
+   The .editor-panel-right is currently a sibling of .editor-canvas in .editor-grid (actually it's in .container > .editor-workspace > .container ... wait let's check HTML structure again)
+*/
+
+
+.panel-header {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--gray-200);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-close {
+  cursor: pointer;
+  color: var(--gray-500);
+  padding: 4px;
+  border-radius: 4px;
+}
+.panel-close:hover { background: var(--gray-100); color: var(--gray-900); }
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2);
+  border: none; /* No border as requested */
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-btn:hover:not(:disabled) {
+  background: var(--gray-100);
+  color: var(--primary-blue);
+  /* No transform/shadow to keep it flat/clean */
+}
+
+.action-btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+  background: var(--gray-50);
+}
+
+.action-btn .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: inherit;
+  flex-shrink: 0;
+}
+
+.action-btn .label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  flex: 1;
+}
+
+/* Loading Spinner inside button */
+.btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--gray-300);
+  border-top-color: var(--primary-blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: none;
+}
+.action-btn.loading .btn-spinner { display: block; }
+.action-btn.loading .icon { display: none; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Result Cards */
+.result-card {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  margin-top: var(--space-2);
+  font-size: 0.85rem;
+  color: var(--gray-700);
+  animation: fadeIn 0.3s ease;
+}
+
+.result-card h4 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--gray-500);
+  margin-bottom: var(--space-2);
+  font-weight: 600;
+}
+
+.result-card .content {
+  line-height: 1.5;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Canvas Selection State */
+.editor-canvas {
+  /* ... existing ... */
+  position: relative;
+}
+
+/* Adjust right padding when panel is active */
+.editor-workspace {
+  transition: padding-right var(--transition-normal);
+}
+.editor-workspace.panel-open {
+  padding-right: 240px;
+}
+
+@media (max-width: 1024px) {
+  .action-btn {
+    padding: var(--space-2);
+    gap: var(--space-2);
+  }
+  .action-btn .label {
+    font-size: 0.8rem;
+  }
+}
+
+.editor-mode cus-footer, .editor-mode .footer { display: none; }
+.editor-mode .hero, .editor-mode .features-grid { display: none; }
+.editor-mode .main { padding-top: var(--space-8); }
+.editor-mode .editor-canvas { min-height: 70vh; }
+.editor-mode .hero { display: none; }
+.editor-mode .features-grid { display: none; }
+.editor-mode .main { padding-top: var(--space-8); }
+.editor-mode .editor-canvas { min-height: 70vh; }
+
+/* Editor safe area to avoid overlap with floating tools */
+
+/* Floating tools container (right of canvas) */
+.editor-floating-tools {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 1000;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-3);
+}
+.editor-floating-tools.active {
+  display: flex;
+}
+
+.editor-floating-tools .tool-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: 40px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  background: var(--white);
+}
+.editor-floating-tools .tool-btn:hover { background: var(--gray-50); border-color: var(--primary-blue-light); }
+
+/* Editor workspace full width */
+.editor-workspace .container { max-width: 100%; }
+.editor-canvas { width: 100%; }
+
+/* Desktop: left toolbar card centered vertically */
+@media (min-width: 1025px){
+  .editor-grid { grid-template-columns: auto 1fr; }
+}
+
+@media (max-width: 768px){
+  .editor-floating-tools { padding: var(--space-2); gap: var(--space-2); }
+  .editor-floating-tools .tool-btn { height: 44px; }
+}
+
 /* ===== 功能卡片网格 ===== */
 .features-grid {
   display: grid;
@@ -1204,3 +1409,5 @@ body {
 .panel-card .prompts-box { flex: 1; display: flex; flex-direction: column; }
 .panel-card .prompts-box textarea { flex: 1; }
 .panel-card .panel-actions { margin-top: auto; }
+.editor-mode .header { display: none; }
+.editor-mode cus-footer, .editor-mode .footer { display: none; }

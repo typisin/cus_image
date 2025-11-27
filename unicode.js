@@ -27,6 +27,7 @@ class ImageToUnicodeConverter {
     const fileInput = document.getElementById('fileInput');
     const uploadArea = document.getElementById('uploadArea');
     const emptyState = uploadArea && uploadArea.querySelector('.empty-state');
+    const uploadBtn = emptyState && emptyState.querySelector('.upload-btn');
     const densitySlider = document.getElementById('densitySlider');
     const widthSlider = document.getElementById('widthSlider');
     const convertBtn = document.getElementById('convertBtn');
@@ -41,9 +42,10 @@ class ImageToUnicodeConverter {
     uploadArea.addEventListener('dragleave', (e) => this.handleDragLeave(e));
     uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
 
-    // 仅在空态时允许容器点击触发文件选择
-    uploadArea.addEventListener('click', () => {
+    // 仅在空态时允许容器点击触发文件选择，且忽略按钮本身的点击
+    uploadArea.addEventListener('click', (e) => {
       if (this.hasImage) return;
+      if (e.target && e.target.closest('.upload-btn')) return;
       fileInput && fileInput.click();
     });
 
@@ -55,6 +57,12 @@ class ImageToUnicodeConverter {
       emptyState.addEventListener('dragover', (e) => this.handleDragOver(e));
       emptyState.addEventListener('dragleave', (e) => this.handleDragLeave(e));
       emptyState.addEventListener('drop', (e) => this.handleDrop(e));
+    }
+
+    if (uploadBtn) {
+      uploadBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
     }
     
     // Controls

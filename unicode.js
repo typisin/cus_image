@@ -32,6 +32,7 @@ class ImageToUnicodeConverter {
     const widthSlider = document.getElementById('widthSlider');
     const convertBtn = document.getElementById('convertBtn');
     const downloadBtn = document.getElementById('downloadBtn');
+    const previewBtn = document.getElementById('previewBtn');
     
     // File input
     fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
@@ -71,6 +72,30 @@ class ImageToUnicodeConverter {
     convertBtn.addEventListener('click', () => this.convertImage());
     
     downloadBtn.addEventListener('click', () => this.downloadResult());
+    
+    if (previewBtn) {
+      previewBtn.addEventListener('click', () => this.openPreview());
+    }
+
+    // Modal events
+    const modal = document.getElementById('previewModal');
+    const closeBtn = document.querySelector('.close-modal');
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => this.closePreview());
+    }
+    
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal || e.target.classList.contains('modal-content-container')) {
+          this.closePreview();
+        }
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') this.closePreview();
+    });
 
     window.addEventListener('resize', () => {
       this.initializePaneHeights();
@@ -192,9 +217,8 @@ class ImageToUnicodeConverter {
     out.textContent = asciiArt;
     pane && pane.classList.remove('hidden');
 
-    const imgEl = document.getElementById('imagePreview');
-    const targetW = imgEl ? imgEl.clientWidth : this.currentImage.width;
-    const targetH = imgEl ? imgEl.clientHeight : this.currentImage.height;
+    const targetW = this.currentImage.width;
+    const targetH = this.currentImage.height;
 
     let canvas = document.getElementById('unicodeCanvas');
     if (!canvas) {
@@ -210,11 +234,11 @@ class ImageToUnicodeConverter {
     const cols = Math.max(1, Math.max(...lines.map(l => l.length)));
 
     const charWidthFactor = 0.6;
-    const cellW = Math.max(6, Math.floor(targetW / cols));
-    const cellH = Math.max(6, Math.floor(targetH / rows));
+    const cellW = Math.max(6, targetW / cols);
+    const cellH = Math.max(6, targetH / rows);
     const fontSize = Math.max(6, Math.min(cellH, Math.floor(cellW / charWidthFactor)));
-    canvas.width = cols * cellW;
-    canvas.height = rows * cellH;
+    canvas.width = Math.round(targetW);
+    canvas.height = Math.round(targetH);
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#111827';
@@ -230,8 +254,10 @@ class ImageToUnicodeConverter {
     }
 
     // 显示为可预览的等比例图片
-    canvas.style.width = '100%';
-    canvas.style.height = 'auto';
+    // Remove inline styles that force full width/auto height, let CSS handle it
+    canvas.style.width = '';
+    canvas.style.height = '';
+    
     if (out) out.style.display = 'none';
     
     this.fitAsciiToPane();
@@ -337,6 +363,28 @@ class ImageToUnicodeConverter {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  }
+
+  openPreview() {
+    const canvas = document.getElementById('unicodeCanvas');
+    if (!canvas) return;
+    
+    const modal = document.getElementById('previewModal');
+    const modalImg = document.getElementById('modalImage');
+    
+    if (modal && modalImg) {
+      modalImg.src = canvas.toDataURL('image/png');
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+  }
+
+  closePreview() {
+    const modal = document.getElementById('previewModal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
   }
 
   bindResultStopPropagation() {

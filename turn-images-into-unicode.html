@@ -119,7 +119,10 @@
                                 <div class="content-pane" id="unicodePane">
                                     <div class="output-header">
                                         <h4 class="output-title">Unicode Output</h4>
-                                        <button id="downloadBtn" class="action-btn small">Download Text</button>
+                                        <div class="output-actions">
+                                            <button id="previewBtn" class="action-btn small">Preview</button>
+                                            <button id="downloadBtn" class="action-btn small">Download</button>
+                                        </div>
                                     </div>
                                     <pre id="unicodeOutput" class="unicode-output"></pre>
                                 </div>
@@ -213,6 +216,13 @@
     </section>
 
     <cus-footer></cus-footer>
+
+    <div id="previewModal" class="modal">
+        <span class="close-modal">&times;</span>
+        <div class="modal-content-container">
+            <img class="modal-content" id="modalImage">
+        </div>
+    </div>
 
     <script src="unicode.js"></script>
     <script>

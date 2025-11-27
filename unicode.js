@@ -7,6 +7,7 @@ class ImageToUnicodeConverter {
   constructor() {
     this.currentImage = null;
     this.lastAscii = '';
+    this.hasImage = false;
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d');
     
@@ -40,8 +41,11 @@ class ImageToUnicodeConverter {
     uploadArea.addEventListener('dragleave', (e) => this.handleDragLeave(e));
     uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
 
-    // Click anywhere to open file selector (overlay透明或覆盖都可点击)
-    uploadArea.addEventListener('click', () => fileInput && fileInput.click());
+    // 仅在空态时允许容器点击触发文件选择
+    uploadArea.addEventListener('click', () => {
+      if (this.hasImage) return;
+      fileInput && fileInput.click();
+    });
 
     // 当空态层启用 pointer-events 时，确保拖拽事件同样可用
     if (emptyState) {
@@ -114,6 +118,7 @@ class ImageToUnicodeConverter {
         if (es) es.style.display = 'none';
         document.getElementById('convertBtn').disabled = false;
         area && area.classList.add('has-image');
+        this.hasImage = true;
       };
       img.src = e.target.result;
     };
@@ -298,9 +303,18 @@ class ImageToUnicodeConverter {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
+
+  bindResultStopPropagation() {
+    const selectors = ['#imagePreview', '#unicodePane', '#unicodeOutput', '#contentGrid'];
+    selectors.forEach(sel => {
+      const el = document.querySelector(sel);
+      if (el) el.addEventListener('click', (e) => e.stopPropagation());
+    });
+  }
 }
 
 // Initialize the converter when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  new ImageToUnicodeConverter();
+  const app = new ImageToUnicodeConverter();
+  app.bindResultStopPropagation();
 });

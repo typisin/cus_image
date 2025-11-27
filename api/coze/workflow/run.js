@@ -24,26 +24,39 @@ export default async function handler(req) {
       return new Response(JSON.stringify({ error: 'invalid JSON' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
     }
     
-    const { file_id, workflow_id, workflow_name, prompt_style } = body
+    const { file_id, workflow_id, workflow_name, prompt_style, parameters } = body
     const envWorkflowId = process.env.COZE_WORKFLOW_Cutout_ID
     const envDescriberId = process.env.COZE_WORKFLOW_Describer_ID
-    const finalWorkflowId = workflow_id || (workflow_name === 'describer' && envDescriberId ? envDescriberId : envWorkflowId)
+    const envImageGenId = process.env.COZE_WORKFLOW_ImageGen_ID
+    const isTextOnly = parameters && typeof parameters.input === 'string' && (!file_id)
+    const finalWorkflowId = workflow_id 
+        || (workflow_name === 'describer' && envDescriberId ? envDescriberId 
+            : (workflow_name === 'image_gen' && envImageGenId ? envImageGenId 
+               : envWorkflowId))
     
     console.log('Received file_id:', file_id)
     console.log('Received workflow_id:', workflow_id)
     console.log('Environment workflow_id:', envWorkflowId)
     console.log('Final workflow_id:', finalWorkflowId)
     
-    if (!file_id) return new Response(JSON.stringify({ error: 'file_id required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
     if (!finalWorkflowId) return new Response(JSON.stringify({ error: 'workflow_id required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
+    if (!isTextOnly && !file_id) return new Response(JSON.stringify({ error: 'file_id required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
     
     // 按照curl命令格式构建参数
-    const payload = {
-      workflow_id: finalWorkflowId,
-      parameters: {
-        input: JSON.stringify(prompt_style ? { file_id: file_id, prompt_style: prompt_style } : { file_id: file_id })
-      }
-    };
+    let payload;
+    if (isTextOnly) {
+      payload = {
+        workflow_id: finalWorkflowId,
+        parameters: { input: parameters.input }
+      };
+    } else {
+      payload = {
+        workflow_id: finalWorkflowId,
+        parameters: {
+          input: JSON.stringify(prompt_style ? { file_id: file_id, prompt_style: prompt_style } : { file_id: file_id })
+        }
+      };
+    }
     
     console.log('Sending workflow request with curl format:', JSON.stringify(payload, null, 2));
     

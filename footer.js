@@ -12,7 +12,6 @@ class CusFooter extends HTMLElement {
               <h4 class="footer-title">Tools</h4>
               <ul class="footer-list">
                 <li><a href="/image-describer" class="footer-link">Image Describer</a></li>
-                <li><a href="/ai-cutout" class="footer-link">AI Cutout</a></li>
                 <li><a href="/turn-images-into-unicode" class="footer-link">Turn Images into Unicode</a></li>
                 <li><a href="/images-for-fb-cover" class="footer-link">Fb Covers</a></li>
                 <li><a href="/400x400-black-image" class="footer-link">400x400 Black Image</a></li>

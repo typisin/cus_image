@@ -29,7 +29,6 @@
                 <nav class="nav" id="main-nav" aria-label="Main navigation">
                     <ul class="nav-menu">
                         <li><a href="/image-describer" class="nav-link">Image Describer</a></li>
-                        <li><a href="/ai-cutout" class="nav-link">AI Cutout</a></li>
                         <li><a href="/turn-images-into-unicode" class="nav-link">Turn Images into Unicode</a></li>
                         <li><a href="/images-for-fb-cover" class="nav-link">Fb Covers</a></li>
                         <li><a href="/400x400-black-image" class="nav-link">400x400 Black Image</a></li>
@@ -47,30 +46,6 @@
                 <p class="hero-description">Transform your images with our advanced AI image describer for automatic descriptions, smart cutout for background removal, and unicode converter for text art creation</p>
             </section>
 
-            <section class="editor-workspace" aria-label="Image Editor">
-                <div class="container">
-                    <div class="editor-grid">
-                        <div class="editor-canvas" id="editorCanvasWrap">
-                            <div id="emptyState" class="empty-state" aria-live="polite">
-                                <div class="upload-icon" aria-hidden="true">
-                                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
-                                        <path d="M12 2L12 14M12 2L8 6M12 2L16 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                        <path d="M4 16L4 18C4 19.1046 4.89543 20 6 20L18 20C19.1046 20 20 19.1046 20 18L20 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <h3 class="upload-title">Upload image to start editing</h3>
-                                <p class="upload-text">Click the button or drag and drop an image here</p>
-                                <div class="download-actions">
-                                  <button id="btnUploadCanvas" class="btn btn-secondary" aria-controls="editorCanvas">Upload Image</button>
-                                </div>
-                            </div>
-                            <input id="fileInput" type="file" accept="image/*" hidden>
-                            <canvas id="editorCanvas" width="960" height="540" aria-label="Image editor canvas"></canvas>
-                        </div>
-                    </div>
-                    
-                </div>
-            </section>
 
             <div class="features-grid">
                 <a href="/image-describer" class="feature-card">
@@ -86,19 +61,6 @@
                     <span class="card-cta">Get Started →</span>
                 </a>
 
-                <a href="/ai-cutout" class="feature-card">
-                    <div class="card-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                            <path d="M4 4h10a3 3 0 0 1 3 3v10" stroke="currentColor" stroke-width="1.5"/>
-                            <circle cx="7" cy="17" r="2" stroke="currentColor" stroke-width="1.5"/>
-                            <circle cx="17" cy="7" r="2" stroke="currentColor" stroke-width="1.5"/>
-                            <path d="M7 17l10-10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="card-title">AI Cutout</h3>
-                    <p class="card-description">Smart cutout and background removal with fine edge and hair detail</p>
-                    <span class="card-cta">Get Started →</span>
-                </a>
 
                 <a href="/turn-images-into-unicode" class="feature-card">
                     <div class="card-icon">
@@ -172,112 +134,6 @@
         }
       });
     });
-    </script>
-    <script>
-    (function(){
-      var fileInput = document.getElementById('fileInput');
-      var btnUploadCanvas = document.getElementById('btnUploadCanvas');
-      var canvasWrap = document.getElementById('editorCanvasWrap');
-      var emptyState = document.getElementById('emptyState');
-      var canvas = document.getElementById('editorCanvas');
-      var toolImage = document.getElementById('toolImage');
-      var toolText = document.getElementById('toolText');
-      
-      if (!canvas) return; var ctx = canvas.getContext('2d');
-
-      var img = null; var imgW = 0, imgH = 0; var scale = 1; var panX = 0, panY = 0; var baseFitScale = 1;
-      var dragging = false; var lastX = 0, lastY = 0;
-      var drawMode = false; var drawing = false; var overlays = { texts: [], paths: [] };
-
-      function clear(){ ctx.clearRect(0,0,canvas.width,canvas.height); }
-      function draw(){
-        clear();
-        ctx.fillStyle = '#f5f5f7';
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.strokeStyle = '#e5e7eb';
-        ctx.strokeRect(0.5,0.5,canvas.width-1,canvas.height-1);
-        if (!img) return;
-        var cx = canvas.width/2, cy = canvas.height/2;
-        ctx.save();
-        ctx.translate(cx + panX, cy + panY);
-        ctx.scale(baseFitScale * scale, baseFitScale * scale);
-        ctx.drawImage(img, -imgW/2, -imgH/2, imgW, imgH);
-        ctx.restore();
-
-        // overlays
-        ctx.save();
-        ctx.translate(cx + panX, cy + panY);
-        ctx.scale(baseFitScale * scale, baseFitScale * scale);
-        // paths
-        ctx.strokeStyle = '#2563eb';
-        ctx.lineWidth = 2 / (baseFitScale * scale);
-        overlays.paths.forEach(function(path){
-          if (path.length < 2) return; ctx.beginPath();
-          for (var i=0;i<path.length;i++){ var p = path[i]; var x = p.x - imgW/2; var y = p.y - imgH/2; if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }
-          ctx.stroke();
-        });
-        // texts
-        overlays.texts.forEach(function(t){
-          ctx.fillStyle = t.color || '#111827';
-          ctx.font = t.font || '16px Inter, sans-serif';
-          var x = t.x - imgW/2; var y = t.y - imgH/2;
-          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-          ctx.fillText(t.text || 'Text', x, y);
-        });
-        ctx.restore();
-      }
-
-      function fitBase(){ if (!img) return; var sx = canvas.width / imgW; var sy = canvas.height / imgH; baseFitScale = Math.min(sx, sy); }
-      function reset(){ if (!img) { scale = 1; panX = 0; panY = 0; draw(); return; } scale = 1; panX = 0; panY = 0; fitBase(); draw(); }
-
-      function loadFile(file){ var fr = new FileReader(); fr.onload = function(){ var im = new Image(); im.onload = function(){ img = im; imgW = im.naturalWidth; imgH = im.naturalHeight; fitBase(); emptyState.style.display = 'none'; overlays.paths = []; overlays.texts = []; draw(); }; im.src = fr.result; }; fr.readAsDataURL(file); }
-
-      function loadFileAndEnter(file){ var fr = new FileReader(); fr.onload = function(){ try { sessionStorage.setItem('editor:imageData', fr.result); } catch(_){}; window.location.href = '/editor'; }; fr.readAsDataURL(file); }
-
-      btnUploadCanvas && btnUploadCanvas.addEventListener('click', function(){ fileInput && fileInput.click(); });
-      fileInput && fileInput.addEventListener('change', function(e){ var f = e.target.files && e.target.files[0]; if (f) loadFileAndEnter(f); });
-      toolImage && toolImage.addEventListener('click', function(){ fileInput && fileInput.click(); });
-      toolText && toolText.addEventListener('click', function(){ if (!img) return; var cx = imgW/2, cy = imgH/2; overlays.texts.push({ text: 'Text', x: cx, y: cy, color: '#111827', font: '18px Inter, sans-serif' }); draw(); });
-      function deleteImage(){ if (!img) return; img = null; imgW = 0; imgH = 0; overlays.paths = []; overlays.texts = []; drawMode = false; document.body.style.cursor = 'default'; if (emptyState) emptyState.style.display = 'block'; draw(); }
-      window.addEventListener('keydown', function(e){ if ((e.key==='Delete' || e.key==='Backspace') && img){ e.preventDefault(); deleteImage(); } });
-      
-
-      canvas && canvas.addEventListener('wheel', function(e){
-        if (e.ctrlKey) {
-          e.preventDefault();
-          var delta = e.deltaY < 0 ? 0.1 : -0.1;
-          var old = scale;
-          scale = Math.max(0.1, Math.min(10, scale + delta));
-          var mx = e.offsetX - canvas.width/2;
-          var my = e.offsetY - canvas.height/2;
-          panX += mx * (scale - old);
-          panY += my * (scale - old);
-          draw();
-        }
-      }, { passive: false });
-
-      canvas && canvas.addEventListener('mousedown', function(e){
-        if (drawMode && img){ drawing = true; var rect = canvas.getBoundingClientRect(); var x = (e.clientX - rect.left - canvas.width/2) / (baseFitScale*scale) + imgW/2; var y = (e.clientY - rect.top  - canvas.height/2) / (baseFitScale*scale) + imgH/2; overlays.paths.push([{x:x,y:y}]); draw(); return; }
-        dragging = true; lastX = e.clientX; lastY = e.clientY;
-      });
-      window.addEventListener('mouseup', function(){ dragging = false; });
-      window.addEventListener('mousemove', function(e){
-        if (drawMode && drawing && img){ var rect = canvas.getBoundingClientRect(); var x = (e.clientX - rect.left - canvas.width/2) / (baseFitScale*scale) + imgW/2; var y = (e.clientY - rect.top  - canvas.height/2) / (baseFitScale*scale) + imgH/2; var path = overlays.paths[overlays.paths.length-1]; path.push({x:x,y:y}); draw(); return; }
-        if (!dragging) return; var dx = e.clientX - lastX; var dy = e.clientY - lastY; lastX = e.clientX; lastY = e.clientY; panX += dx; panY += dy; draw();
-      });
-      window.addEventListener('mouseup', function(){ drawing = false; });
-
-      canvas && canvas.addEventListener('dblclick', function(){ reset(); });
-
-      canvas && canvas.addEventListener('click', function(){ if (!img) { fileInput && fileInput.click(); } });
-
-      ;['dragenter','dragover','dragleave','drop'].forEach(function(evt){ canvasWrap.addEventListener(evt, function(e){ e.preventDefault(); }); });
-      canvasWrap.addEventListener('dragover', function(){ canvasWrap.classList.add('dragover'); });
-      canvasWrap.addEventListener('dragleave', function(){ canvasWrap.classList.remove('dragover'); });
-      canvasWrap.addEventListener('drop', function(e){ canvasWrap.classList.remove('dragover'); var files = e.dataTransfer && e.dataTransfer.files; if (files && files[0]) loadFileAndEnter(files[0]); });
-
-      draw();
-    })();
     </script>
 </body>
 </html>

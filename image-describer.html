@@ -98,7 +98,6 @@
                     <ul class="nav-menu">
                         <li><a href="/" class="nav-link">Home</a></li>
                         <li><a href="/image-describer" class="nav-link" aria-current="page">Image Describer</a></li>
-                        <li><a href="/ai-cutout" class="nav-link">AI Cutout</a></li>
                         <li><a href="/turn-images-into-unicode" class="nav-link">Turn Images into Unicode</a></li>
                         <li><a href="/images-for-fb-cover" class="nav-link">Fb Covers</a></li>
                         <li><a href="/400x400-black-image" class="nav-link">400x400 Black Image</a></li>
@@ -149,7 +148,10 @@
                                     </select>
                                 </div>
                                 <div class="prompts-box" style="margin-bottom: var(--space-4); position: relative;">
-                                    <label style="font-size:0.9rem;color:var(--gray-700);">Generated prompts</label>
+                                    <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);">
+                                      <label style="font-size:0.9rem;color:var(--gray-700);">Generated prompts</label>
+                                      <button class="btn btn-secondary" id="clearBtn">Clear All</button>
+                                    </div>
                                     <textarea id="promptOutput" style="width:100%;height:180px;padding:var(--space-3);border:1px solid var(--gray-300);border-radius:var(--radius-md);" placeholder="Prompts will be shown here..."></textarea>
                                     <div id="panelLoading" class="loading-overlay" style="display: none; position: absolute; inset: 0; justify-content: center; align-items: center;">
                                         <div class="loading-spinner"></div>
@@ -158,7 +160,8 @@
                                 </div>
                                 <div class="panel-actions" style="display:flex;flex-direction:column;gap:var(--space-3);">
                                     <button class="btn btn-primary" id="generateBtn">Generate Prompts</button>
-                                    <button class="btn btn-secondary" id="clearBtn">Clear All</button>
+                                    <button class="btn" id="generateImageBtn">Generate Image</button>
+                                    <img id="generatedImagePreview" alt="Generated Image" style="display:none;max-width:100%;border-radius:8px;border:1px solid var(--gray-200);" />
                                 </div>
                             </div>
                         </div>
@@ -282,6 +285,8 @@
         var copyBtn = document.getElementById('copyBtn');
         var generateBtn = document.getElementById('generateBtn');
         var clearBtn = document.getElementById('clearBtn');
+        var generateImageBtn = document.getElementById('generateImageBtn');
+        var generatedImagePreview = document.getElementById('generatedImagePreview');
         var resetBtn = document.getElementById('resetBtn');
         var canvas = document.getElementById('canvas');
         var promptStyleSelect = document.getElementById('promptStyleSelect');
@@ -359,6 +364,49 @@
                 if (pl2) pl2.style.display = 'none';
             })();
         });
+
+        if (generateImageBtn) {
+            generateImageBtn.addEventListener('click', async function(){
+                var text = promptOutput && promptOutput.value ? promptOutput.value.trim() : '';
+                if (!text) { 
+                    var toast = document.getElementById('copyToast');
+                    if (toast) { toast.textContent = 'Please enter prompts first.'; toast.classList.add('show'); setTimeout(function(){ toast.classList.remove('show'); }, 2000); }
+                    return;
+                }
+                var btn = this;
+                btn.disabled = true;
+                btn.textContent = 'Generating...';
+                try {
+                    var payload = {workflow_id: '7566465208119328814', parameters: { input: text } };
+                    var res = await fetch('/api/coze/workflow/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    var json;
+                    try { json = await res.json(); } catch(e){ json = null; }
+                    if (!res.ok) { throw new Error(json && json.error ? json.error : ('HTTP '+res.status)); }
+                    var url = json && (json.image_url || null);
+                    if (!url && json && json.data) {
+                        try {
+                            var dataObj = typeof json.data === 'string' ? JSON.parse(json.data) : json.data;
+                            if (dataObj) {
+                               if (dataObj.output && dataObj.output.image_url) url = dataObj.output.image_url;
+                               else if (dataObj.url) url = dataObj.url;
+                               else if (typeof dataObj.output === 'string' && /^https?:\/\//.test(dataObj.output)) url = dataObj.output;
+                            }
+                        } catch(e){}
+                    }
+                    if (url) {
+                        if (generatedImagePreview) { generatedImagePreview.src = url; generatedImagePreview.style.display = 'block'; }
+                    } else {
+                        throw new Error('No image url in workflow output');
+                    }
+                } catch (e) {
+                    var toast2 = document.getElementById('copyToast');
+                    if (toast2) { toast2.textContent = 'Generate image failed: ' + e.message; toast2.classList.add('show'); setTimeout(function(){ toast2.classList.remove('show'); }, 2000); }
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Generate Image';
+                }
+            });
+        }
 
         resetBtn.addEventListener('click', function(){
             restoreUploadSection();

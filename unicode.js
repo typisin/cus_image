@@ -191,26 +191,44 @@ class ImageToUnicodeConverter {
     
     out.textContent = asciiArt;
     pane && pane.classList.remove('hidden');
-    
-    // 获取原图在页面中的实际展示尺寸
+
     const imgEl = document.getElementById('imagePreview');
-    const w = imgEl ? imgEl.clientWidth : this.currentImage.width;
-    const h = imgEl ? imgEl.clientHeight : this.currentImage.height;
+    const targetW = imgEl ? imgEl.clientWidth : this.currentImage.width;
+    const targetH = imgEl ? imgEl.clientHeight : this.currentImage.height;
 
-    // 将unicode预览区域限制为与原图一致的宽高
-    if (pane) {
-      pane.style.width = w + 'px';
-      pane.style.height = h + 'px';
-    }
-    if (out) {
-      out.style.width = w + 'px';
-      out.style.height = h + 'px';
-      out.style.maxWidth = w + 'px';
-      out.style.maxHeight = h + 'px';
-      out.style.overflow = 'auto';
+    let canvas = document.getElementById('unicodeCanvas');
+    if (!canvas) {
+      canvas = document.createElement('canvas');
+      canvas.id = 'unicodeCanvas';
+      canvas.className = 'unicode-canvas';
+      pane && pane.appendChild(canvas);
     }
 
-    // 根据限制后的空间自适配字号
+    const ctx = canvas.getContext('2d');
+    const lines = asciiArt.split('\n');
+    const rows = Math.max(1, lines.length);
+    const cols = Math.max(1, Math.max(...lines.map(l => l.length)));
+
+    const charWidthFactor = 0.6;
+    const cellW = Math.max(6, Math.floor(targetW / cols));
+    const cellH = Math.max(6, Math.floor(targetH / rows));
+    const fontSize = Math.max(6, Math.min(cellH, Math.floor(cellW / charWidthFactor)));
+    canvas.width = cols * cellW;
+    canvas.height = rows * cellH;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#111827';
+    ctx.font = `${fontSize}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Courier New', monospace`;
+    ctx.textBaseline = 'top';
+
+    for (let y = 0; y < rows; y++) {
+      const line = lines[y] || '';
+      for (let x = 0; x < line.length; x++) {
+        const ch = line[x];
+        ctx.fillText(ch, x * cellW, y * cellH);
+      }
+    }
+    
     this.fitAsciiToPane();
   }
 
@@ -305,12 +323,11 @@ class ImageToUnicodeConverter {
   
   
   downloadResult() {
-    const out = document.getElementById('unicodeOutput');
-    const blob = new Blob([out.textContent || ''], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
+    const canvas = document.getElementById('unicodeCanvas');
+    const url = canvas ? canvas.toDataURL('image/png') : URL.createObjectURL(new Blob([''], { type: 'text/plain' }));
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'unicode.txt';
+    a.download = canvas ? 'unicode.png' : 'unicode.txt';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

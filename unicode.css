@@ -141,6 +141,12 @@
   display: block; /* 确保是块级元素 */
 }
 
+.unicode-canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 /* Controls Section */
 .controls-section {
   flex: 0.6667;

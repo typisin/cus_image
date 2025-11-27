@@ -16,6 +16,7 @@ class CusFooter extends HTMLElement {
                 <li><a href="/images-for-fb-cover" class="footer-link">Fb Covers</a></li>
                 <li><a href="/400x400-black-image" class="footer-link">400x400 Black Image</a></li>
                 <li><a href="/blank-image" class="footer-link">Blank Image</a></li>
+                <li><a href="/ambigram-generator" class="footer-link">Ambigram Generator</a></li>
               </ul>
             </div>
             <div class="footer-section">

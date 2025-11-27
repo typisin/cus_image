@@ -228,6 +228,11 @@ class ImageToUnicodeConverter {
         ctx.fillText(ch, x * cellW, y * cellH);
       }
     }
+
+    // 显示为可预览的等比例图片
+    canvas.style.width = '100%';
+    canvas.style.height = 'auto';
+    if (out) out.style.display = 'none';
     
     this.fitAsciiToPane();
   }

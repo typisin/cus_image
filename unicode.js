@@ -25,6 +25,7 @@ class ImageToUnicodeConverter {
   initializeEventListeners() {
     const fileInput = document.getElementById('fileInput');
     const uploadArea = document.getElementById('uploadArea');
+    const emptyState = uploadArea && uploadArea.querySelector('.empty-state');
     const densitySlider = document.getElementById('densitySlider');
     const widthSlider = document.getElementById('widthSlider');
     const convertBtn = document.getElementById('convertBtn');
@@ -37,6 +38,19 @@ class ImageToUnicodeConverter {
     uploadArea.addEventListener('dragover', (e) => this.handleDragOver(e));
     uploadArea.addEventListener('dragleave', (e) => this.handleDragLeave(e));
     uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
+
+    // Click anywhere to open file selector (overlay透明或覆盖都可点击)
+    uploadArea.addEventListener('click', () => fileInput && fileInput.click());
+
+    // 当空态层启用 pointer-events 时，确保拖拽事件同样可用
+    if (emptyState) {
+      ['dragenter','dragover','dragleave','drop'].forEach(evt => {
+        emptyState.addEventListener(evt, (e) => e.preventDefault());
+      });
+      emptyState.addEventListener('dragover', (e) => this.handleDragOver(e));
+      emptyState.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+      emptyState.addEventListener('drop', (e) => this.handleDrop(e));
+    }
     
     // Controls
     densitySlider.addEventListener('input', (e) => this.updateDensityDisplay(e));

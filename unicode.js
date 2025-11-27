@@ -35,6 +35,7 @@ class ImageToUnicodeConverter {
     fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
     
     // Drag and drop
+    uploadArea.addEventListener('dragenter', (e) => e.preventDefault());
     uploadArea.addEventListener('dragover', (e) => this.handleDragOver(e));
     uploadArea.addEventListener('dragleave', (e) => this.handleDragLeave(e));
     uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
@@ -104,8 +105,14 @@ class ImageToUnicodeConverter {
       img.onload = () => {
         this.currentImage = img;
         this.updatePreview();
-        document.getElementById('convertBtn').disabled = false;
+        const previewEl = document.getElementById('imagePreview');
+        if (previewEl) previewEl.style.display = 'block';
         const area = document.getElementById('uploadArea');
+        const rs = area && area.querySelector('.result-state');
+        const es = area && area.querySelector('.empty-state');
+        if (rs) rs.style.display = 'block';
+        if (es) es.style.display = 'none';
+        document.getElementById('convertBtn').disabled = false;
         area && area.classList.add('has-image');
       };
       img.src = e.target.result;

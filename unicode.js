@@ -114,8 +114,12 @@ class ImageToUnicodeConverter {
         const area = document.getElementById('uploadArea');
         const rs = area && area.querySelector('.result-state');
         const es = area && area.querySelector('.empty-state');
+        const uPane = document.getElementById('unicodePane');
+        const iPane = document.getElementById('imagePane');
         if (rs) rs.style.display = 'block';
         if (es) es.style.display = 'none';
+        uPane && uPane.classList.add('hidden');
+        iPane && iPane.classList.remove('hidden');
         document.getElementById('convertBtn').disabled = false;
         area && area.classList.add('has-image');
         this.hasImage = true;
@@ -178,6 +182,7 @@ class ImageToUnicodeConverter {
     const pane = document.getElementById('unicodePane');
     
     out.textContent = asciiArt;
+    pane && pane.classList.remove('hidden');
     
     // 获取原图在页面中的实际展示尺寸
     const imgEl = document.getElementById('imagePreview');

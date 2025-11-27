@@ -50,6 +50,8 @@
 #uploadArea.has-image .empty-state { display: none; }
 #uploadArea.has-image .result-state { display: block; }
 
+.hidden { display: none !important; }
+
 /* Prevent overflow of inner content */
 #uploadArea {
   overflow: hidden;

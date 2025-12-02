@@ -5,13 +5,18 @@ import { grantCredits } from '../../lib/credits.js'
 export default async function handler(req, res) {
   if (req.method !== 'POST') { res.status(405).json({ error: 'Method Not Allowed' }); return }
   try {
+    const rid = Math.random().toString(36).slice(2)
+    console.log('[Webhook] start', { rid })
     const secret = process.env.CREEM_WEBHOOK_SECRET
     if (!secret) { res.status(500).json({ error: 'Missing webhook secret' }); return }
     const sig = getSignatureFromReq(req)
     const raw = await readRaw(req)
-    if (!checkSig(String(sig || '').trim(), raw, secret)) { res.status(401).json({ error: 'Invalid signature' }); return }
+    const sigOk = checkSig(String(sig || '').trim(), raw, secret)
+    console.log('[Webhook] sig', { rid, present: !!sig, ok: sigOk })
+    if (!sigOk) { res.status(401).json({ error: 'Invalid signature' }); return }
     let payload
     try { payload = JSON.parse(raw) } catch { res.status(400).json({ error: 'Bad payload' }); return }
+    console.log('[Webhook] payload', { rid, keys: Object.keys(payload || {}) })
     const orderId = payload.order_id || (payload.order && payload.order.id) || payload.id || null
     const status = payload.status || (payload.order && payload.order.status) || payload.event || null
     const email = (
@@ -24,6 +29,7 @@ export default async function handler(req, res) {
     const meta = payload.metadata || (payload.order && payload.order.metadata) || {}
     const productId = payload.product_id || (payload.order && payload.order.product_id) || null
     const paid = status === 'paid' || status === 'payment_succeeded' || status === 'success' || status === 'completed'
+    console.log('[Webhook] status', { rid, status, paid })
     if (!paid) { res.status(200).json({ ok: true }); return }
     if (!orderId) { res.status(400).json({ error: 'Missing order id' }); return }
     const amountEnv = process.env.CREDIT_GRANT_STANDARD_PACK
@@ -32,6 +38,7 @@ export default async function handler(req, res) {
     const client = getTursoClient()
     await ensurePurchasesTable()
     const existing = await client.execute({ sql: 'select id from purchases where order_id = ?', args: [String(orderId)] })
+    console.log('[Webhook] dedupe', { rid, orderId, duplicate: !!(existing.rows && existing.rows.length) })
     if (existing.rows && existing.rows.length) { res.status(200).json({ ok: true, duplicate: true }); return }
     let uid = null
     if (meta && (meta.user_id || meta.userId || meta.uid)) {
@@ -41,9 +48,12 @@ export default async function handler(req, res) {
       const u = await client.execute({ sql: 'select id from users where lower(email) = ?', args: [email] })
       if (u.rows && u.rows.length) { uid = Number(u.rows[0].id) }
     }
+    console.log('[Webhook] map', { rid, email, metaKeys: Object.keys(meta || {}), uid })
     if (!uid) { res.status(400).json({ error: 'User not found' }); return }
     await grantCredits(uid, amount, 365)
+    console.log('[Webhook] grant', { rid, uid, amount })
     await client.execute({ sql: 'insert into purchases(order_id, user_id, product_id, amount, created_at) values(?, ?, ?, ?, datetime("now"))', args: [String(orderId), uid, productId || null, amount] })
+    console.log('[Webhook] done', { rid, orderId })
     res.status(200).json({ ok: true })
   } catch (e) { res.status(500).json({ error: 'Server Error' }) }
 }

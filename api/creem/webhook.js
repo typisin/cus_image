@@ -14,7 +14,13 @@ export default async function handler(req, res) {
     try { payload = JSON.parse(raw) } catch { res.status(400).json({ error: 'Bad payload' }); return }
     const orderId = payload.order_id || (payload.order && payload.order.id) || payload.id || null
     const status = payload.status || (payload.order && payload.order.status) || payload.event || null
-    const email = (payload.buyer_email || (payload.customer && payload.customer.email) || '').toLowerCase()
+    const email = (
+      payload.buyer_email ||
+      (payload.customer && payload.customer.email) ||
+      payload.customer ||
+      (payload.order && payload.order.customer) ||
+      ''
+    ).toLowerCase()
     const meta = payload.metadata || (payload.order && payload.order.metadata) || {}
     const productId = payload.product_id || (payload.order && payload.order.product_id) || null
     const paid = status === 'paid' || status === 'payment_succeeded' || status === 'success' || status === 'completed'
@@ -28,7 +34,9 @@ export default async function handler(req, res) {
     const existing = await client.execute({ sql: 'select id from purchases where order_id = ?', args: [String(orderId)] })
     if (existing.rows && existing.rows.length) { res.status(200).json({ ok: true, duplicate: true }); return }
     let uid = null
-    if (meta && meta.user_id) { uid = Number(meta.user_id) }
+    if (meta && (meta.user_id || meta.userId || meta.uid)) {
+      uid = Number(meta.user_id || meta.userId || meta.uid)
+    }
     else if (email) {
       const u = await client.execute({ sql: 'select id from users where lower(email) = ?', args: [email] })
       if (u.rows && u.rows.length) { uid = Number(u.rows[0].id) }

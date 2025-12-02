@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing | CusImage</title>
+  <meta name="description" content="Simple pricing for CusImage credits.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+  <link rel="shortcut icon" href="/favicon.svg?v=2" type="image/svg+xml">
+  <script src="favicon.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>(function(){var h=location.hostname;var isLocal=/^(localhost|127\.0\.0\.1)$/.test(h);if(!isLocal){var s=document.createElement('script');s.defer=true;s.src='/_vercel/insights/script.js';document.head.appendChild(s);}})();</script>
+  <script>
+    (function(){
+      var host = location.hostname || '';
+      var isLocal = host === 'localhost' || host === '127.0.0.1' || /\.vercel\.dev$/.test(host);
+      if (isLocal) return;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2211656389763853';
+      s.crossOrigin = 'anonymous';
+      document.head.appendChild(s);
+    })();
+  </script>
+  <style>
+    .pricing-card {
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius-xl);
+        padding: var(--space-8);
+        max-width: 400px;
+        margin: 0 auto;
+        text-align: center;
+        box-shadow: var(--shadow-lg);
+        transition: transform var(--transition-normal);
+    }
+    .pricing-card:hover {
+        transform: translateY(-4px);
+    }
+    .pricing-grid {
+        display: flex;
+        justify-content: center;
+        gap: var(--space-8);
+        flex-wrap: wrap;
+        margin: 0 auto;
+        max-width: 1000px;
+    }
+    .pricing-price {
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: var(--primary-blue);
+        line-height: 1;
+        margin: var(--space-4) 0;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 4px;
+    }
+    .pricing-currency {
+        font-size: 1rem;
+        color: var(--gray-500);
+        font-weight: 500;
+        margin-top: 8px;
+    }
+    .pricing-features {
+        list-style: none;
+        margin: var(--space-8) 0;
+        text-align: left;
+        padding: 0 var(--space-4);
+    }
+    .pricing-features li {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        margin-bottom: var(--space-3);
+        color: var(--gray-700);
+    }
+    .check-icon {
+        color: var(--success);
+        flex-shrink: 0;
+    }
+    .buy-btn {
+        width: 100%;
+        padding: 14px;
+        font-size: 1.1rem;
+        justify-content: center;
+        background: var(--primary-blue);
+        color: white;
+        border: none;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        cursor: pointer;
+        transition: background var(--transition-fast);
+    }
+    .buy-btn:hover {
+        background: var(--primary-blue-dark);
+    }
+    #pricingInfoModal { position: fixed; inset: 0; background: rgba(17,24,39,0.35); display: none; align-items: center; justify-content: center; z-index: 100; }
+    #pricingInfoModal.show { display: flex; }
+    #pricingInfoModal .content { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: var(--space-6); display: flex; align-items: center; gap: var(--space-3); }
+    #pricingInfoModal .loading-spinner { width: 20px; height: 20px; border: 2px solid var(--primary-blue); border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="brand">
+        <div class="logo"><img src="/logo.png" alt="CusImage"></div>
+        <h1 class="title">CusImage</h1>
+      </div>
+      <div class="nav-dropdown">
+        <a href="#" class="nav-link nav-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="main-nav" role="button">Tools</a>
+        <a href="/pricing.html" class="nav-link" style="margin-left: 10px;">Pricing</a>
+        <nav class="nav" id="main-nav" aria-label="Main navigation">
+          <ul class="nav-menu">
+            <li><a href="/image-describer" class="nav-link">Image Describer</a></li>
+            <li><a href="/turn-images-into-unicode" class="nav-link">Turn Images into Unicode</a></li>
+            <li><a href="/images-for-fb-cover" class="nav-link">Fb Covers</a></li>
+            <li><a href="/400x400-black-image" class="nav-link">400x400 Black Image</a></li>
+            <li><a href="/blank-image" class="nav-link">Blank Image</a></li>
+            <li><a href="/ambigram-generator" class="nav-link">Ambigram Generator</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container">
+      <section class="hero">
+        <h2 class="hero-title">Simple Pricing</h2>
+        <p class="hero-description">Get more credits to power your creativity. Simple, transparent, and secure.</p>
+      </section>
+
+      <div class="pricing-grid">
+        <!-- Free Plan -->
+        <div class="pricing-card">
+             <h3 style="font-size: 1.5rem; font-weight: 600; color: var(--gray-900);">Free Pack</h3>
+             <div class="pricing-price">
+               $0
+               <span class="pricing-currency">USD</span>
+             </div>
+             <p style="color: var(--gray-500); margin-bottom: var(--space-4);">Forever free</p>
+          
+          <ul class="pricing-features">
+              <li>
+                  <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span><strong>5 Credits</strong> daily login bonus</span>
+              </li>
+              <li>
+                  <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Access to basic tools</span>
+              </li>
+              <li>
+                  <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Standard generation speed</span>
+              </li>
+          </ul>
+  
+          <button class="buy-btn" style="background: var(--gray-100); color: var(--gray-700); cursor: default; pointer-events: none;">Active Plan</button>
+          <p style="font-size: 0.875rem; color: var(--gray-500); margin-top: var(--space-4); visibility: hidden;">Spacer</p>
+        </div>
+
+        <div class="pricing-card">
+           <h3 style="font-size: 1.5rem; font-weight: 600; color: var(--gray-900);">Standard Pack</h3>
+           <div class="pricing-price">
+             $10
+             <span class="pricing-currency">USD</span>
+           </div>
+           <p style="color: var(--gray-500); margin-bottom: var(--space-4);">One-time payment</p>
+        
+        <ul class="pricing-features">
+            <li>
+                <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span><strong>100 Credits</strong> added instantly</span>
+            </li>
+            <li>
+                <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Valid for 1 year</span>
+            </li>
+            <li>
+                <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Sign-up bonus: 10 credits</span>
+            </li>
+        </ul>
+
+        <button class="buy-btn" id="buyStandardBtn">Buy Now</button>
+      </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="pricingInfoModal">
+    <div class="content">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Loading...</p>
+    </div>
+  </div>
+
+  <cus-footer></cus-footer>
+  <script src="/footer.js" defer></script>
+  <script src="/user-widget.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var toggle = document.querySelector('.nav-toggle');
+      var dropdown = toggle && toggle.parentElement;
+      var nav = dropdown && dropdown.querySelector('.nav');
+      if (toggle && dropdown && nav) {
+        toggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          var open = dropdown.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        document.addEventListener('click', function(e) {
+          if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+      var brand = document.querySelector('.brand');
+      if (brand) {
+        brand.setAttribute('role','link');
+        brand.setAttribute('tabindex','0');
+        brand.addEventListener('click', function(){ location.href = '/'; });
+        brand.addEventListener('keypress', function(e){ if (e.key === 'Enter' || e.keyCode === 13) location.href = '/'; });
+      }
+      var modal = document.getElementById('pricingInfoModal');
+      var spans = document.querySelectorAll('.pricing-features span');
+      spans.forEach(function(s){
+        s.style.cursor = 'pointer';
+        s.addEventListener('click', function(){
+          modal.classList.add('show');
+          // Simulate data request pattern: Show div -> Request Data -> Hide/Update
+          var mockRequest = new Promise(function(resolve) {
+            setTimeout(resolve, 1200);
+          });
+          mockRequest.then(function() {
+            modal.classList.remove('show');
+          });
+        });
+      });
+      modal.addEventListener('click', function(e){ if (e.target === modal) modal.classList.remove('show'); });
+      var buyBtn = document.getElementById('buyStandardBtn');
+      if (buyBtn) {
+        buyBtn.addEventListener('click', async function(){
+          try {
+            var r = await fetch('/api/config');
+            var j = await r.json();
+            var url = j && j.checkout_url;
+            if (url) { location.href = url; }
+          } catch (e) {}
+        });
+      }
+    });
+  </script>
+</body>
+</html>

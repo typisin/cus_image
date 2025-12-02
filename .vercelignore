@@ -5,3 +5,7 @@ dist
 .trae
 .log
 .figma
+api/coze/**
+api/feishu/**
+api/turso/**
+api/describe.js

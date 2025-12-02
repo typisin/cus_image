@@ -260,17 +260,22 @@
         var params = new URLSearchParams(location.search || '');
         if (params.get('purchase') === 'success') {
           var content = document.querySelector('#pricingInfoModal .content');
-          var orderId = params.get('order_id') || '';
-          var checkoutId = params.get('checkout_id') || '';
-          if (content) {
-            var lines = ['Purchase successful'];
-            if (orderId) lines.push('Order: ' + orderId);
-            if (checkoutId) lines.push('Checkout: ' + checkoutId);
-            content.innerHTML = '<div style="display:flex;align-items:center;gap:12px">\n  <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>\n  <div>' + lines.map(function(t){ return '<p class="loading-text">'+t+'</p>'; }).join('') + '</div>\n</div>';
-          }
+          if (content) { content.innerHTML = '<div style="display:flex;align-items:center;gap:12px">\n  <div class="loading-spinner"></div>\n  <p class="loading-text">Updating credits...</p>\n</div>'; }
           modal.classList.add('show');
           if (typeof refresh === 'function') { try { refresh(); } catch(e){} }
-          setTimeout(function(){ modal.classList.remove('show'); }, 2200);
+          (async function(){
+            var info = null;
+            try {
+              var r2 = await fetch('/api/purchases/latest');
+              if (r2.ok) { var j2 = await r2.json(); info = j2 && j2.latest || null; }
+            } catch(e){}
+            if (content) {
+              var lines = ['Purchase successful'];
+              if (info && info.order_id) lines.push('Order: ' + info.order_id);
+              content.innerHTML = '<div style="display:flex;align-items:center;gap:12px">\n  <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>\n  <div>' + lines.map(function(t){ return '<p class="loading-text">'+t+'</p>'; }).join('') + '</div>\n</div>';
+            }
+            setTimeout(function(){ modal.classList.remove('show'); }, 2200);
+          })();
         }
       } catch(e) {}
     });

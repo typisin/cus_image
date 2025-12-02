@@ -252,7 +252,13 @@
             var r = await fetch('/api/config');
             var j = await r.json();
             var url = j && j.checkout_url;
-            if (url) { location.href = url; }
+            if (url) {
+              try {
+                var u = new URL(url);
+                if (!u.searchParams.get('locale')) { u.searchParams.set('locale','en'); }
+                location.href = u.toString();
+              } catch (e) { location.href = url; }
+            }
           } catch (e) {}
         });
       }

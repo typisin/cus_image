@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   try {
     const secret = process.env.CREEM_WEBHOOK_SECRET
     if (!secret) { res.status(500).json({ error: 'Missing webhook secret' }); return }
-    const sig = req.headers['x-creem-signature'] || req.headers['X-Creem-Signature'] || req.headers['x-signature'] || req.headers['X-Signature']
+    const sig = getSignatureFromReq(req)
     const raw = await readRaw(req)
     if (!checkSig(String(sig || '').trim(), raw, secret)) { res.status(401).json({ error: 'Invalid signature' }); return }
     let payload
@@ -46,6 +46,24 @@ function readRaw(req) {
     req.on('data', (c) => { data += c })
     req.on('end', () => { resolve(data || '') })
   })
+}
+
+function getSignatureFromReq(req){
+  const h = req.headers || {}
+  const candidates = [
+    'x-creem-signature','X-Creem-Signature',
+    'x-creem-signature-sha256','X-Creem-Signature-SHA256',
+    'x-webhook-signature','X-Webhook-Signature',
+    'x-signature','X-Signature',
+    'signature','Signature'
+  ]
+  for (const k of candidates){ if (h[k]) return h[k] }
+  try {
+    const u = new URL(req.url, 'http://localhost')
+    const qp = ['x-creem-signature','x-webhook-signature','signature','sig','s']
+    for (const q of qp){ const v = u.searchParams.get(q); if (v) return v }
+  } catch {}
+  return ''
 }
 
 function checkSig(headerSig, raw, secret) {

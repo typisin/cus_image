@@ -87,14 +87,38 @@ function getSignatureFromReq(req){
 function checkSig(headerSig, raw, secret) {
   try {
     if (!headerSig) return false
-    const clean = headerSig.replace(/^sha256=/i, '')
+    const digest = parseSignature(headerSig)
+    if (!digest) return false
     const hHex = crypto.createHmac('sha256', secret).update(raw).digest('hex')
     const hBase64 = crypto.createHmac('sha256', secret).update(raw).digest('base64')
-    const a = Buffer.from(clean, 'hex')
-    const b = Buffer.from(hHex, 'hex')
-    if (a.length === b.length && crypto.timingSafeEqual(a, b)) return true
-    return clean === hHex || clean === hBase64
+    // 尝试 hex 比较（常见）
+    try {
+      const a = Buffer.from(digest, 'hex')
+      const b = Buffer.from(hHex, 'hex')
+      if (a.length === b.length && crypto.timingSafeEqual(a, b)) return true
+    } catch {}
+    // 直接字符串比较（hex / base64）
+    if (digest === hHex || digest === hBase64) return true
+    return false
   } catch { return false }
+}
+
+function parseSignature(headerSig) {
+  try {
+    const s = String(headerSig || '').trim()
+    // 复合格式：v1=... 或 sha256=...
+    let m = s.match(/(?:^|[,;\s])v1=([^,;\s]+)/i)
+    if (m && m[1]) return m[1].trim()
+    m = s.match(/(?:^|[,;\s])sha256=([^,;\s]+)/i)
+    if (m && m[1]) return m[1].trim()
+    // 裸 hex（64位）
+    m = s.match(/[a-f0-9]{64}/i)
+    if (m && m[0]) return m[0]
+    // 裸 base64（长度较长）
+    m = s.match(/[A-Za-z0-9+/=]{32,}/)
+    if (m && m[0]) return m[0]
+    return s
+  } catch { return '' }
 }
 
 async function ensurePurchasesTable() {

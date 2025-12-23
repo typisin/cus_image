@@ -2,15 +2,15 @@ export const config = { runtime: 'edge' }
 
 export default async function handler(req) {
   console.log('=== Describer Workflow API Start ===', { method: req.method, url: ' /api/coze/describer/run ' })
+  console.log('VERCEL_ENV:', process.env.VERCEL_ENV || 'unknown', 'VERCEL_REGION:', process.env.VERCEL_REGION || 'unknown')
   if (req.method !== 'POST') {
     console.log('Non-POST request received')
     return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers: { 'Content-Type': 'application/json' } })
   }
   const workflowUrl = 'https://api.coze.cn/v1/workflow/run'
-  const envToken = process.env.COZE_SAT
-  const clientToken = req.headers.get('authorization')?.replace(/^Bearer\s+/i, '') || req.headers.get('x-coze-token') || req.headers.get('token')
-  const token = envToken || clientToken
-  console.log('Token presence', { envToken: !!envToken, clientToken: !!clientToken, final: !!token })
+  let token, source
+  try { const r = (await import('../../lib/env.js')).getSATFromReq(req); token = r.token; source = r.source } catch (e) { token = process.env.COZE_SAT || null; source = 'env' }
+  console.log('Token presence', { source: source || 'none', final: !!token })
   if (!token) {
     console.log('Missing token')
     return new Response(JSON.stringify({ error: 'token required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
@@ -20,7 +20,8 @@ export default async function handler(req) {
   const image = body && body.image
   const promptStyle = body && body.prompt_style
   const workflowId = process.env.COZE_WORKFLOW_Describer_ID
-  console.log('Request fields', { imageLen: image ? (''+image).length : 0, promptStyle, hasWorkflowId: !!workflowId })
+  const wfLog = workflowId ? (String(workflowId).slice(0, 6) + '...') : null
+  console.log('Request fields', { imageLen: image ? (''+image).length : 0, promptStyle, hasWorkflowId: !!workflowId, workflowId_masked: wfLog })
   if (!image) { console.log('Missing image'); return new Response(JSON.stringify({ error: 'image required' }), { status: 400, headers: { 'Content-Type': 'application/json' } }) }
   if (!workflowId) { console.log('Missing workflow id env'); return new Response(JSON.stringify({ error: 'workflow_id required' }), { status: 400, headers: { 'Content-Type': 'application/json' } }) }
   const payload = { workflow_id: workflowId, parameters: { image: image, prompt_style: promptStyle || 'Brief' } }

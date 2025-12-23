@@ -96,6 +96,33 @@
   display: block;
 }
 
+.unicode-placeholder {
+  margin-top: var(--space-4);
+  padding: var(--space-6);
+  border: 1px dashed var(--gray-300);
+  border-radius: var(--radius-md);
+  background: var(--gray-50);
+  text-align: center;
+  color: var(--gray-700);
+  min-height: var(--pane-h, 300px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.unicode-placeholder .placeholder-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--space-3);
+  color: var(--gray-400);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* image-info and output-info removed per design */
 
 .output-header {
@@ -108,10 +135,10 @@
 #unicodePane {
   display: flex;
   flex-direction: column;
-  height: 100%; /* 确保容器撑满高度 */
-  min-height: 400px; /* 设置最小高度 */
-  max-height: none; /* 移除最大高度限制 */
-  overflow: hidden; /* 防止内容溢出 */
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
 }
 
 #unicodePane .output-header {
@@ -143,10 +170,8 @@
 }
 
 .unicode-canvas {
-  flex: 1;
-  min-height: 0;
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: contain;
   display: block;
 }
@@ -561,8 +586,7 @@
     justify-content: center;
   }
 }
-#imagePane,
-#unicodePane {
+#imagePane {
   height: var(--pane-h, 300px);
   min-height: var(--pane-h, 300px);
 }

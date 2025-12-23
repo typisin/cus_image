@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Art Ideas & Inspiration - Easy Templates for Beginners | CusImage</title>
+    <meta name="description" content="Explore a curated collection of pixel art ideas and templates. Find inspiration for your next 8-bit creation. Easy patterns for beginners and pros.">
+    <meta name="keywords" content="pixel art ideas, pixel art templates, easy pixel art, pixel art inspiration, 8-bit art examples, pixel art gallery, pokemon pixel art, retro game art">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml">
+    <link rel="shortcut icon" href="/favicon.svg?v=3" type="image/svg+xml">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2211656389763853" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        .ideas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .idea-card {
+            background: var(--pixel-dark);
+            border: var(--border-width) solid var(--pixel-border);
+            box-shadow: var(--shadow-md);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .idea-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--pixel-secondary);
+        }
+        
+        .idea-image-container {
+            width: 100%;
+            aspect-ratio: 1;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-bottom: var(--border-width) solid var(--pixel-border);
+            position: relative;
+        }
+        
+        .idea-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+        
+        .idea-content {
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .idea-title {
+            font-size: 1.4rem;
+            color: var(--pixel-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .idea-tag {
+            display: inline-block;
+            background: var(--pixel-secondary);
+            color: #000;
+            padding: 2px 8px;
+            font-size: 0.9rem;
+            border: 2px solid #000;
+            align-self: flex-start;
+            margin-top: auto;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 4rem;
+            font-size: 1.5rem;
+            color: var(--pixel-fg);
+        }
+
+        .error-state {
+            text-align: center;
+            padding: 4rem;
+            color: var(--error);
+            font-size: 1.2rem;
+        }
+
+        .category-btn {
+            background: var(--pixel-dark);
+            color: var(--pixel-fg);
+            border: var(--border-width) solid var(--pixel-border);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            box-shadow: 2px 2px 0 var(--pixel-border);
+            transition: all 0.1s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .category-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0 var(--pixel-border);
+            color: var(--pixel-secondary);
+            text-decoration: none;
+        }
+
+        .category-btn.active {
+            background: var(--pixel-primary);
+            color: #fff;
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0 var(--pixel-border);
+            border-color: var(--pixel-primary);
+        }
+    </style>
+    <script>(function(){var h=location.hostname||'';var isLocal=/^(localhost|127\.0\.0\.1)$/.test(h);if(!isLocal){var s=document.createElement('script');s.defer=true;s.src='/_vercel/insights/script.js';document.head.appendChild(s);}})();</script>
+    <script>(function(){var h=location.hostname||'';var isProd=h==='www.cusimage.com'||h==='cusimage.com';if(!isProd){return;}var si=document.createElement('script');si.defer=true;si.src='/_vercel/speed-insights/script.js';document.head.appendChild(si);})();</script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="brand">
+                <a href="/" style="text-decoration: none; display: flex; align-items: center;">
+                    <img src="/logo.svg" alt="CusImage Logo" class="logo-icon">
+                    <h1 class="title">CusImage</h1>
+                </a>
+            </div>
+            <div class="nav-dropdown">
+                <a href="/pixel-art-ideas" class="nav-link">Pixel Art Ideas</a>
+                <div class="dropdown-container">
+                    <span class="nav-link dropdown-trigger">Tools ▼</span>
+                    <div class="dropdown-content">
+                        <a href="/pixel-editor" class="dropdown-item">Pixel Editor</a>
+                        <a href="/turn-image-into-pixel-art" class="dropdown-item">Image to Pixel</a>
+                        <a href="/turn-images-into-unicode" class="dropdown-item">Unicode Art</a>
+                    </div>
+                </div>
+                <div id="user-widget-container" style="display: inline-block; margin-left: 20px;"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="hero" style="padding: 2rem 0; text-align: center;">
+                <h2 class="hero-title">PIXEL ART IDEAS</h2>
+                <p class="hero-description">Discover a curated collection of pixel art templates and inspiration.</p>
+            </section>
+            
+            <div id="categories-container" class="categories-nav" style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                <!-- Categories will be injected here -->
+            </div>
+            
+            <div id="ideas-container" class="ideas-grid">
+                <div class="loading-state">
+                    LOADING PIXELS...
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <cus-footer></cus-footer>
+    <script src="/footer.js" defer></script>
+    <script src="/user-widget.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('ideas-container');
+            const categoriesContainer = document.getElementById('categories-container');
+            
+            try {
+                const response = await fetch('/api/feishu/pixel-ideas');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch ideas');
+                }
+                
+                const data = await response.json();
+                const ideas = data.items || [];
+                
+                if (ideas.length === 0) {
+                    container.innerHTML = '<div class="error-state">No ideas found. Check back later!</div>';
+                    return;
+                }
+
+                // 1. Build Category Map: { themeName: path }
+                // We prefer the 'path' field from Feishu. If multiple items have same theme, they should share path.
+                const categoryMap = new Map(); // theme -> path
+                const reverseCategoryMap = new Map(); // path -> theme
+                
+                ideas.forEach(idea => {
+                    const themes = Array.isArray(idea.theme) ? idea.theme : [idea.theme];
+                    const path = idea.path || '';
+                    
+                    if (path) {
+                        themes.forEach(t => {
+                            if (t) {
+                                categoryMap.set(t, path);
+                                reverseCategoryMap.set(path, t);
+                            }
+                        });
+                    }
+                });
+
+                // 3. Render Categories as Links
+                // Get unique themes that have a path
+                const uniqueThemes = Array.from(categoryMap.keys());
+                
+                const renderCategories = (activePath) => {
+                    // Remove trailing slash for comparison
+                    const normalizedActivePath = activePath.replace(/\/$/, '');
+                    
+                    let categoriesHtml = `
+                        <a href="/pixel-art-ideas" class="category-btn ${!normalizedActivePath ? 'active' : ''}">
+                            ALL
+                        </a>
+                    `;
+                    
+                    uniqueThemes.forEach(theme => {
+                        const path = categoryMap.get(theme);
+                        // Ensure strict string comparison and handle potential type mismatches
+                        const isActive = String(normalizedActivePath) === String(path);
+                        categoriesHtml += `
+                            <a href="/pixel-art-ideas/${path}" class="category-btn ${isActive ? 'active' : ''}">
+                                ${theme}
+                            </a>
+                        `;
+                    });
+                    
+                    categoriesContainer.innerHTML = categoriesHtml;
+                };
+
+                const escAttr = (v) => {
+                    return String(v || '')
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;')
+                };
+
+                const toImportUrl = (url) => {
+                    const u = String(url || '');
+                    if (/^https?:\/\//i.test(u)) return `/api/image-proxy?url=${encodeURIComponent(u)}`;
+                    return u;
+                };
+
+                const queueImportToEditor = (imageUrl, naturalW, naturalH) => {
+                    const w = Number(naturalW) || 0;
+                    const h = Number(naturalH) || 0;
+                    const maxDim = 128;
+                    const scale = (w > 0 && h > 0) ? Math.max(1, Math.ceil(Math.max(w, h) / maxDim)) : 1;
+                    const targetW = (w > 0) ? Math.max(1, Math.round(w / scale)) : 0;
+                    const targetH = (h > 0) ? Math.max(1, Math.round(h / scale)) : 0;
+
+                    localStorage.removeItem('pending_pixel_import');
+                    localStorage.removeItem('pending_pixel_size');
+                    localStorage.removeItem('pending_pixel_w');
+                    localStorage.removeItem('pending_pixel_h');
+
+                    localStorage.setItem('pending_pixel_import_url', toImportUrl(imageUrl));
+                    if (targetW && targetH) {
+                        localStorage.setItem('pending_pixel_target_w', String(targetW));
+                        localStorage.setItem('pending_pixel_target_h', String(targetH));
+                        localStorage.setItem('pending_pixel_original_w', String(targetW * 20));
+                        localStorage.setItem('pending_pixel_original_h', String(targetH * 20));
+                    }
+
+                    window.location.href = '/pixel-editor';
+                };
+
+                // 4. Update View Function (Routing Logic)
+                const updateView = (path) => {
+                    const cleanPath = decodeURIComponent(path.replace('/pixel-art-ideas', '').replace(/^\//, '')).replace(/\u200B/g, '');
+                    
+                    // Update Categories UI
+                    renderCategories(cleanPath);
+
+                    // Update SEO
+                    if (cleanPath && reverseCategoryMap.has(cleanPath)) {
+                        const activeTheme = reverseCategoryMap.get(cleanPath);
+                        document.title = `${activeTheme} Pixel Art Ideas - CusImage`;
+                        const metaDesc = document.querySelector('meta[name="description"]');
+                        if (metaDesc) {
+                            metaDesc.setAttribute('content', `Explore our collection of ${activeTheme} Pixel Art Ideas. High-quality pixel art inspiration and templates.`);
+                        }
+                        const h2 = document.querySelector('.hero-title');
+                        if (h2) h2.textContent = `${activeTheme.toUpperCase()} PIXEL ART IDEAS`;
+                    } else {
+                        document.title = 'Pixel Art Ideas & Inspiration - CusImage';
+                        const h2 = document.querySelector('.hero-title');
+                        if (h2) h2.textContent = 'PIXEL ART IDEAS';
+                        const metaDesc = document.querySelector('meta[name="description"]');
+                        if (metaDesc) {
+                            metaDesc.setAttribute('content', 'Explore our collection of Pixel Art Ideas. Get inspiration for your next pixel art project with Pokemon, retro games, and creative themes.');
+                        }
+                    }
+
+                    // Filter Ideas
+                    const filteredIdeas = !cleanPath 
+                        ? ideas 
+                        : ideas.filter(idea => {
+                            const pathStr = idea.path ? String(idea.path) : '';
+                            const cleanIdeaPath = pathStr.replace(/\u200B/g, '');
+                            return cleanIdeaPath === cleanPath;
+                        });
+                    
+                    if (filteredIdeas.length === 0) {
+                        container.innerHTML = '<div class="error-state">No ideas found for this category.</div>';
+                        return;
+                    }
+
+                    container.innerHTML = filteredIdeas.map(idea => `
+                        <div class="idea-card" data-image-url="${escAttr(idea.imageUrl)}" style="cursor: pointer;">
+                            <div class="idea-image-container">
+                                <img src="${idea.imageUrl}" alt="${escAttr(idea.title)}" class="idea-image" loading="lazy">
+                            </div>
+                            <div class="idea-content">
+                                <h3 class="idea-title">${escAttr(idea.title)}</h3>
+                                ${idea.theme ? (Array.isArray(idea.theme) ? idea.theme.map(t => `<span class="idea-tag" style="margin-right:4px; margin-bottom:4px;">${escAttr(t)}</span>`).join('') : `<span class="idea-tag">${escAttr(idea.theme)}</span>`) : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                };
+
+                container.addEventListener('click', (e) => {
+                    const card = e.target.closest('.idea-card');
+                    if (!card) return;
+                    const imageUrl = card.dataset.imageUrl || '';
+                    if (!imageUrl) return;
+                    const imgEl = card.querySelector('img');
+                    queueImportToEditor(imageUrl, imgEl && imgEl.naturalWidth, imgEl && imgEl.naturalHeight);
+                });
+
+                // Initial Render
+                updateView(window.location.pathname);
+
+                // History API Navigation Handler
+                categoriesContainer.addEventListener('click', (e) => {
+                    const btn = e.target.closest('.category-btn');
+                    if (btn) {
+                        e.preventDefault();
+                        const href = btn.getAttribute('href');
+                        
+                        // Push State
+                        history.pushState(null, '', href);
+                        
+                        // Update View manually
+                        updateView(href);
+                    }
+                });
+
+                // Handle Browser Back/Forward
+                window.addEventListener('popstate', () => {
+                    updateView(window.location.pathname);
+                });
+                
+            } catch (error) {
+                console.error('Error:', error);
+                container.innerHTML = `
+                    <div class="error-state">
+                        ERROR LOADING DATA<br>
+                        <button onclick="window.location.reload()" class="btn-primary" style="margin-top: 1rem;">RETRY</button>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

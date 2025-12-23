@@ -2,16 +2,15 @@ export const config = { runtime: 'edge' }
 
 export default async function handler(req) {
   console.log('=== Workflow Run API Debug ===')
+  console.log('VERCEL_ENV:', process.env.VERCEL_ENV || 'unknown', 'VERCEL_REGION:', process.env.VERCEL_REGION || 'unknown')
   
   if (req.method !== 'POST') return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers: { 'Content-Type': 'application/json' } })
   
   const workflowUrl = 'https://api.coze.cn/v1/workflow/run'
-  const envToken = process.env.COZE_SAT
-  const clientToken = req.headers.get('authorization')?.replace(/^Bearer\s+/i, '') || req.headers.get('x-coze-token') || req.headers.get('token')
-  const token = envToken || clientToken
+  let token, source
+  try { const r = (await import('../../lib/env.js')).getSATFromReq(req); token = r.token; source = r.source } catch (e) { token = process.env.COZE_SAT || null; source = 'env' }
   
-  console.log('Environment token present:', !!envToken)
-  console.log('Client token present:', !!clientToken)
+  console.log('Token source:', source || 'none')
   console.log('Final token present:', !!token)
   
   if (!token) return new Response(JSON.stringify({ error: 'token required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })

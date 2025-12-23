@@ -10,6 +10,10 @@
     </style>
   </defs>
   
+  <!-- Background (Rounded Rect simulated with pixels) -->
+  <!-- Main body 14x14 -->
+  <!-- Not doing a full background, just the letter C shape with some backing -->
+  
   <!-- C Shape -->
   <!-- Top Horizontal -->
   <rect x="4" y="3" width="7" height="1" class="primary" />

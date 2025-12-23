@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turn Image to Pixel Art - Free Online Photo Pixelator | CusImage</title>
+    <meta name="description" content="Convert photos and images into pixel art instantly. Adjust pixel size and palette. The best free online tool to pixelate images for retro game style.">
+    <meta name="keywords" content="image to pixel art, photo to pixel, pixelate image, 8-bit filter, pixel art converter, retro image effect, turn image into pixel art">
+    <meta name="robots" content="index, follow">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml">
+    <link rel="shortcut icon" href="/favicon.svg?v=3" type="image/svg+xml">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2211656389763853" crossorigin="anonymous"></script>
+    <link rel="canonical" href="https://www.cusimage.com/turn-image-into-pixel-art">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.cusimage.com/turn-image-into-pixel-art">
+    <meta property="og:title" content="Turn Image to Pixel Art - Free Online Photo Pixelator">
+    <meta property="og:description" content="Convert photos and images into pixel art instantly. Adjust pixel size and palette. The best free online tool to pixelate images for retro game style.">
+    <meta property="og:image" content="https://www.cusimage.com/logo.svg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.cusimage.com/turn-image-into-pixel-art">
+    <meta property="twitter:title" content="Turn Image to Pixel Art - Free Online Photo Pixelator">
+    <meta property="twitter:description" content="Convert photos and images into pixel art instantly. Adjust pixel size and palette. The best free online tool to pixelate images for retro game style.">
+    <meta property="twitter:image" content="https://www.cusimage.com/logo.svg">
+
+    <style>
+        .converter-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .upload-area {
+            background: var(--pixel-dark);
+            border: var(--border-width) solid var(--pixel-border);
+            padding: 3rem;
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-md);
+        }
+
+        .upload-area:hover {
+            border-color: var(--pixel-secondary);
+            transform: translate(-2px, -2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .preview-area {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .canvas-wrapper {
+            background: #fff;
+            background-image: 
+                linear-gradient(45deg, #ccc 25%, transparent 25%), 
+                linear-gradient(-45deg, #ccc 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #ccc 75%), 
+                linear-gradient(-45deg, transparent 75%, #ccc 75%);
+            background-size: 20px 20px;
+            border: var(--border-width) solid var(--pixel-border);
+            box-shadow: var(--shadow-lg);
+            max-width: 100%;
+            height: auto; /* 让容器随内容撑开 */
+            max-height: 70vh; /* 依然保留最大高度限制以适配屏幕 */
+            overflow: hidden;
+            display: inline-flex; /* 使用 inline-flex 使宽度贴合内容 */
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 1.5rem auto;
+        }
+
+        canvas {
+            display: block;
+            image-rendering: pixelated;
+            max-width: 100%;
+            max-height: 70vh; /* 确保 canvas 本身不超过视口高度 */
+            width: auto;
+            height: auto;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            background: var(--pixel-dark);
+            padding: 1rem;
+            border: var(--border-width) solid var(--pixel-border);
+            box-shadow: var(--shadow-md);
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .seo-content {
+            margin-top: 4rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .seo-section {
+            background: var(--pixel-dark);
+            border: var(--border-width) solid var(--pixel-border);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .seo-section h2 {
+            color: var(--pixel-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .step-list {
+            list-style: none;
+            counter-reset: steps;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-list li::before {
+            counter-increment: steps;
+            content: counter(steps);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            background: var(--pixel-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid black;
+            font-weight: bold;
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Turn Image into Pixel Art",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Free online tool to convert images into pixel art and edit them."
+    }
+    </script>
+    <script>(function(){var h=location.hostname||'';var isLocal=/^(localhost|127\.0\.0\.1)$/.test(h);if(!isLocal){var s=document.createElement('script');s.defer=true;s.src='/_vercel/insights/script.js';document.head.appendChild(s);}})();</script>
+    <script>(function(){var h=location.hostname||'';var isProd=h==='www.cusimage.com'||h==='cusimage.com';if(!isProd){return;}var si=document.createElement('script');si.defer=true;si.src='/_vercel/speed-insights/script.js';document.head.appendChild(si);})();</script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="brand">
+                <a href="/" style="text-decoration: none; display: flex; align-items: center;">
+                    <img src="/logo.svg" alt="CusImage Logo" class="logo-icon">
+                    <h1 class="title">CusImage</h1>
+                </a>
+            </div>
+            <div class="nav-dropdown">
+                <a href="/pixel-art-ideas" class="nav-link">Pixel Art Ideas</a>
+                <div class="dropdown-container">
+                    <span class="nav-link dropdown-trigger">Tools ▼</span>
+                    <div class="dropdown-content">
+                        <a href="/pixel-editor" class="dropdown-item">Pixel Editor</a>
+                        <a href="/turn-image-into-pixel-art" class="dropdown-item">Image to Pixel</a>
+                        <a href="/turn-images-into-unicode" class="dropdown-item">Unicode Art</a>
+                    </div>
+                </div>
+                <div id="user-widget-container" style="display: inline-block; margin-left: 20px;"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <h1 style="text-align: center; color: var(--pixel-accent); margin-top: 1rem; font-size: 2.5rem;">TURN IMAGE INTO PIXEL ART</h1>
+            <p style="text-align: center; color: var(--pixel-fg); margin-bottom: 2rem; font-size: 1.2rem;">Upload any image, convert it to pixel art, and edit it instantly.</p>
+            
+            <div class="converter-container">
+                <!-- Upload Section -->
+                <div class="upload-area" id="upload-zone">
+                    <div style="margin-bottom: 1.5rem; color: var(--pixel-secondary);">
+                        <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                    </div>
+                    <h3 style="color: var(--pixel-secondary); margin-bottom: 1rem;">Click or Drag Image Here</h3>
+                    <p style="color: var(--pixel-fg); opacity: 0.7;">Supports JPG, PNG, WEBP</p>
+                    <input type="file" id="file-input" accept="image/*" style="display: none;">
+                    <button class="action-btn" style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-left: auto; margin-right: auto;">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        SELECT FILE
+                    </button>
+                </div>
+
+                <!-- Preview & Controls Section -->
+                <div class="preview-area" id="preview-area">
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Pixel Size: <span id="pixel-size-value">10</span>px</label>
+                            <input id="pixel-size" type="range" min="2" max="64" step="1" value="10" class="select-field" style="padding: 0.35rem 0.5rem;" />
+                        </div>
+                        <div class="control-group">
+                            <label>&nbsp;</label>
+                            <button id="re-pixelate-btn" class="btn-primary" style="display: flex; align-items: center; gap: 0.5rem;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M23 4v6h-6"></path>
+                                    <path d="M1 20v-6h6"></path>
+                                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                </svg>
+                                UPDATE
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="canvas-wrapper">
+                        <canvas id="preview-canvas"></canvas>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+                        <button id="new-image-btn" class="action-btn" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            UPLOAD NEW
+                        </button>
+                        <button id="download-btn" class="action-btn" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            DOWNLOAD PNG
+                        </button>
+                        <button id="edit-btn" class="action-btn" style="background: var(--pixel-primary); color: white; display: flex; align-items: center; gap: 0.5rem;">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            EDIT IN STUDIO
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEO Content -->
+            <div class="seo-content">
+                <section class="seo-section">
+                    <h2>How to Turn Images into Pixel Art</h2>
+                    <ol class="step-list">
+                        <li><strong>Upload Your Image:</strong> Select any photo or image file from your device. We support standard formats like JPG and PNG.</li>
+                        <li><strong>Adjust Pixel Size:</strong> Increase the pixel size for a chunkier retro look, or decrease it for more detail.</li>
+                        <li><strong>Convert & Preview:</strong> Our tool automatically processes your image into pixel art. You can adjust the settings to get the perfect look.</li>
+                        <li><strong>Edit or Download:</strong> Download the result directly, or click "Edit in Studio" to open it in our full-featured Pixel Art Editor for fine-tuning.</li>
+                    </ol>
+                </section>
+
+                <section class="seo-section">
+                    <h2>Why Use Our Image to Pixel Art Converter?</h2>
+                    <p>Creating pixel art from scratch can be time-consuming. Our <strong>Turn Image into Pixel Art</strong> tool acts as a perfect starting point. Whether you're making game assets, avatars, or just retro aesthetic art, you can instantly convert high-resolution images into 8-bit or 16-bit style masterpieces.</p>
+                    <p style="margin-top: 1rem;">Combined with our powerful integrated <a href="/pixel-editor" style="color: var(--pixel-secondary);">Pixel Editor</a>, you have a complete workflow from photo to finished sprite.</p>
+                </section>
+                
+                <section class="seo-section">
+                    <h2>Features</h2>
+                    <ul style="list-style: disc; padding-left: 1.5rem; line-height: 1.6;">
+                        <li>Instant browser-based conversion</li>
+                        <li>Adjustable pixelation levels</li>
+                        <li>Privacy-focused (images processed locally)</li>
+                        <li>Seamless integration with editing tools</li>
+                        <li>Free to use with no watermarks</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <cus-footer></cus-footer>
+    <script src="/footer.js" defer></script>
+    <script src="/user-widget.js" defer></script>
+    <div id="custom-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">NOTICE</h3>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-cancel" class="modal-btn cancel">CANCEL</button>
+                <button id="modal-confirm" class="modal-btn confirm">OK</button>
+            </div>
+        </div>
+    </div>
+    <script src="/pixel-converter.js" defer></script>
+</body>
+</html>

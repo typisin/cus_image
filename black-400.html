@@ -3,50 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A simple 400x400 black image page. View and download a 400×400 black square PNG.">
-  <meta name="keywords" content="black image, 400x400, square, png, download">
-  <title>400x400 Black Image | CusImage</title>
+  <meta name="description" content="Download a pure black 400x400 pixel image. Useful for testing screens, placeholders, or backgrounds. Free instant download.">
+  <meta name="keywords" content="black image 400x400, pure black background, black placeholder image, screen test image, 400x400 pixels">
+  <title>Pure Black Image 400x400 - Download Free | CusImage</title>
   <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
-  <link rel="shortcut icon" href="/favicon.svg?v=2" type="image/svg+xml">
-  <script src="favicon.js" defer></script>
+  <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml">
+  <link rel="shortcut icon" href="/favicon.svg?v=3" type="image/svg+xml">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2211656389763853" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script>(function(){var h=location.hostname;var isLocal=/^(localhost|127\.0\.0\.1)$/.test(h);if(!isLocal){var s=document.createElement('script');s.defer=true;s.src='/_vercel/insights/script.js';document.head.appendChild(s);}})();</script>
-<script>
-  (function(){
-    var host = location.hostname || '';
-    var isLocal = host === 'localhost' || host === '127.0.0.1' || /\.vercel\.dev$/.test(host);
-    if (isLocal) return;
-    var s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2211656389763853';
-    s.crossOrigin = 'anonymous';
-    document.head.appendChild(s);
-  })();
-</script>
+  <script>(function(){var h=location.hostname||'';var isLocal=/^(localhost|127\.0\.0\.1)$/.test(h);if(!isLocal){var s=document.createElement('script');s.defer=true;s.src='/_vercel/insights/script.js';document.head.appendChild(s);}})();</script>
+  <script>(function(){var h=location.hostname||'';var isProd=h==='www.cusimage.com'||h==='cusimage.com';if(!isProd){return;}var si=document.createElement('script');si.defer=true;si.src='/_vercel/speed-insights/script.js';document.head.appendChild(si);})();</script>
 </head>
 <body>
   <header class="header">
     <div class="container">
       <div class="brand">
-        <div class="logo"><img src="/logo.png" alt="CusImage"></div>
-        <h1 class="title">CusImage</h1>
+        <a href="/" style="text-decoration: none; display: flex; align-items: center;">
+            <img src="/logo.svg" alt="CusImage Logo" class="logo-icon">
+            <h1 class="title">CusImage</h1>
+        </a>
         <p class="subtitle">Simple 400×400 Black Image Generator</p>
       </div>
       <div class="nav-dropdown">
-        <button class="nav-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="main-nav">Menu</button>
-        <nav class="nav" id="main-nav" aria-label="Main navigation">
-          <ul class="nav-menu">
-            <li><a href="/" class="nav-link">Home</a></li>
-            <li><a href="/image-describer" class="nav-link">Image Describer</a></li>
-            <li><a href="/turn-images-into-unicode" class="nav-link">Turn Images into Unicode</a></li>
-            <li><a href="/images-for-fb-cover" class="nav-link">Fb Covers</a></li>
-            <li><a href="/black-400" class="nav-link active">Black 400x400</a></li>
-          </ul>
-        </nav>
-      </div>
+                <a href="/pixel-art-ideas" class="nav-link">Pixel Art Ideas</a>
+                <div class="dropdown-container">
+                    <span class="nav-link dropdown-trigger">Tools ▼</span>
+                    <div class="dropdown-content">
+                        <a href="/pixel-editor" class="dropdown-item">Pixel Editor</a>
+                        <a href="/turn-image-into-pixel-art" class="dropdown-item">Image to Pixel</a>
+                        <a href="/turn-images-into-unicode" class="dropdown-item">Unicode Art</a>
+                    </div>
+                </div>
+                <div id="user-widget-container" style="display: inline-block; margin-left: 20px;"></div>
+            </div>
     </div>
   </header>
 
@@ -112,5 +103,17 @@
     });
   </script>
   <script src="/footer.js" defer></script>
-</body>
-</html>
+  <script>
+  document.addEventListener('DOMContentLoaded', function(){
+    var brand = document.querySelector('.brand');
+    if (brand) {
+      brand.setAttribute('role','link');
+      brand.setAttribute('tabindex','0');
+      brand.addEventListener('click', function(){ location.href = '/'; });
+      brand.addEventListener('keypress', function(e){ if (e.key === 'Enter' || e.keyCode === 13) location.href = '/'; });
+    }
+  });
+  </script>
+  <script src="/user-widget.js" defer></script>
+ </body>
+ </html>

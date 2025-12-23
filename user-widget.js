@@ -1,9 +1,18 @@
 function q(s) { return document.querySelector(s); }
 
 async function req(u, o) {
-  const r = await fetch(u, Object.assign({ headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin' }, o || {}));
-  const t = await r.text();
-  try { return { ok: r.ok, status: r.status, data: JSON.parse(t) }; } catch { return { ok: r.ok, status: r.status, data: { error: t } }; }
+  try {
+    const opts = Object.assign({ credentials: 'same-origin' }, o || {});
+    if (opts.body && (!opts.headers || !opts.headers['Content-Type'])) {
+      opts.headers = Object.assign({}, opts.headers, { 'Content-Type': 'application/json' });
+    }
+    const r = await fetch(u, opts);
+    let t = '';
+    try { t = await r.text(); } catch {}
+    try { return { ok: r.ok, status: r.status, data: JSON.parse(t) }; } catch { return { ok: r.ok, status: r.status, data: { error: t } }; }
+  } catch (e) {
+    return { ok: false, status: 0, data: { error: 'NetworkError', message: (e && e.message) || 'Request aborted' } };
+  }
 }
 
 function createEl(tag, attrs) {
@@ -102,7 +111,28 @@ async function refresh() {
   const creditsBadge = q('#user-credits-balance');
   const loading = q('#user-loading-indicator');
   
-  const r = await req('/api/auth/profile');
+  let r = { ok: false };
+  try {
+    const res = await fetch('/api/auth/profile', {
+      headers: {
+        'Accept': 'application/json'
+      },
+      credentials: 'same-origin',
+      cache: 'no-store',
+      keepalive: true
+    });
+    if (res.ok) {
+        let t = '';
+        try { t = await res.text(); } catch {}
+        try { r = { ok: true, status: res.status, data: JSON.parse(t) }; } catch { r = { ok: true, status: res.status, data: { error: t } }; }
+    } else {
+        // Silent failure for auth check (e.g. 401 Unauthorized for guests)
+        r = { ok: false, status: res.status };
+    }
+  } catch (e) {
+    // Network error or aborted
+    r = { ok: false };
+  }
   
   // Remove loading indicator if it exists
   if (loading) loading.style.display = 'none';
@@ -135,18 +165,23 @@ async function refresh() {
 
 function mount() {
   injectStyles();
-  const host = q('.header .container');
-  if (!host) return;
   
-  let area = q('.user-area');
+  // Target the specific container for user widget
+  let area = q('#user-widget-container');
+  
   if (!area) {
-    area = createEl('div', { className: 'user-area' });
-    const dropdown = q('.nav-dropdown');
-    if (dropdown && dropdown.parentElement) {
-      dropdown.parentElement.appendChild(area);
-    } else {
-      host.appendChild(area);
+    // Fallback: look for .user-area or append to nav
+    area = q('.user-area');
+    if (!area) {
+      area = createEl('div', { className: 'user-area' });
+      const nav = q('.nav-dropdown');
+      if (nav) {
+        nav.appendChild(area);
+      }
     }
+  } else {
+    // Ensure it has the correct class for styling
+    area.className = 'user-area';
   }
   
   // Clear area to ensure correct order if re-mounting
@@ -318,7 +353,19 @@ function mount() {
     });
   });
   
-  refresh();
+  let started = false;
+  const start = () => {
+    if (started) return;
+    started = true;
+    refresh();
+  };
+  const t = setTimeout(start, 700);
+  const cancel = () => { clearTimeout(t); };
+  window.addEventListener('pagehide', cancel, { once: true });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') cancel();
+    if (document.visibilityState === 'visible') start();
+  });
 }
 
 document.addEventListener('DOMContentLoaded', mount);

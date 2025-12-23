@@ -1,0 +1,37 @@
+{
+  "name": "cus_image",
+  "version": "1.0.0",
+  "description": "一个现代化的图片编辑工具，提供三种强大的AI功能：图片描述生成、智能抠图、字符艺术转换。",
+  "main": "ambigram.js",
+  "dependencies": {
+    "@libsql/client": "^0.15.15",
+    "bcryptjs": "^2.4.3",
+    "data-uri-to-buffer": "^4.0.1",
+    "detect-libc": "^2.0.2",
+    "fetch-blob": "^3.2.0",
+    "formdata-polyfill": "^4.0.10",
+    "jose": "^5.10.0",
+    "js-base64": "^3.7.8",
+    "libsql": "^0.3.19",
+    "node-domexception": "^1.0.0",
+    "node-fetch": "^3.3.2",
+    "undici-types": "^7.16.0",
+    "web-streams-polyfill": "^3.3.3",
+    "ws": "^8.18.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/typisin/cus_image.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/typisin/cus_image/issues"
+  },
+  "homepage": "https://github.com/typisin/cus_image#readme"
+}

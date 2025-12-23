@@ -20,8 +20,59 @@ class ImageToUnicodeConverter {
     };
     
     this.initializeEventListeners();
+    this.initCustomModal();
     this.initializePaneHeights();
   }
+
+  initCustomModal() {
+    this.customModal = document.getElementById('custom-modal');
+    this.modalMessage = document.getElementById('modal-message');
+    this.modalCancel = document.getElementById('modal-cancel');
+    this.modalConfirm = document.getElementById('modal-confirm');
+    this.modalTitle = document.querySelector('.modal-title');
+    this.currentConfirmCallback = null;
+
+    if (this.modalCancel) {
+        this.modalCancel.addEventListener('click', () => this.hideCustomModal());
+    }
+    if (this.modalConfirm) {
+        this.modalConfirm.addEventListener('click', () => {
+            if (this.currentConfirmCallback) this.currentConfirmCallback();
+            this.hideCustomModal();
+        });
+    }
+    if (this.customModal) {
+        this.customModal.addEventListener('click', (e) => {
+            if (e.target === this.customModal) this.hideCustomModal();
+        });
+    }
+  }
+
+  showCustomModal(message, onConfirm = null, isAlert = false) {
+    if (!this.customModal) return alert(message);
+    
+    this.modalMessage.textContent = message;
+    this.currentConfirmCallback = onConfirm;
+    
+    if (isAlert) {
+        if (this.modalTitle) this.modalTitle.textContent = 'NOTICE';
+        if (this.modalCancel) this.modalCancel.style.display = 'none';
+        if (this.modalConfirm) this.modalConfirm.textContent = 'OK';
+        this.currentConfirmCallback = () => {};
+    } else {
+        if (this.modalTitle) this.modalTitle.textContent = 'CONFIRM ACTION';
+        if (this.modalCancel) this.modalCancel.style.display = 'block';
+        if (this.modalConfirm) this.modalConfirm.textContent = 'CONFIRM';
+    }
+    
+    this.customModal.style.display = 'flex';
+  }
+
+  hideCustomModal() {
+    if (this.customModal) this.customModal.style.display = 'none';
+    this.currentConfirmCallback = null;
+  }
+
   
   initializeEventListeners() {
     const fileInput = document.getElementById('fileInput');
@@ -33,6 +84,7 @@ class ImageToUnicodeConverter {
     const convertBtn = document.getElementById('convertBtn');
     const downloadBtn = document.getElementById('downloadBtn');
     const previewBtn = document.getElementById('previewBtn');
+    const reuploadBtn = document.getElementById('reuploadBtn');
     
     // File input
     fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
@@ -76,6 +128,9 @@ class ImageToUnicodeConverter {
     if (previewBtn) {
       previewBtn.addEventListener('click', () => this.openPreview());
     }
+    if (reuploadBtn) {
+      reuploadBtn.addEventListener('click', () => this.reupload());
+    }
 
     // Modal events
     const modal = document.getElementById('previewModal');
@@ -99,8 +154,56 @@ class ImageToUnicodeConverter {
 
     window.addEventListener('resize', () => {
       this.initializePaneHeights();
+      this.syncPlaceholderHeight();
       if (this.lastAscii) this.fitAsciiToPane();
     });
+  }
+  
+  reupload() {
+    const fileInput = document.getElementById('fileInput');
+    const area = document.getElementById('uploadArea');
+    const rs = area && area.querySelector('.result-state');
+    const es = area && area.querySelector('.empty-state');
+    const uPane = document.getElementById('unicodePane');
+    const iPane = document.getElementById('imagePane');
+    const out = document.getElementById('unicodeOutput');
+    const canvas = document.getElementById('unicodeCanvas');
+    const convertBtn = document.getElementById('convertBtn');
+    const modal = document.getElementById('previewModal');
+    if (modal) modal.style.display = 'none';
+    document.body.style.overflow = '';
+    if (canvas) canvas.remove();
+    if (out) { out.textContent = ''; out.style.display = ''; }
+    if (uPane) {
+      uPane.classList.remove('hidden');
+      const placeholder = document.getElementById('unicodePlaceholder');
+      if (placeholder) {
+        placeholder.style.display = 'block';
+        this.syncPlaceholderHeight();
+      }
+    }
+    if (iPane) iPane.classList.add('hidden');
+    if (rs) rs.style.display = 'none';
+    if (es) es.style.display = 'block';
+    if (area) area.classList.remove('has-image');
+    this.currentImage = null;
+    this.lastAscii = '';
+    this.hasImage = false;
+    if (convertBtn) convertBtn.disabled = true;
+    if (fileInput) fileInput.value = '';
+    if (fileInput) fileInput.click();
+  }
+  
+  syncPlaceholderHeight() {
+    const imagePane = document.getElementById('imagePane');
+    const placeholder = document.getElementById('unicodePlaceholder');
+    if (!placeholder) return;
+    let h = imagePane ? imagePane.getBoundingClientRect().height : 0;
+    if (!h || h < 100) {
+      const area = document.getElementById('uploadArea');
+      h = area ? area.getBoundingClientRect().height / 2 : 300;
+    }
+    placeholder.style.minHeight = Math.round(h) + 'px';
   }
   
   handleDragOver(e) {
@@ -132,7 +235,7 @@ class ImageToUnicodeConverter {
   
   processFile(file) {
     if (!file.type.startsWith('image/')) {
-      alert('请上传图片文件！');
+      this.showCustomModal('请上传图片文件！', null, true);
       return;
     }
     
@@ -151,8 +254,16 @@ class ImageToUnicodeConverter {
         const iPane = document.getElementById('imagePane');
         if (rs) rs.style.display = 'block';
         if (es) es.style.display = 'none';
-        uPane && uPane.classList.add('hidden');
+        // 展示右侧预览容器，并显示占位提示
+        if (uPane) {
+          uPane.classList.remove('hidden');
+          const placeholder = document.getElementById('unicodePlaceholder');
+          if (placeholder) placeholder.style.display = 'block';
+          const out = document.getElementById('unicodeOutput');
+          if (out) out.style.display = 'none';
+        }
         iPane && iPane.classList.remove('hidden');
+        this.syncPlaceholderHeight();
         document.getElementById('convertBtn').disabled = false;
         area && area.classList.add('has-image');
         this.hasImage = true;
@@ -180,6 +291,7 @@ class ImageToUnicodeConverter {
     if (!this.currentImage) return;
     
     const outputWidth = parseInt(document.getElementById('widthSlider').value);
+    const density = parseFloat(document.getElementById('densitySlider').value) || 1.0;
     
     // 关键：考虑字符的宽高比例
     // 等宽字符的宽度大约是高度的0.6倍，所以需要调整高度计算
@@ -199,6 +311,8 @@ class ImageToUnicodeConverter {
     const tempCtx = tempCanvas.getContext('2d');
     tempCanvas.width = outputWidth;
     tempCanvas.height = outputHeight;
+    tempCtx.imageSmoothingEnabled = true;
+    tempCtx.imageSmoothingQuality = 'high';
     
     // 绘制图片到临时canvas
     tempCtx.drawImage(this.currentImage, 0, 0, outputWidth, outputHeight);
@@ -207,7 +321,7 @@ class ImageToUnicodeConverter {
     const imageData = tempCtx.getImageData(0, 0, outputWidth, outputHeight);
     
     // 转换为ASCII
-    const asciiArt = this.imageDataToAscii(imageData, charset);
+    const asciiArt = this.imageDataToAscii(imageData, charset, density);
     this.lastAscii = asciiArt;
     
     // 显示结果并设置与原图一致的显示尺寸
@@ -216,6 +330,8 @@ class ImageToUnicodeConverter {
     
     out.textContent = asciiArt;
     pane && pane.classList.remove('hidden');
+    const placeholder = document.getElementById('unicodePlaceholder');
+    if (placeholder) placeholder.style.display = 'none';
 
     const targetW = this.currentImage.width;
     const targetH = this.currentImage.height;
@@ -324,11 +440,12 @@ class ImageToUnicodeConverter {
     out.style.letterSpacing = '0px';
   }
   
-  imageDataToAscii(imageData, charset) {
+  imageDataToAscii(imageData, charset, density = 1.0) {
     const data = imageData.data;
     const width = imageData.width;
     const height = imageData.height;
     let result = '';
+    const gamma = Math.max(0.3, Math.min(2.0, 1 / density));
     
     for (let y = 0; y < height; y++) {
       let line = '';
@@ -339,7 +456,11 @@ class ImageToUnicodeConverter {
         const b = data[index + 2];
         
         // Convert to grayscale
-        const gray = Math.round(0.299 * r + 0.587 * g + 0.114 * b);
+        let gray = 0.299 * r + 0.587 * g + 0.114 * b;
+        // Gamma correction based on density (perceptual)
+        let norm = gray / 255;
+        norm = Math.pow(norm, gamma);
+        gray = Math.round(norm * 255);
         
         // Map to character
         const charIndex = Math.floor((gray / 255) * (charset.length - 1));

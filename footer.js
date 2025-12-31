@@ -6,7 +6,7 @@ class CusFooter extends HTMLElement {
           <div class="footer-grid">
             <div class="footer-brand">
               <h4 class="footer-title">CusImage</h4>
-              <p class="footer-text">Retro Pixel Art & Unicode Tools.</p>
+              <p class="footer-text">Professional Online Image Tools & Converters.</p>
             </div>
             <div class="footer-section">
               <h4 class="footer-title">Tools</h4>
@@ -15,6 +15,7 @@ class CusFooter extends HTMLElement {
                 <li><a href="/turn-images-into-unicode" class="footer-link">Turn Images into Unicode</a></li>
                 <li><a href="/image-dpi-converter" class="footer-link">Image DPI Converter</a></li>
                 <li><a href="/convert-jpeg-to-jpg" class="footer-link">JPEG to JPG</a></li>
+                <li><a href="/convert-mermaid-to-image" class="footer-link">Mermaid to Image</a></li>
               </ul>
             </div>
             <div class="footer-section">

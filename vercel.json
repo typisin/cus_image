@@ -10,6 +10,7 @@
     { "source": "/400x400-black-image", "destination": "/400x400-black-image.html" },
     { "source": "/image-dpi-converter", "destination": "/image-dpi-converter.html" },
     { "source": "/convert-jpeg-to-jpg", "destination": "/convert-jpeg-to-jpg.html" },
+    { "source": "/convert-mermaid-to-image", "destination": "/convert-mermaid-to-image.html" },
     { "source": "/login", "destination": "/login.html" },
     { "source": "/", "destination": "/index.html" }
   ],

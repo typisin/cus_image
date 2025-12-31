@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Convert Mermaid Diagram to Image Online (Free Tool) | CusImage</title>
+  <meta name="description" content="Learn how to convert mermaid diagram to image online. Use our free tool to render Mermaid code and export as PNG, SVG, or JPG instantly." />
+  <meta name="keywords" content="how to convert mermaid diagram to image online, mermaid to image, mermaid converter, mermaid editor online, save mermaid as png" />
+  <link rel="canonical" href="https://www.cusimage.com/convert-mermaid-to-image" />
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml">
+  <link rel="shortcut icon" href="/favicon.svg?v=3" type="image/svg+xml">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2211656389763853" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Mermaid to Image Converter",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Web Browser",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Free online tool to convert Mermaid diagrams to images. Render Mermaid code and download as PNG or SVG instantly.",
+    "url": "https://www.cusimage.com/convert-mermaid-to-image"
+  }
+  </script>
+  <script>(function(){var h=location.hostname||'';var isLocal=/^(localhost|127\.0\.0\.1)$/.test(h);if(!isLocal){var s=document.createElement('script');s.defer=true;s.src='/_vercel/insights/script.js';document.head.appendChild(s);}})();</script>
+  <script>(function(){var h=location.hostname||'';var isProd=h==='www.cusimage.com'||h==='cusimage.com';if(!isProd){return;}var si=document.createElement('script');si.defer=true;si.src='/_vercel/speed-insights/script.js';document.head.appendChild(si);})();</script>
+  <style>
+    .tool-shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .editor-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      height: 600px;
+    }
+
+    .input-panel, .preview-panel {
+      background: rgba(231, 238, 252, 0.06);
+      border: var(--border-width) solid var(--pixel-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      padding: 18px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(231, 238, 252, 0.1);
+      padding-bottom: 8px;
+    }
+
+    .panel-title {
+      font-weight: 800;
+      color: var(--gray-800);
+    }
+
+    textarea#mermaidInput {
+      flex: 1;
+      width: 100%;
+      background: rgba(7, 11, 22, 0.3);
+      border: 1px solid rgba(231, 238, 252, 0.14);
+      border-radius: var(--radius-md);
+      color: var(--gray-100);
+      padding: 12px;
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      resize: none;
+      outline: none;
+    }
+    
+    textarea#mermaidInput:focus {
+        border-color: rgba(34, 211, 238, 0.5);
+    }
+
+    #preview-container {
+      flex: 1;
+      background: #ffffff; /* Mermaid often looks best on white, or we need to theme it */
+      border-radius: var(--radius-md);
+      overflow: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    /* Dark mode support for preview if needed, but keeping it simple first */
+    
+    .controls {
+        margin-top: 12px;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    @media (max-width: 768px) {
+      .editor-container {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      #mermaidInput {
+          height: 300px;
+      }
+      #preview-container {
+          height: 300px;
+      }
+    }
+  </style>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: false, theme: 'default' });
+    window.mermaid = mermaid;
+  </script>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="brand-group">
+        <a class="brand" href="/">
+          <img src="/logo.svg" alt="CusImage Logo" class="logo-icon">
+          <h1 class="title">CusImage</h1>
+        </a>
+        <p class="subtitle">Mermaid to Image</p>
+      </div>
+      <div class="nav-dropdown">
+        <div class="dropdown-container">
+          <span class="nav-link dropdown-trigger">Tools ▼</span>
+          <div class="dropdown-content">
+            <a href="/turn-image-into-pixel-art" class="dropdown-item">Image to Pixel</a>
+            <a href="/turn-images-into-unicode" class="dropdown-item">Unicode Art</a>
+            <a href="/image-dpi-converter" class="dropdown-item">Image DPI Converter</a>
+            <a href="/convert-jpeg-to-jpg" class="dropdown-item">JPEG to JPG</a>
+            <a href="/convert-mermaid-to-image" class="dropdown-item">Mermaid to Image</a>
+          </div>
+        </div>
+        <div id="user-widget-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container">
+      <section class="tool-header">
+        <h2 class="tool-title">How to Convert Mermaid Diagram to Image Online</h2>
+        <p class="tool-description">Enter your Mermaid code below, preview the diagram, and export it as PNG or SVG instantly.</p>
+      </section>
+
+      <div class="tool-shell">
+        <div class="editor-container">
+            <div class="input-panel">
+                <div class="panel-header">
+                    <span class="panel-title">Mermaid Code</span>
+                    <button id="exampleBtn" class="btn-sm" style="font-size: 0.8rem; padding: 4px 8px; border: 1px solid rgba(231,238,252,0.2); border-radius: 4px; background: rgba(231,238,252,0.05); color: var(--gray-200); cursor: pointer;">Load Example</button>
+                </div>
+                <textarea id="mermaidInput" spellcheck="false">graph TD
+    A[Start] --> B{Is it working?}
+    B -- Yes --> C[Great!]
+    B -- No --> D[Debug]
+    D --> B</textarea>
+                <div style="margin-top: 10px; text-align: right;">
+                    <button id="renderBtn" class="btn-primary" style="width: auto; padding: 8px 16px;">Render Diagram</button>
+                </div>
+            </div>
+            
+            <div class="preview-panel">
+                <div class="panel-header">
+                    <span class="panel-title">Preview</span>
+                    <span id="status" class="muted" style="font-size: 0.85rem;">Ready</span>
+                </div>
+                <div id="preview-container">
+                    <!-- SVG will be injected here -->
+                    <div class="muted">Click Render to see the diagram</div>
+                </div>
+                <div class="controls">
+                    <button id="downloadSvgBtn" class="btn btn-secondary">Download SVG</button>
+                    <button id="downloadPngBtn" class="btn-primary">Download PNG</button>
+                </div>
+            </div>
+        </div>
+
+        <section class="faq-card" style="margin-top: 24px;">
+          <h2>FAQ: How to Convert Mermaid Diagram to Image Online</h2>
+          <h3>What is Mermaid?</h3>
+          <p>Mermaid is a JavaScript based diagramming and charting tool that renders Markdown-inspired text definitions to create and modify diagrams dynamically.</p>
+          <h3>How do I use this tool?</h3>
+          <p>Simply paste your Mermaid code into the left panel and click "Render Diagram". Once the preview appears, you can download it as an SVG or PNG file.</p>
+          <h3>Is it free?</h3>
+          <p>Yes, this tool is completely free and runs in your browser. No data is sent to any server.</p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <cus-footer></cus-footer>
+  <script src="/footer.js" defer></script>
+  <script src="/user-widget.js" defer></script>
+  
+  <script type="module">
+    // Logic for rendering and downloading
+    const input = document.getElementById('mermaidInput');
+    const previewContainer = document.getElementById('preview-container');
+    const renderBtn = document.getElementById('renderBtn');
+    const exampleBtn = document.getElementById('exampleBtn');
+    const downloadSvgBtn = document.getElementById('downloadSvgBtn');
+    const downloadPngBtn = document.getElementById('downloadPngBtn');
+    const status = document.getElementById('status');
+
+    let currentSvg = '';
+
+    // Render function
+    async function renderDiagram() {
+        if (!window.mermaid) {
+            status.textContent = 'Mermaid library loading...';
+            return;
+        }
+        
+        const code = input.value;
+        status.textContent = 'Rendering...';
+        
+        try {
+            const { svg } = await window.mermaid.render('mermaid-diagram', code);
+            currentSvg = svg;
+            previewContainer.innerHTML = svg;
+            status.textContent = 'Rendered successfully';
+            
+            // Remove the id from the SVG to avoid conflicts if we render multiple times (though we replace innerHTML so it should be fine)
+            // But mermaid.render requires a unique ID for the container it creates internally or returns.
+            // The returned svg string has an ID.
+            
+        } catch (error) {
+            console.error(error);
+            status.textContent = 'Error: ' + error.message;
+            previewContainer.innerHTML = '<div style="color: #ff6b6b; padding: 10px;">Syntax Error. Please check your Mermaid code.</div>';
+        }
+    }
+
+    renderBtn.addEventListener('click', renderDiagram);
+
+    exampleBtn.addEventListener('click', () => {
+        input.value = `sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice->>John: Hello John, how are you?
+    loop Healthcheck
+        John->>John: Fight against hypochondria
+    end
+    Note right of John: Rational thoughts <br/>prevail!
+    John-->>Alice: Great!
+    John->>Bob: How about you?
+    Bob-->>John: Jolly good!`;
+        renderDiagram();
+    });
+
+    // Initial render
+    window.addEventListener('load', () => {
+        // Wait a bit for mermaid module to load if needed, though type=module usually handles it
+        setTimeout(renderDiagram, 1000); 
+    });
+
+    // Download SVG
+    downloadSvgBtn.addEventListener('click', () => {
+        if (!currentSvg) return;
+        const blob = new Blob([currentSvg], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'mermaid-diagram.svg';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+
+    // Download PNG
+    downloadPngBtn.addEventListener('click', () => {
+        if (!currentSvg) return;
+        
+        const svgElement = previewContainer.querySelector('svg');
+        if (!svgElement) return;
+
+        // Get dimensions
+        const box = svgElement.viewBox.baseVal;
+        const width = box.width;
+        const height = box.height;
+        
+        // Create canvas
+        const canvas = document.createElement('canvas');
+        // Scale up for better quality
+        const scale = 2; 
+        canvas.width = width * scale;
+        canvas.height = height * scale;
+        const ctx = canvas.getContext('2d');
+        
+        // We need to convert SVG to data URL
+        // It's tricky because external styles might be missing if not inlined.
+        // Mermaid puts styles in a <style> tag inside the SVG usually.
+        
+        const img = new Image();
+        const svgBlob = new Blob([currentSvg], {type: 'image/svg+xml;charset=utf-8'});
+        const url = URL.createObjectURL(svgBlob);
+        
+        img.onload = function() {
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, width * scale, height * scale);
+            
+            canvas.toBlob(function(blob) {
+                const pngUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = pngUrl;
+                a.download = 'mermaid-diagram.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(pngUrl);
+                URL.revokeObjectURL(url);
+            }, 'image/png');
+        };
+        
+        img.src = url;
+    });
+
+  </script>
+</body>
+</html>

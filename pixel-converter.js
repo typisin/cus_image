@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const pixelSizeValue = document.getElementById('pixel-size-value');
     const rePixelateBtn = document.getElementById('re-pixelate-btn');
     const downloadBtn = document.getElementById('download-btn');
-    const editBtn = document.getElementById('edit-btn');
     const newImageBtn = document.getElementById('new-image-btn');
 
     let originalImage = null;
@@ -134,35 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
             link.download = `pixel-art-${Date.now()}.png`;
             link.href = exportCanvas.toDataURL('image/png');
             link.click();
-        });
-    }
-
-    if (editBtn) {
-        editBtn.addEventListener('click', () => {
-            if (!originalImage) {
-                showModal('Please upload an image first.', null, true);
-                return;
-            }
-
-            const sourceWidth = originalImage.naturalWidth || originalImage.width;
-            const sourceHeight = originalImage.naturalHeight || originalImage.height;
-            const wSmall = Math.max(1, Math.round(sourceWidth / Math.max(1, currentPixelSize)));
-            const hSmall = Math.max(1, Math.round(sourceHeight / Math.max(1, currentPixelSize)));
-            
-            const smallCanvas = document.createElement('canvas');
-            smallCanvas.width = wSmall;
-            smallCanvas.height = hSmall;
-            const smallCtx = smallCanvas.getContext('2d');
-            smallCtx.imageSmoothingEnabled = false;
-            smallCtx.clearRect(0, 0, wSmall, hSmall);
-            smallCtx.drawImage(originalImage, 0, 0, wSmall, hSmall);
-
-            localStorage.setItem('pending_pixel_import', smallCanvas.toDataURL('image/png'));
-            localStorage.setItem('pending_pixel_w', String(wSmall));
-            localStorage.setItem('pending_pixel_h', String(hSmall));
-            localStorage.setItem('pending_pixel_original_w', String(sourceWidth));
-            localStorage.setItem('pending_pixel_original_h', String(sourceHeight));
-            window.location.href = '/pixel-editor';
         });
     }
 

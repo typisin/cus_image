@@ -12,7 +12,6 @@
     <link rel="shortcut icon" href="/favicon.svg?v=3" type="image/svg+xml">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2211656389763853" crossorigin="anonymous"></script>
     <link rel="canonical" href="https://www.cusimage.com/turn-image-into-pixel-art">
-    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -38,21 +37,25 @@
         }
 
         .upload-area {
-            background: var(--pixel-dark);
+            background: rgba(231, 238, 252, 0.06);
             border: var(--border-width) solid var(--pixel-border);
+            border-radius: var(--radius-xl);
             padding: 3rem;
             text-align: center;
             width: 100%;
-            max-width: 600px;
+            max-width: 640px;
             cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: var(--shadow-md);
+            transition: transform var(--transition-fast), box-shadow var(--transition-normal), background var(--transition-normal), border-color var(--transition-normal);
+            box-shadow: var(--shadow-sm);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
         }
 
         .upload-area:hover {
-            border-color: var(--pixel-secondary);
-            transform: translate(-2px, -2px);
-            box-shadow: var(--shadow-lg);
+            border-color: rgba(34, 211, 238, 0.55);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            background: rgba(231, 238, 252, 0.08);
         }
 
         .preview-area {
@@ -74,10 +77,10 @@
             border: var(--border-width) solid var(--pixel-border);
             box-shadow: var(--shadow-lg);
             max-width: 100%;
-            height: auto; /* 让容器随内容撑开 */
-            max-height: 70vh; /* 依然保留最大高度限制以适配屏幕 */
+            height: auto;
+            max-height: 70vh;
             overflow: hidden;
-            display: inline-flex; /* 使用 inline-flex 使宽度贴合内容 */
+            display: inline-flex;
             justify-content: center;
             align-items: center;
             margin: 0 auto 1.5rem auto;
@@ -87,7 +90,7 @@
             display: block;
             image-rendering: pixelated;
             max-width: 100%;
-            max-height: 70vh; /* 确保 canvas 本身不超过视口高度 */
+            max-height: 70vh;
             width: auto;
             height: auto;
         }
@@ -97,10 +100,13 @@
             gap: 1rem;
             flex-wrap: wrap;
             justify-content: center;
-            background: var(--pixel-dark);
+            background: rgba(231, 238, 252, 0.06);
             padding: 1rem;
             border: var(--border-width) solid var(--pixel-border);
-            box-shadow: var(--shadow-md);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-sm);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
         }
 
         .control-group {
@@ -117,11 +123,14 @@
         }
 
         .seo-section {
-            background: var(--pixel-dark);
+            background: rgba(231, 238, 252, 0.06);
             border: var(--border-width) solid var(--pixel-border);
+            border-radius: var(--radius-xl);
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-sm);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
         }
 
         .seo-section h2 {
@@ -148,13 +157,14 @@
             top: 0;
             width: 2rem;
             height: 2rem;
-            background: var(--pixel-primary);
-            color: white;
+            background: linear-gradient(135deg, rgba(91, 140, 255, 1), rgba(34, 211, 238, 0.92));
+            color: rgba(7, 11, 22, 0.96);
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid black;
-            font-weight: bold;
+            border: 1px solid rgba(231, 238, 252, 0.18);
+            border-radius: 12px;
+            font-weight: 800;
         }
     </style>
     <script type="application/ld+json">
@@ -169,7 +179,7 @@
         "price": "0",
         "priceCurrency": "USD"
       },
-      "description": "Free online tool to convert images into pixel art and edit them."
+      "description": "Free online tool to convert images into pixel art."
     }
     </script>
     <script>(function(){var h=location.hostname||'';var isLocal=/^(localhost|127\.0\.0\.1)$/.test(h);if(!isLocal){var s=document.createElement('script');s.defer=true;s.src='/_vercel/insights/script.js';document.head.appendChild(s);}})();</script>
@@ -178,23 +188,23 @@
 <body>
     <header class="header">
         <div class="container">
-            <div class="brand">
-                <a href="/" style="text-decoration: none; display: flex; align-items: center;">
+            <div class="brand-group">
+                <a class="brand" href="/">
                     <img src="/logo.svg" alt="CusImage Logo" class="logo-icon">
                     <h1 class="title">CusImage</h1>
                 </a>
             </div>
             <div class="nav-dropdown">
-                <a href="/pixel-art-ideas" class="nav-link">Pixel Art Ideas</a>
                 <div class="dropdown-container">
                     <span class="nav-link dropdown-trigger">Tools ▼</span>
                     <div class="dropdown-content">
-                        <a href="/pixel-editor" class="dropdown-item">Pixel Editor</a>
                         <a href="/turn-image-into-pixel-art" class="dropdown-item">Image to Pixel</a>
                         <a href="/turn-images-into-unicode" class="dropdown-item">Unicode Art</a>
+                        <a href="/image-dpi-converter" class="dropdown-item">Image DPI Converter</a>
+                        <a href="/convert-jpeg-to-jpg" class="dropdown-item">JPEG to JPG</a>
                     </div>
                 </div>
-                <div id="user-widget-container" style="display: inline-block; margin-left: 20px;"></div>
+                <div id="user-widget-container"></div>
             </div>
         </div>
     </header>
@@ -202,7 +212,7 @@
     <main class="main">
         <div class="container">
             <h1 style="text-align: center; color: var(--pixel-accent); margin-top: 1rem; font-size: 2.5rem;">TURN IMAGE INTO PIXEL ART</h1>
-            <p style="text-align: center; color: var(--pixel-fg); margin-bottom: 2rem; font-size: 1.2rem;">Upload any image, convert it to pixel art, and edit it instantly.</p>
+            <p style="text-align: center; color: var(--pixel-fg); margin-bottom: 2rem; font-size: 1.2rem;">Upload any image and convert it to pixel art instantly.</p>
             
             <div class="converter-container">
                 <!-- Upload Section -->
@@ -268,13 +278,6 @@
                             </svg>
                             DOWNLOAD PNG
                         </button>
-                        <button id="edit-btn" class="action-btn" style="background: var(--pixel-primary); color: white; display: flex; align-items: center; gap: 0.5rem;">
-                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                            </svg>
-                            EDIT IN STUDIO
-                        </button>
                     </div>
                 </div>
             </div>
@@ -287,14 +290,13 @@
                         <li><strong>Upload Your Image:</strong> Select any photo or image file from your device. We support standard formats like JPG and PNG.</li>
                         <li><strong>Adjust Pixel Size:</strong> Increase the pixel size for a chunkier retro look, or decrease it for more detail.</li>
                         <li><strong>Convert & Preview:</strong> Our tool automatically processes your image into pixel art. You can adjust the settings to get the perfect look.</li>
-                        <li><strong>Edit or Download:</strong> Download the result directly, or click "Edit in Studio" to open it in our full-featured Pixel Art Editor for fine-tuning.</li>
+                        <li><strong>Download:</strong> Export the result as a PNG instantly.</li>
                     </ol>
                 </section>
 
                 <section class="seo-section">
                     <h2>Why Use Our Image to Pixel Art Converter?</h2>
                     <p>Creating pixel art from scratch can be time-consuming. Our <strong>Turn Image into Pixel Art</strong> tool acts as a perfect starting point. Whether you're making game assets, avatars, or just retro aesthetic art, you can instantly convert high-resolution images into 8-bit or 16-bit style masterpieces.</p>
-                    <p style="margin-top: 1rem;">Combined with our powerful integrated <a href="/pixel-editor" style="color: var(--pixel-secondary);">Pixel Editor</a>, you have a complete workflow from photo to finished sprite.</p>
                 </section>
                 
                 <section class="seo-section">
@@ -303,7 +305,7 @@
                         <li>Instant browser-based conversion</li>
                         <li>Adjustable pixelation levels</li>
                         <li>Privacy-focused (images processed locally)</li>
-                        <li>Seamless integration with editing tools</li>
+                        <li>High-quality PNG export</li>
                         <li>Free to use with no watermarks</li>
                     </ul>
                 </section>

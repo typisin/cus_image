@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image DPI Converter (72 DPI to 300 DPI) - Free Online Tool | CusImage</title>
+  <meta name="description" content="Free online Image DPI Converter to change DPI metadata for PNG and JPEG without resizing. Convert 72 DPI to 300 DPI for printing, publishing, and design workflows.">
+  <meta name="keywords" content="image dpi converter, change dpi online, convert 72 dpi to 300 dpi, set image dpi, png dpi changer, jpeg dpi changer, dpi metadata editor, photo dpi converter">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.cusimage.com/image-dpi-converter">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml">
+  <link rel="shortcut icon" href="/favicon.svg?v=3" type="image/svg+xml">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2211656389763853" crossorigin="anonymous"></script>
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.cusimage.com/image-dpi-converter">
+  <meta property="og:title" content="Image DPI Converter (72 DPI to 300 DPI) - Free Online Tool">
+  <meta property="og:description" content="Change DPI metadata for PNG and JPEG without resizing. Convert 72 DPI to 300 DPI for print-ready files.">
+  <meta property="og:image" content="https://www.cusimage.com/logo.svg">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://www.cusimage.com/image-dpi-converter">
+  <meta property="twitter:title" content="Image DPI Converter (72 DPI to 300 DPI) - Free Online Tool">
+  <meta property="twitter:description" content="Change DPI metadata for PNG and JPEG without resizing. Convert 72 DPI to 300 DPI for print-ready files.">
+  <meta property="twitter:image" content="https://www.cusimage.com/logo.svg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Image DPI Converter",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Web Browser",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Free online tool to change DPI metadata for PNG and JPEG without resizing.",
+    "url": "https://www.cusimage.com/image-dpi-converter"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does changing DPI resize the image?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. This tool updates DPI metadata only. Pixel dimensions stay the same." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the best DPI for printing?",
+        "acceptedAnswer": { "@type": "Answer", "text": "300 DPI is a common standard for high-quality printing. Some workflows use 150 DPI or 600 DPI depending on the output." }
+      },
+      {
+        "@type": "Question",
+        "name": "Which formats are supported?",
+        "acceptedAnswer": { "@type": "Answer", "text": "This Image DPI Converter supports PNG and JPEG. The conversion runs locally in your browser." }
+      }
+    ]
+  }
+  </script>
+  <script>(function(){var h=location.hostname||'';var isLocal=/^(localhost|127\.0\.0\.1)$/.test(h);if(!isLocal){var s=document.createElement('script');s.defer=true;s.src='/_vercel/insights/script.js';document.head.appendChild(s);}})();</script>
+  <script>(function(){var h=location.hostname||'';var isProd=h==='www.cusimage.com'||h==='cusimage.com';if(!isProd){return;}var si=document.createElement('script');si.defer=true;si.src='/_vercel/speed-insights/script.js';document.head.appendChild(si);})();</script>
+  <style>
+    .tool-shell {
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .drop {
+      background: rgba(231, 238, 252, 0.06);
+      border: var(--border-width) solid var(--pixel-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform var(--transition-fast), box-shadow var(--transition-normal), border-color var(--transition-normal), background var(--transition-normal);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .drop:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(34, 211, 238, 0.55);
+      background: rgba(231, 238, 252, 0.08);
+    }
+
+    .drop.dragover {
+      border-color: rgba(34, 211, 238, 0.85);
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.12), var(--shadow-md);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: rgba(231, 238, 252, 0.06);
+      border: var(--border-width) solid var(--pixel-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      padding: 18px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .preview {
+      width: 100%;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(231, 238, 252, 0.14);
+      background: rgba(7, 11, 22, 0.58);
+      display: block;
+      max-height: 58vh;
+      object-fit: contain;
+    }
+
+    .kpi {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 10px 12px;
+      border: 1px solid rgba(231, 238, 252, 0.14);
+      background: rgba(7, 11, 22, 0.46);
+      color: rgba(231, 238, 252, 0.88);
+      font-size: 0.85rem;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .control {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .control label {
+      font-weight: 800;
+      color: var(--gray-800);
+      font-size: 0.95rem;
+    }
+
+    .preset-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .seo-content {
+      margin-top: 36px;
+      max-width: 980px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .seo-section {
+      background: rgba(231, 238, 252, 0.06);
+      border: var(--border-width) solid var(--pixel-border);
+      border-radius: var(--radius-xl);
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .seo-section h2 {
+      color: var(--pixel-secondary);
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .kpi {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="brand-group">
+        <a class="brand" href="/">
+          <img src="/logo.svg" alt="CusImage Logo" class="logo-icon">
+          <h1 class="title">CusImage</h1>
+        </a>
+        <p class="subtitle">Image DPI Converter</p>
+      </div>
+      <div class="nav-dropdown">
+        <div class="dropdown-container">
+          <span class="nav-link dropdown-trigger">Tools ▼</span>
+          <div class="dropdown-content">
+            <a href="/turn-image-into-pixel-art" class="dropdown-item">Image to Pixel</a>
+            <a href="/turn-images-into-unicode" class="dropdown-item">Unicode Art</a>
+            <a href="/image-dpi-converter" class="dropdown-item">Image DPI Converter</a>
+            <a href="/convert-jpeg-to-jpg" class="dropdown-item">JPEG to JPG</a>
+          </div>
+        </div>
+        <div id="user-widget-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container">
+      <section class="tool-header">
+        <h1 class="tool-title">Image DPI Converter</h1>
+        <p class="tool-description">Change DPI metadata for PNG and JPEG without resizing. Convert 72 DPI to 300 DPI in seconds for print-ready files.</p>
+      </section>
+
+      <div class="tool-shell">
+        <div class="drop" id="dropZone" role="button" tabindex="0" aria-label="Upload PNG or JPEG">
+          <div style="display:flex;justify-content:center;margin-bottom:12px;color:rgba(34, 211, 238, 0.92);">
+            <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 5 17 10"/>
+              <line x1="12" y1="5" x2="12" y2="18"/>
+            </svg>
+          </div>
+          <div style="font-weight:900;letter-spacing:-0.01em;font-size:1.15rem;color:rgba(231,238,252,0.92);">Click or drag an image here</div>
+          <div class="muted" style="margin-top:8px;">Supported: .png, .jpg, .jpeg</div>
+          <input id="fileInput" type="file" accept="image/png,image/jpeg" hidden />
+        </div>
+
+        <div class="grid" id="workspace" style="display:none;">
+          <div class="panel">
+            <img id="preview" class="preview" alt="Image preview" />
+            <div class="kpi">
+              <div class="pill" id="kpiName">—</div>
+              <div class="pill" id="kpiType">—</div>
+              <div class="pill" id="kpiSize">—</div>
+              <div class="pill" id="kpiDpi">—</div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="control">
+              <label for="dpiInput">Target DPI</label>
+              <input id="dpiInput" class="input" type="number" min="1" max="1200" step="1" value="300" inputmode="numeric" />
+              <div class="muted">Updates metadata only. Pixel dimensions stay unchanged.</div>
+              <div class="preset-row" aria-label="Common DPI presets">
+                <button class="btn btn-secondary" type="button" data-dpi="72">72</button>
+                <button class="btn btn-secondary" type="button" data-dpi="96">96</button>
+                <button class="btn btn-secondary" type="button" data-dpi="150">150</button>
+                <button class="btn btn-secondary" type="button" data-dpi="300">300</button>
+                <button class="btn btn-secondary" type="button" data-dpi="600">600</button>
+              </div>
+            </div>
+
+            <div class="control" style="margin-top: 16px;">
+              <div class="form-actions">
+                <button id="convertBtn" class="btn-primary" type="button">Update DPI</button>
+                <button id="downloadBtn" class="btn" type="button" disabled>Download</button>
+                <button id="resetBtn" class="btn btn-secondary" type="button">New Image</button>
+              </div>
+              <div class="muted" id="status" style="margin-top: 10px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="seo-content">
+        <section class="seo-section">
+          <h2>What Is DPI?</h2>
+          <p>DPI (dots per inch) tells printers and design software how large an image should appear on paper. An image can be <strong>2000×2000 pixels</strong> whether it is labeled 72 DPI or 300 DPI. Changing DPI affects <strong>print size</strong>, not pixel count.</p>
+        </section>
+
+        <section class="seo-section">
+          <h2>Convert 72 DPI to 300 DPI (Without Resizing)</h2>
+          <p>This Image DPI Converter updates the DPI <strong>metadata</strong> for <strong>PNG</strong> and <strong>JPEG</strong> files. It is ideal when your pixels are already correct and you just need a print-ready DPI tag for workflows like publishing, packaging, or lab prints.</p>
+        </section>
+
+        <section class="seo-section">
+          <h2>Privacy</h2>
+          <p>Your image is processed locally in your browser. Nothing is uploaded to a server.</p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <cus-footer></cus-footer>
+  <script src="/footer.js" defer></script>
+  <script src="/user-widget.js" defer></script>
+  <script src="/image-dpi-converter.js" defer></script>
+</body>
+</html>

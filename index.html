@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Create stunning pixel art with our free online editor, convert images to pixel art or unicode, and use AI tools like background remover. No download or registration required.">
-    <meta name="keywords" content="pixel art editor, online pixel art maker, image to pixel art, pixel art converter, image to unicode, ascii art generator, ai background remover, free image tools, cusimage">
-    <title>CusImage - Free Online Pixel Art Editor, Converter & AI Image Tools</title>
+    <meta name="description" content="CusImage is a free, professional online image toolkit. Convert JPEG to JPG, optimize image DPI, generate pixel art, and export instantly — no signup, no watermark.">
+    <meta name="keywords" content="online image tools, image converter, jpeg to jpg, image dpi converter, image to pixel art, pixel art converter, free image tools, cusimage">
+    <link rel="canonical" href="https://www.cusimage.com/" />
+    <title>CusImage - Professional Online Image Editor & Free Image Tools</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml">
     <link rel="shortcut icon" href="/favicon.svg?v=3" type="image/svg+xml">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2211656389763853" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <script>(function(){var h=location.hostname||'';var isLocal=/^(localhost|127\.0\.0\.1)$/.test(h);if(!isLocal){var s=document.createElement('script');s.defer=true;s.src='/_vercel/insights/script.js';document.head.appendChild(s);}})();</script>
     <script>(function(){var h=location.hostname||'';var isProd=h==='www.cusimage.com'||h==='cusimage.com';if(!isProd){return;}var si=document.createElement('script');si.defer=true;si.src='/_vercel/speed-insights/script.js';document.head.appendChild(si);})();</script>
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"CusImage","url":"https://www.cusimage.com","logo":"https://www.cusimage.com/logo.svg"}</script>
@@ -18,21 +18,23 @@
 <body>
     <header class="header">
         <div class="container">
-            <div class="brand">
-                <img src="/logo.svg" alt="CusImage Logo" class="logo-icon">
-                <h1 class="title">CusImage</h1>
+            <div class="brand-group">
+                <a class="brand" href="/">
+                    <img src="/logo.svg" alt="CusImage Logo" class="logo-icon">
+                    <h1 class="title">CusImage</h1>
+                </a>
             </div>
             <div class="nav-dropdown">
-                <a href="/pixel-art-ideas" class="nav-link">Pixel Art Ideas</a>
                 <div class="dropdown-container">
                     <span class="nav-link dropdown-trigger">Tools ▼</span>
                     <div class="dropdown-content">
-                        <a href="/pixel-editor" class="dropdown-item">Pixel Editor</a>
                         <a href="/turn-image-into-pixel-art" class="dropdown-item">Image to Pixel</a>
                         <a href="/turn-images-into-unicode" class="dropdown-item">Unicode Art</a>
+                        <a href="/image-dpi-converter" class="dropdown-item">Image DPI Converter</a>
+                        <a href="/convert-jpeg-to-jpg" class="dropdown-item">JPEG to JPG</a>
                     </div>
                 </div>
-                <div id="user-widget-container" style="display: inline-block; margin-left: 20px;"></div>
+                <div id="user-widget-container"></div>
             </div>
         </div>
     </header>
@@ -40,27 +42,145 @@
     <main class="main">
         <div class="container">
             <section class="hero">
-                <h2 class="hero-title">FREE ONLINE PIXEL EDITOR</h2>
-                <p class="hero-description">Create stunning pixel art with our easy-to-use editor. No download required.</p>
-                <div style="margin-top: 2rem;">
-                    <a href="/pixel-editor" class="btn-primary">START DESIGNING</a>
+                <div class="hero-content">
+                    <p class="hero-eyebrow">Professional Image Tools</p>
+                    <h2 class="hero-title">Edit, Convert, Export — Fast.</h2>
+                    <p class="hero-description">A focused toolkit for creators and teams: pixel art generation, format conversion, DPI optimization, and instant downloads. Built for speed, designed for clarity.</p>
+                    <div class="hero-badges" aria-label="Key benefits">
+                        <span class="hero-badge">Runs in your browser</span>
+                        <span class="hero-badge">No signup</span>
+                        <span class="hero-badge">No watermark</span>
+                    </div>
+                </div>
+                <div class="hero-media" aria-hidden="true">
+                    <svg viewBox="0 0 760 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="g1" x1="90" y1="40" x2="690" y2="520" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="rgba(91, 140, 255, 1)"/>
+                                <stop offset="0.55" stop-color="rgba(34, 211, 238, 0.92)"/>
+                                <stop offset="1" stop-color="rgba(167, 139, 250, 0.9)"/>
+                            </linearGradient>
+                            <linearGradient id="g2" x1="180" y1="160" x2="600" y2="410" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="rgba(231, 238, 252, 0.26)"/>
+                                <stop offset="1" stop-color="rgba(231, 238, 252, 0.04)"/>
+                            </linearGradient>
+                            <filter id="blurGlow" x="-40" y="-40" width="840" height="640" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feGaussianBlur stdDeviation="18" result="blur"/>
+                                <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.7 0"/>
+                                <feMerge>
+                                    <feMergeNode/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                        <path d="M160 112C178 76 221 52 270 52H532C580 52 624 76 642 112L716 258C732 290 732 326 716 358L642 504C624 540 580 564 532 564H270C221 564 178 540 160 504L86 358C70 326 70 290 86 258L160 112Z" fill="rgba(231, 238, 252, 0.04)" opacity="0.9"/>
+                        <path d="M168 126C184 94 224 72 270 72H532C578 72 618 94 634 126L702 258C716 286 716 318 702 346L634 478C618 510 578 532 532 532H270C224 532 184 510 168 478L100 346C86 318 86 286 100 258L168 126Z" stroke="url(#g1)" stroke-opacity="0.42" stroke-width="2" filter="url(#blurGlow)"/>
+
+                        <g opacity="0.98">
+                            <rect x="156" y="128" width="448" height="308" rx="18" fill="rgba(7, 11, 22, 0.62)" stroke="rgba(231, 238, 252, 0.14)"/>
+                            <rect x="156" y="128" width="448" height="44" rx="18" fill="rgba(231, 238, 252, 0.06)"/>
+                            <circle cx="182" cy="150" r="6" fill="rgba(251, 113, 133, 0.85)"/>
+                            <circle cx="202" cy="150" r="6" fill="rgba(251, 191, 36, 0.85)"/>
+                            <circle cx="222" cy="150" r="6" fill="rgba(52, 211, 153, 0.85)"/>
+
+                            <rect x="186" y="196" width="248" height="212" rx="14" fill="url(#g2)" stroke="rgba(231, 238, 252, 0.12)"/>
+                            <path d="M224 354C262 318 302 324 344 340C388 356 412 334 436 306" stroke="rgba(231, 238, 252, 0.72)" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M248 246C284 222 314 236 346 250C378 264 402 258 432 236" stroke="rgba(231, 238, 252, 0.48)" stroke-width="3" stroke-linecap="round"/>
+
+                            <rect x="456" y="196" width="124" height="212" rx="14" fill="rgba(231, 238, 252, 0.05)" stroke="rgba(231, 238, 252, 0.12)"/>
+                            <rect x="472" y="214" width="92" height="12" rx="6" fill="rgba(231, 238, 252, 0.58)"/>
+                            <rect x="472" y="242" width="92" height="8" rx="4" fill="rgba(231, 238, 252, 0.22)"/>
+                            <rect x="472" y="272" width="92" height="8" rx="4" fill="rgba(231, 238, 252, 0.22)"/>
+                            <rect x="472" y="302" width="92" height="8" rx="4" fill="rgba(231, 238, 252, 0.22)"/>
+                            <rect x="472" y="332" width="92" height="8" rx="4" fill="rgba(231, 238, 252, 0.22)"/>
+                            <rect x="472" y="362" width="92" height="8" rx="4" fill="rgba(231, 238, 252, 0.22)"/>
+                            <rect x="472" y="388" width="72" height="12" rx="6" fill="url(#g1)" fill-opacity="0.85"/>
+                        </g>
+
+                        <g opacity="0.92">
+                            <rect x="88" y="96" width="168" height="110" rx="18" fill="rgba(231, 238, 252, 0.05)" stroke="rgba(231, 238, 252, 0.12)"/>
+                            <rect x="108" y="120" width="122" height="12" rx="6" fill="rgba(231, 238, 252, 0.58)"/>
+                            <rect x="108" y="148" width="92" height="8" rx="4" fill="rgba(231, 238, 252, 0.22)"/>
+                            <rect x="108" y="168" width="132" height="8" rx="4" fill="rgba(231, 238, 252, 0.22)"/>
+                        </g>
+
+                        <g opacity="0.92">
+                            <rect x="524" y="64" width="176" height="126" rx="18" fill="rgba(231, 238, 252, 0.05)" stroke="rgba(231, 238, 252, 0.12)"/>
+                            <rect x="548" y="90" width="128" height="12" rx="6" fill="rgba(231, 238, 252, 0.58)"/>
+                            <rect x="548" y="118" width="84" height="10" rx="5" fill="url(#g1)" fill-opacity="0.78"/>
+                            <rect x="548" y="142" width="112" height="8" rx="4" fill="rgba(231, 238, 252, 0.22)"/>
+                            <rect x="548" y="160" width="98" height="8" rx="4" fill="rgba(231, 238, 252, 0.22)"/>
+                        </g>
+                    </svg>
                 </div>
             </section>
 
-            <h3 style="text-align: center; margin-bottom: 2rem; color: var(--pixel-accent);">PIXEL ART GALLERY</h3>
-            
-            <div id="home-marquee-container" class="marquee-container">
-                <!-- Marquee tracks will be injected here by JS -->
-            </div>
+            <section class="home-section">
+                <div class="section-header">
+                    <h3 class="section-title">Tools That Feel Like a Pro Workflow</h3>
+                    <p class="section-subtitle">Quick conversions, crisp DPI control, and pixel art generation — tuned for everyday production tasks.</p>
+                </div>
+                <div class="tool-grid">
+                    <a class="tool-card" href="/convert-jpeg-to-jpg">
+                        <div class="tool-icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7 3h7l4 4v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" stroke="rgba(231, 238, 252, 0.85)" stroke-width="1.6"/>
+                                <path d="M14 3v4h4" stroke="rgba(231, 238, 252, 0.55)" stroke-width="1.6"/>
+                                <path d="M8 14h8" stroke="rgba(34, 211, 238, 0.92)" stroke-width="2.2" stroke-linecap="round"/>
+                                <path d="M12 11v6" stroke="rgba(34, 211, 238, 0.92)" stroke-width="2.2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="tool-card-title">JPEG to JPG</div>
+                            <div class="tool-card-desc">Convert instantly with quality control and quick downloads.</div>
+                        </div>
+                    </a>
 
-            <!-- Legacy container kept but hidden via CSS -->
-            <div class="pixel-grid-container" style="display:none;"></div>
+                    <a class="tool-card" href="/image-dpi-converter">
+                        <div class="tool-icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 7.5A3.5 3.5 0 0 1 9.5 4h5A3.5 3.5 0 0 1 18 7.5v9A3.5 3.5 0 0 1 14.5 20h-5A3.5 3.5 0 0 1 6 16.5v-9Z" stroke="rgba(231, 238, 252, 0.85)" stroke-width="1.6"/>
+                                <path d="M8.5 9.5h7" stroke="rgba(231, 238, 252, 0.45)" stroke-width="1.6" stroke-linecap="round"/>
+                                <path d="M8.5 12h4.5" stroke="rgba(231, 238, 252, 0.45)" stroke-width="1.6" stroke-linecap="round"/>
+                                <path d="M8.5 14.5h7" stroke="rgba(34, 211, 238, 0.92)" stroke-width="2.2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="tool-card-title">Image DPI Converter</div>
+                            <div class="tool-card-desc">Adjust DPI for print and design specs without resampling surprises.</div>
+                        </div>
+                    </a>
 
-            <div style="text-align: center; margin: 4rem 0;">
-                <h3>Need more inspiration?</h3>
-                <p style="margin-bottom: 2rem;">Explore our curated collection of pixel art ideas.</p>
-                <a href="/pixel-art-ideas" class="btn-primary" style="font-size: 1.5rem; padding: 1rem 2rem;">VIEW MORE IDEAS</a>
-            </div>
+                    <a class="tool-card" href="/turn-image-into-pixel-art">
+                        <div class="tool-icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 8a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V8Z" stroke="rgba(231, 238, 252, 0.85)" stroke-width="1.6"/>
+                                <path d="M8 10h3v3H8v-3Zm5 0h3v3h-3v-3Zm-5 5h3v2H8v-2Zm5 0h3v2h-3v-2Z" fill="rgba(34, 211, 238, 0.92)" fill-opacity="0.9"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="tool-card-title">Image to Pixel</div>
+                            <div class="tool-card-desc">Turn photos into stylized pixel art with clean, controllable results.</div>
+                        </div>
+                    </a>
+
+                    <a class="tool-card" href="/turn-images-into-unicode">
+                        <div class="tool-icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 6.5A2.5 2.5 0 0 1 8.5 4h7A2.5 2.5 0 0 1 18 6.5v11A2.5 2.5 0 0 1 15.5 20h-7A2.5 2.5 0 0 1 6 17.5v-11Z" stroke="rgba(231, 238, 252, 0.85)" stroke-width="1.6"/>
+                                <path d="M9 9h6" stroke="rgba(231, 238, 252, 0.5)" stroke-width="1.6" stroke-linecap="round"/>
+                                <path d="M9 12h4" stroke="rgba(231, 238, 252, 0.5)" stroke-width="1.6" stroke-linecap="round"/>
+                                <path d="M9 15h6" stroke="rgba(34, 211, 238, 0.92)" stroke-width="2.2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="tool-card-title">Unicode Art</div>
+                            <div class="tool-card-desc">Convert images into high-density Unicode art for sharing anywhere.</div>
+                        </div>
+                    </a>
+                </div>
+            </section>
 
         </div>
     </main>
@@ -68,6 +188,5 @@
     <cus-footer></cus-footer>
     <script src="/footer.js" defer></script>
     <script src="/user-widget.js" defer></script>
-    <script src="/home-gallery.js" defer></script>
 </body>
 </html>

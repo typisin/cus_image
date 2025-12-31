@@ -8,12 +8,9 @@
     { "source": "/ambigram-generator", "destination": "/ambigram-generator.html" },
     { "source": "/dandys-world-oc-maker", "destination": "/dandys-world-oc-maker.html" },
     { "source": "/400x400-black-image", "destination": "/400x400-black-image.html" },
+    { "source": "/image-dpi-converter", "destination": "/image-dpi-converter.html" },
+    { "source": "/convert-jpeg-to-jpg", "destination": "/convert-jpeg-to-jpg.html" },
     { "source": "/login", "destination": "/login.html" },
-    { "source": "/pixel-editor", "destination": "/pixel-editor.html" },
-    { "source": "/pixel-art-ideas", "destination": "/pixel-art-ideas.html" },
-    { "source": "/pixel-art-ideas/:path*", "destination": "/pixel-art-ideas.html" },
-    { "source": "/pokemon-pixel-art", "destination": "/pokemon-pixel-art.html" },
-    { "source": "/hello-kitty-pixel-art", "destination": "/hello-kitty-pixel-art.html" },
     { "source": "/", "destination": "/index.html" }
   ],
   "redirects": [

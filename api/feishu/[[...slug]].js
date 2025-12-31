@@ -1,6 +1,5 @@
 import fbCovers from '../../src/api_handlers/feishu/fb-covers.js';
 import media from '../../src/api_handlers/feishu/media.js';
-import pixelIdeas from '../../src/api_handlers/feishu/pixel-ideas.js';
 
 export default async function handler(req, res) {
   let { slug } = req.query;
@@ -12,7 +11,6 @@ export default async function handler(req, res) {
 
   if (path === 'fb-covers') return fbCovers(req, res);
   if (path === 'media') return media(req, res);
-  if (path === 'pixel-ideas') return pixelIdeas(req, res);
 
   res.status(404).json({ error: 'Not Found' });
 }

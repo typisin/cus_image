@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convert Image JPEG to JPG Online (Free, Fast) | CusImage</title>
+  <meta name="description" content="Convert image JPEG to JPG online for free. Upload a JPEG/JPG, choose quality, and download a JPG instantly. No signup, no watermark." />
+  <meta name="keywords" content="convert image jpeg to jpg, jpeg to jpg, convert jpeg to jpg online, image jpeg to jpg, jpg converter" />
+  <link rel="canonical" href="https://www.cusimage.com/convert-jpeg-to-jpg" />
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml">
+  <link rel="shortcut icon" href="/favicon.svg?v=3" type="image/svg+xml">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2211656389763853" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Convert Image JPEG to JPG",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Web Browser",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Free online tool to convert image JPEG to JPG. Upload an image, choose quality, and download a JPG instantly.",
+    "url": "https://www.cusimage.com/convert-jpeg-to-jpg"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is JPEG the same as JPG?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. JPEG and JPG refer to the same image format. The difference is only the file extension." }
+      },
+      {
+        "@type": "Question",
+        "name": "Will converting JPEG to JPG reduce quality?",
+        "acceptedAnswer": { "@type": "Answer", "text": "JPEG is a lossy format. If you re-encode it, quality can change depending on the selected quality level. Choose a higher quality for better results." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does this JPEG to JPG converter upload my image?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Conversion runs in your browser. The image is processed locally on your device." }
+      }
+    ]
+  }
+  </script>
+  <script>(function(){var h=location.hostname||'';var isLocal=/^(localhost|127\.0\.0\.1)$/.test(h);if(!isLocal){var s=document.createElement('script');s.defer=true;s.src='/_vercel/insights/script.js';document.head.appendChild(s);}})();</script>
+  <script>(function(){var h=location.hostname||'';var isProd=h==='www.cusimage.com'||h==='cusimage.com';if(!isProd){return;}var si=document.createElement('script');si.defer=true;si.src='/_vercel/speed-insights/script.js';document.head.appendChild(si);})();</script>
+  <style>
+    .tool-shell {
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .drop {
+      background: rgba(231, 238, 252, 0.06);
+      border: var(--border-width) solid var(--pixel-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform var(--transition-fast), box-shadow var(--transition-normal), border-color var(--transition-normal), background var(--transition-normal);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .drop:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(34, 211, 238, 0.55);
+      background: rgba(231, 238, 252, 0.08);
+    }
+
+    .drop.dragover {
+      border-color: rgba(34, 211, 238, 0.85);
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.12), var(--shadow-md);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: rgba(231, 238, 252, 0.06);
+      border: var(--border-width) solid var(--pixel-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      padding: 18px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .preview {
+      width: 100%;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(231, 238, 252, 0.14);
+      background: rgba(7, 11, 22, 0.58);
+      display: block;
+    }
+
+    .meta {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+      color: var(--gray-500);
+      font-size: 0.9rem;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .control {
+      display: grid;
+      gap: 8px;
+    }
+
+    .control label {
+      font-weight: 800;
+      color: var(--gray-800);
+      font-size: 0.95rem;
+    }
+
+    .slider {
+      width: 100%;
+      height: 4px;
+      background: rgba(231, 238, 252, 0.12);
+      border-radius: 3px;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(91, 140, 255, 1), rgba(34, 211, 238, 0.92));
+      border: 1px solid rgba(231, 238, 252, 0.22);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.40);
+      cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(91, 140, 255, 1), rgba(34, 211, 238, 0.92));
+      border: 1px solid rgba(231, 238, 252, 0.22);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.40);
+      cursor: pointer;
+    }
+
+    .kpi {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .kpi .pill {
+      border-radius: 999px;
+      padding: 10px 12px;
+      border: 1px solid rgba(231, 238, 252, 0.14);
+      background: rgba(7, 11, 22, 0.46);
+      color: rgba(231, 238, 252, 0.88);
+      font-size: 0.85rem;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .kpi {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="brand-group">
+        <a class="brand" href="/">
+          <img src="/logo.svg" alt="CusImage Logo" class="logo-icon">
+          <h1 class="title">CusImage</h1>
+        </a>
+        <p class="subtitle">Convert Image JPEG to JPG</p>
+      </div>
+      <div class="nav-dropdown">
+        <div class="dropdown-container">
+          <span class="nav-link dropdown-trigger">Tools ▼</span>
+          <div class="dropdown-content">
+            <a href="/turn-image-into-pixel-art" class="dropdown-item">Image to Pixel</a>
+            <a href="/turn-images-into-unicode" class="dropdown-item">Unicode Art</a>
+            <a href="/image-dpi-converter" class="dropdown-item">Image DPI Converter</a>
+            <a href="/convert-jpeg-to-jpg" class="dropdown-item">JPEG to JPG</a>
+          </div>
+        </div>
+        <div id="user-widget-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container">
+      <section class="tool-header">
+        <h2 class="tool-title">Convert Image JPEG to JPG</h2>
+        <p class="tool-description">Upload a JPEG/JPG, choose output quality, and download a JPG instantly. Fast, free, and runs in your browser.</p>
+      </section>
+
+      <div class="tool-shell">
+        <div class="drop" id="dropZone" role="button" tabindex="0" aria-label="Upload JPEG or JPG">
+          <div style="display:flex;justify-content:center;margin-bottom:12px;color:rgba(34, 211, 238, 0.92);">
+            <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 5 17 10"/>
+              <line x1="12" y1="5" x2="12" y2="18"/>
+            </svg>
+          </div>
+          <div style="font-weight:900;letter-spacing:-0.01em;font-size:1.15rem;color:rgba(231,238,252,0.92);">Click or drag an image here</div>
+          <div class="muted" style="margin-top:8px;">Supported: .jpeg, .jpg</div>
+          <input id="fileInput" type="file" accept="image/jpeg" hidden />
+        </div>
+
+        <div class="grid" id="workspace" style="display:none;">
+          <div class="panel">
+            <img id="preview" class="preview" alt="JPEG preview" />
+            <div class="meta">
+              <div class="kpi">
+                <div class="pill" id="kpiName">—</div>
+                <div class="pill" id="kpiDim">—</div>
+                <div class="pill" id="kpiSize">—</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="control">
+              <label for="quality">JPG Quality</label>
+              <div class="row">
+                <input id="quality" class="slider" type="range" min="0.4" max="1" step="0.01" value="0.92" />
+                <div class="pill" id="qualityValue" style="min-width:88px;">0.92</div>
+              </div>
+              <div class="muted">Higher quality produces larger files.</div>
+            </div>
+
+            <div class="row" style="margin-top:16px;">
+              <button id="downloadBtn" class="btn-primary" type="button">Download JPG</button>
+              <button id="resetBtn" class="btn btn-secondary" type="button">Convert Another</button>
+            </div>
+            <div class="muted" id="status" style="margin-top:10px;">Ready.</div>
+          </div>
+        </div>
+
+        <section class="faq-card" style="margin-top: 12px;">
+          <h2>JPEG to JPG Converter FAQ</h2>
+          <h3>Is JPEG the same as JPG?</h3>
+          <p>Yes. JPEG and JPG are the same format. The only difference is the file extension.</p>
+          <h3>Can I turn a .jpeg into a .jpg without changing quality?</h3>
+          <p>If you simply rename the extension, the file stays the same. If you re-encode, quality depends on the selected quality level.</p>
+          <h3>Does this tool upload my image?</h3>
+          <p>No. Conversion runs locally in your browser.</p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <cus-footer></cus-footer>
+  <script src="/footer.js" defer></script>
+  <script src="/user-widget.js" defer></script>
+  <script>
+    (function(){
+      var dropZone = document.getElementById('dropZone');
+      var fileInput = document.getElementById('fileInput');
+      var workspace = document.getElementById('workspace');
+      var preview = document.getElementById('preview');
+      var kpiName = document.getElementById('kpiName');
+      var kpiDim = document.getElementById('kpiDim');
+      var kpiSize = document.getElementById('kpiSize');
+      var quality = document.getElementById('quality');
+      var qualityValue = document.getElementById('qualityValue');
+      var downloadBtn = document.getElementById('downloadBtn');
+      var resetBtn = document.getElementById('resetBtn');
+      var status = document.getElementById('status');
+
+      var currentFile = null;
+      var currentImage = null;
+      var currentObjectUrl = null;
+
+      function humanBytes(bytes){
+        if (!bytes && bytes !== 0) return '—';
+        var units = ['B','KB','MB','GB'];
+        var i = 0;
+        var v = bytes;
+        while (v >= 1024 && i < units.length - 1) { v /= 1024; i++; }
+        return (i === 0 ? v.toFixed(0) : v.toFixed(2)) + ' ' + units[i];
+      }
+
+      function setStatus(t){
+        status.textContent = t;
+      }
+
+      function cleanup(){
+        if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
+        currentObjectUrl = null;
+        currentFile = null;
+        currentImage = null;
+        preview.removeAttribute('src');
+        kpiName.textContent = '—';
+        kpiDim.textContent = '—';
+        kpiSize.textContent = '—';
+        workspace.style.display = 'none';
+        dropZone.style.display = '';
+        setStatus('Ready.');
+      }
+
+      function loadFile(file){
+        if (!file || !file.type || file.type !== 'image/jpeg') {
+          setStatus('Please upload a JPEG/JPG image.');
+          return;
+        }
+
+        currentFile = file;
+        kpiName.textContent = file.name || 'image.jpeg';
+        kpiSize.textContent = humanBytes(file.size);
+
+        if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
+        currentObjectUrl = URL.createObjectURL(file);
+
+        var img = new Image();
+        img.onload = function(){
+          currentImage = img;
+          kpiDim.textContent = img.naturalWidth + '×' + img.naturalHeight;
+          preview.src = currentObjectUrl;
+          dropZone.style.display = 'none';
+          workspace.style.display = '';
+          setStatus('Ready to download.');
+        };
+        img.onerror = function(){
+          setStatus('Could not read this image. Please try another file.');
+        };
+        img.src = currentObjectUrl;
+      }
+
+      function toJpgBlob(img, q){
+        return new Promise(function(resolve, reject){
+          try {
+            var canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            var ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, 0, 0);
+            canvas.toBlob(function(blob){
+              if (!blob) {
+                reject(new Error('toBlob failed'));
+                return;
+              }
+              resolve(blob);
+            }, 'image/jpeg', q);
+          } catch (e) {
+            reject(e);
+          }
+        });
+      }
+
+      function downloadBlob(blob, name){
+        var a = document.createElement('a');
+        var url = URL.createObjectURL(blob);
+        a.href = url;
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+      }
+
+      function defaultOutputName(inputName){
+        var n = (inputName || 'image.jpeg').replace(/\.(jpeg|jpg)$/i, '');
+        return n + '.jpg';
+      }
+
+      dropZone.addEventListener('click', function(){ fileInput.click(); });
+      dropZone.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+
+      dropZone.addEventListener('dragover', function(e){
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+      });
+      dropZone.addEventListener('dragleave', function(e){
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+      });
+      dropZone.addEventListener('drop', function(e){
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        loadFile(f);
+      });
+      fileInput.addEventListener('change', function(e){
+        var f = e.target && e.target.files && e.target.files[0];
+        loadFile(f);
+      });
+
+      quality.addEventListener('input', function(){
+        qualityValue.textContent = String(quality.value);
+      });
+
+      downloadBtn.addEventListener('click', async function(){
+        if (!currentImage || !currentFile) return;
+        downloadBtn.disabled = true;
+        resetBtn.disabled = true;
+        setStatus('Converting…');
+        try {
+          var q = Math.max(0.1, Math.min(1, parseFloat(quality.value) || 0.92));
+          var blob = await toJpgBlob(currentImage, q);
+          downloadBlob(blob, defaultOutputName(currentFile.name));
+          setStatus('Done.');
+        } catch (e) {
+          setStatus('Conversion failed. Please try again.');
+        } finally {
+          downloadBtn.disabled = false;
+          resetBtn.disabled = false;
+        }
+      });
+
+      resetBtn.addEventListener('click', function(){
+        fileInput.value = '';
+        cleanup();
+      });
+    })();
+  </script>
+</body>
+</html>

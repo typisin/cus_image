@@ -235,7 +235,7 @@ class ImageToUnicodeConverter {
   
   processFile(file) {
     if (!file.type.startsWith('image/')) {
-      this.showCustomModal('请上传图片文件！', null, true);
+      this.showCustomModal('Please upload an image file.', null, true);
       return;
     }
     

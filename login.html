@@ -6,44 +6,73 @@
   <title>Login | CusImage</title>
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml">
   <link rel="shortcut icon" href="/favicon.svg?v=3" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2211656389763853" crossorigin="anonymous"></script>
-  <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;padding:24px;background:#fafafa;color:#111}
-    .card{max-width:520px;margin:0 auto;background:#fff;border:1px solid #eee;border-radius:10px;padding:20px}
-    h1{font-size:20px;margin:0 0 16px}
-    label{display:block;margin:10px 0 6px}
-    input{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px}
-    button{margin-top:12px;padding:10px 14px;border:1px solid #333;background:#111;color:#fff;border-radius:8px;cursor:pointer}
-    button.secondary{background:#fff;color:#111}
-    .row{display:flex;gap:8px}
-    .row>button{flex:1}
-    .muted{color:#666;font-size:12px;margin-top:8px}
-    .profile{margin-top:16px;padding-top:12px;border-top:1px solid #eee}
-  </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Email Login / Register</h1>
-    <div>
-      <label>Email</label>
-      <input id="email" type="email" placeholder="you@example.com" />
-      <label>Password</label>
-      <input id="password" type="password" placeholder="minimum 6 characters" />
-      <div class="row">
-        <button id="register">Register</button>
-        <button id="login" class="secondary">Login</button>
+  <header class="header">
+    <div class="container">
+      <div class="brand-group">
+        <a class="brand" href="/">
+          <img src="/logo.svg" alt="CusImage Logo" class="logo-icon">
+          <h1 class="title">CusImage</h1>
+        </a>
+        <p class="subtitle">Account</p>
       </div>
-      <div class="muted">Google login coming soon</div>
-    </div>
-    <div class="profile">
-      <div id="who"></div>
-      <div class="row">
-        <input id="displayName" placeholder="Edit display name" />
-        <button id="saveName">Save</button>
+      <div class="nav-dropdown">
+        <div class="dropdown-container">
+          <span class="nav-link dropdown-trigger">Tools ▼</span>
+          <div class="dropdown-content">
+            <a href="/turn-image-into-pixel-art" class="dropdown-item">Image to Pixel</a>
+            <a href="/turn-images-into-unicode" class="dropdown-item">Unicode Art</a>
+            <a href="/image-dpi-converter" class="dropdown-item">Image DPI Converter</a>
+            <a href="/convert-jpeg-to-jpg" class="dropdown-item">JPEG to JPG</a>
+          </div>
+        </div>
+        <div id="user-widget-container"></div>
       </div>
     </div>
-  </div>
+  </header>
+
+  <main class="main">
+    <div class="container">
+      <div class="card auth-card">
+        <h2 style="font-size: 1.35rem; letter-spacing: -0.01em; margin-bottom: 12px;">Email Login / Register</h2>
+        <div class="form">
+          <div>
+            <label for="email">Email</label>
+            <input id="email" class="input" type="email" placeholder="you@example.com" autocomplete="email" />
+          </div>
+          <div>
+            <label for="password">Password</label>
+            <input id="password" class="input" type="password" placeholder="minimum 6 characters" autocomplete="current-password" />
+          </div>
+          <div class="form-actions">
+            <button id="register" class="btn-primary" type="button">Register</button>
+            <button id="login" class="btn btn-secondary" type="button">Login</button>
+          </div>
+          <div class="muted">Google login coming soon.</div>
+        </div>
+
+        <div class="auth-section">
+          <div id="who" class="muted"></div>
+          <div class="form" style="margin-top: 12px;">
+            <div>
+              <label for="displayName">Display Name</label>
+              <input id="displayName" class="input" placeholder="Edit display name" autocomplete="nickname" />
+            </div>
+            <div class="form-actions">
+              <button id="saveName" class="btn" type="button">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <cus-footer></cus-footer>
+  <script src="/footer.js" defer></script>
+  <script src="/user-widget.js" defer></script>
   <script src="/auth.js"></script>
 </body>
 </html>
-

@@ -19,24 +19,24 @@
 <body>
   <header class="header">
     <div class="container">
-      <div class="brand">
-        <a href="/" style="text-decoration: none; display: flex; align-items: center;">
+      <div class="brand-group">
+        <a class="brand" href="/">
             <img src="/logo.svg" alt="CusImage Logo" class="logo-icon">
             <h1 class="title">CusImage</h1>
         </a>
         <p class="subtitle">Simple 400×400 Black Image Generator</p>
       </div>
       <div class="nav-dropdown">
-                <a href="/pixel-art-ideas" class="nav-link">Pixel Art Ideas</a>
                 <div class="dropdown-container">
                     <span class="nav-link dropdown-trigger">Tools ▼</span>
                     <div class="dropdown-content">
-                        <a href="/pixel-editor" class="dropdown-item">Pixel Editor</a>
                         <a href="/turn-image-into-pixel-art" class="dropdown-item">Image to Pixel</a>
                         <a href="/turn-images-into-unicode" class="dropdown-item">Unicode Art</a>
+                        <a href="/image-dpi-converter" class="dropdown-item">Image DPI Converter</a>
+                        <a href="/convert-jpeg-to-jpg" class="dropdown-item">JPEG to JPG</a>
                     </div>
                 </div>
-                <div id="user-widget-container" style="display: inline-block; margin-left: 20px;"></div>
+                <div id="user-widget-container"></div>
             </div>
     </div>
   </header>
@@ -50,13 +50,13 @@
 
       <section class="content-grid" style="justify-content:center;">
         <div class="faq-card" style="text-align:center;">
-          <div class="image-preview-container" style="display:inline-block;padding:12px;background:#f5f5f7;border:1px solid #e5e7eb;border-radius:12px;">
+          <div class="image-preview-container">
             <canvas id="blackCanvas" width="400" height="400" aria-label="400 by 400 black image" style="display:block"></canvas>
           </div>
           <div style="margin-top:16px;">
             <button id="downloadBtn" class="btn btn-primary">Download PNG</button>
           </div>
-          <p style="margin-top:8px;color:#6b7280;">Tip: The PNG is exactly 400×400 pixels filled with #000000.</p>
+          <p class="muted" style="margin-top:8px;">Tip: The PNG is exactly 400×400 pixels filled with #000000.</p>
         </div>
       </section>
     </div>
@@ -103,17 +103,6 @@
     });
   </script>
   <script src="/footer.js" defer></script>
-  <script>
-  document.addEventListener('DOMContentLoaded', function(){
-    var brand = document.querySelector('.brand');
-    if (brand) {
-      brand.setAttribute('role','link');
-      brand.setAttribute('tabindex','0');
-      brand.addEventListener('click', function(){ location.href = '/'; });
-      brand.addEventListener('keypress', function(e){ if (e.key === 'Enter' || e.keyCode === 13) location.href = '/'; });
-    }
-  });
-  </script>
   <script src="/user-widget.js" defer></script>
  </body>
  </html>

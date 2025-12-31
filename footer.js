@@ -11,9 +11,10 @@ class CusFooter extends HTMLElement {
             <div class="footer-section">
               <h4 class="footer-title">Tools</h4>
               <ul class="footer-list">
-                <li><a href="/pixel-editor" class="footer-link">Pixel Editor</a></li>
                 <li><a href="/turn-image-into-pixel-art" class="footer-link">Turn Image into Pixel Art</a></li>
                 <li><a href="/turn-images-into-unicode" class="footer-link">Turn Images into Unicode</a></li>
+                <li><a href="/image-dpi-converter" class="footer-link">Image DPI Converter</a></li>
+                <li><a href="/convert-jpeg-to-jpg" class="footer-link">JPEG to JPG</a></li>
               </ul>
             </div>
             <div class="footer-section">
@@ -48,17 +49,19 @@ function ensureSupportStyles(){
   const css = document.createElement('style');
   css.id = 'support-modal-style';
   css.textContent = `
-    .support-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;z-index:9999}
-    .support-modal{width:360px;max-width:90vw;background:#fff;border-radius:16px;border:1px solid #e5e7eb;box-shadow:0 10px 30px rgba(0,0,0,0.12);font-family:Inter,system-ui,sans-serif}
-    .support-modal header{padding:16px 20px;border-bottom:1px solid #e5e7eb;font-weight:600;font-size:18px;color:#111;display:flex;justify-content:space-between;align-items:center}
-    .support-modal .body{padding:20px}
-    .support-close{width:32px;height:32px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;color:#6b7280;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s}
-    .support-close:hover{background:#f3f4f6;color:#111}
-    .support-row{display:flex;gap:8px;align-items:center}
-    .support-email{flex:1;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;color:#1f2937;background:#f9fafb;user-select:all}
-    .support-btn{padding:10px 12px;border:none;border-radius:8px;background:#2563eb;color:#fff;font-weight:500;cursor:pointer}
-    .support-btn:hover{background:#1d4ed8}
-    .support-toast{margin-top:10px;font-size:12px;color:#2563eb;display:none}
+    .support-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:24px}
+    .support-modal{width:420px;max-width:92vw;background:rgba(7,11,22,0.86);border-radius:20px;border:1px solid rgba(231,238,252,0.14);box-shadow:0 24px 80px rgba(0,0,0,0.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial}
+    .support-modal header{padding:16px 18px;border-bottom:1px solid rgba(231,238,252,0.12);font-weight:800;font-size:16px;letter-spacing:0.01em;color:rgba(231,238,252,0.92);display:flex;justify-content:space-between;align-items:center}
+    .support-modal .body{padding:18px}
+    .support-close{width:36px;height:36px;border:1px solid rgba(231,238,252,0.16);border-radius:12px;background:rgba(231,238,252,0.06);color:rgba(231,238,252,0.78);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 120ms ease, background 220ms ease, border-color 220ms ease, color 220ms ease}
+    .support-close:hover{background:rgba(231,238,252,0.10);border-color:rgba(34,211,238,0.45);color:rgba(231,238,252,0.92)}
+    .support-close:active{transform:translateY(1px)}
+    .support-row{display:flex;gap:10px;align-items:center;margin-top:10px}
+    .support-email{flex:1;padding:12px 14px;border:1px solid rgba(231,238,252,0.18);border-radius:12px;font-size:14px;color:rgba(231,238,252,0.92);background:rgba(7,11,22,0.62);user-select:all}
+    .support-btn{padding:12px 14px;border:1px solid rgba(231,238,252,0.16);border-radius:999px;background:linear-gradient(135deg, rgba(91, 140, 255, 1), rgba(34, 211, 238, 0.92));color:rgba(7, 11, 22, 0.96);font-weight:800;letter-spacing:0.01em;cursor:pointer;transition:transform 120ms ease, box-shadow 220ms ease, filter 220ms ease}
+    .support-btn:hover{transform:translateY(-1px);box-shadow:0 16px 40px rgba(0,0,0,0.35);filter:saturate(1.08) brightness(1.02)}
+    .support-btn:active{transform:translateY(0);box-shadow:0 2px 10px rgba(0,0,0,0.25)}
+    .support-toast{margin-top:12px;font-size:12px;color:rgba(34,211,238,0.92);display:none}
     .support-toast.show{display:block}
   `;
   document.head.appendChild(css);

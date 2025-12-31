@@ -1,46 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">
-  <!-- Palette -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" shape-rendering="geometricPrecision">
   <defs>
-    <style>
-      .bg { fill: #1e293b; } /* Dark Background for contrast */
-      .primary { fill: #3b82f6; } /* Blue */
-      .light { fill: #60a5fa; } /* Light Blue */
-      .dark { fill: #1d4ed8; } /* Dark Blue */
-      .accent { fill: #f43f5e; } /* Pink Accent */
-    </style>
+    <linearGradient id="g" x1="14" y1="14" x2="50" y2="50" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5B8CFF"/>
+      <stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
+    <linearGradient id="a" x1="44" y1="16" x2="52" y2="24" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A78BFA"/>
+      <stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
   </defs>
-  
-  <!-- Background (Rounded Rect simulated with pixels) -->
-  <!-- Main body 14x14 -->
-  <!-- Not doing a full background, just the letter C shape with some backing -->
-  
-  <!-- C Shape -->
-  <!-- Top Horizontal -->
-  <rect x="4" y="3" width="7" height="1" class="primary" />
-  <rect x="5" y="2" width="5" height="1" class="light" /> <!-- Highlight top -->
-  
-  <!-- Top Right Corner -->
-  <rect x="11" y="3" width="1" height="1" class="primary" />
-  <rect x="12" y="4" width="1" height="2" class="primary" />
-  
-  <!-- Left Vertical -->
-  <rect x="3" y="4" width="1" height="8" class="primary" />
-  <rect x="2" y="5" width="1" height="6" class="dark" /> <!-- Shadow left -->
-  
-  <!-- Bottom Horizontal -->
-  <rect x="4" y="12" width="7" height="1" class="primary" />
-  <rect x="5" y="13" width="5" height="1" class="dark" /> <!-- Shadow bottom -->
-  
-  <!-- Bottom Right Corner -->
-  <rect x="11" y="12" width="1" height="1" class="primary" />
-  <rect x="12" y="10" width="1" height="2" class="primary" />
-  
-  <!-- Inner Highlights/Details -->
-  <rect x="4" y="4" width="1" height="1" class="light" />
-  <rect x="4" y="11" width="1" height="1" class="dark" />
-  
-  <!-- Pixel Accents (Decorations) -->
-  <rect x="10" y="5" width="1" height="1" class="accent" />
-  <rect x="11" y="6" width="1" height="1" class="accent" />
-  
+  <rect x="6" y="6" width="52" height="52" rx="16" fill="#0B1020" fill-opacity="0.72" stroke="#E7EEFC" stroke-opacity="0.12"/>
+  <path d="M41 22.5C38.3 19.7 34.8 18.3 31 18.3C23.1 18.3 17 24.5 17 32.4C17 40.3 23.1 46.5 31 46.5C34.8 46.5 38.3 45.1 41 42.3" stroke="url(#g)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="48" cy="18" r="4" fill="url(#a)" fill-opacity="0.92"/>
 </svg>
